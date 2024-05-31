@@ -112,7 +112,6 @@ public class ApiConnection {
         String apiUrl = urlEndPoint + "searchKeyword1?serviceKey=" + serviceKey + "&numOfRows=" + numOfRows
                 + "&pageNo=" + pageNo + os + "&areaCode=" + metroId + "&contentTypeId=" + contentTypeId + "&keyword=" + encodedKeyword + dataType;
 
-        System.out.println(apiUrl);
         return apiResult(apiUrl);
     }
 
