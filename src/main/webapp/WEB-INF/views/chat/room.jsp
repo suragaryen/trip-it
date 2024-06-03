@@ -89,7 +89,7 @@ setInterval(Chat_loadNewMessages, 2000);
 		
 		
 		
-		body = '';
+		form.body.body = '';
 		form.body.focus();
 		
 		
