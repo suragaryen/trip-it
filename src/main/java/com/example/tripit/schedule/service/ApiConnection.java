@@ -70,13 +70,13 @@ public class ApiConnection {
                     errorResponse.append(line);
                 }
                 rd.close();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + errorResponse.toString());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api 연결 실패: " + errorResponse.toString());
             }
 
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("에러");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예외: " + e.getMessage());
         } finally {
             if (connection != null) {
                 connection.disconnect(); //HTTP 연결 닫기
@@ -84,9 +84,9 @@ public class ApiConnection {
         }
     }
 
-    public ResponseEntity<Object> cultureFacilityApi(String metroId, String contentTypeId)  {
+    public ResponseEntity<Object> cultureFacilityApi(String metroId, String pageNo, String contentTypeId)  {
         int numOfRows = 8; //가져올 갯수
-        int pageNo = 1; //페이지 넘버
+        //int pageNo = 1; //페이지 넘버
 
         //URL 생성
         String apiUrl = urlEndPoint + "areaBasedSyncList1?serviceKey=" + serviceKey + "&numOfRows=" + numOfRows
@@ -103,10 +103,10 @@ public class ApiConnection {
         return apiResult(apiUrl);
     }
 
-    public ResponseEntity<Object> searchApi(String metroId, String contentTypeId, String keyword) throws UnsupportedEncodingException {
+    public ResponseEntity<Object> searchApi(String metroId, String pageNo, String contentTypeId, String keyword) throws UnsupportedEncodingException {
         int numOfRows = 8; //가져올 갯수
-        int pageNo = 1; //페이지 넘버
-        String encodedKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8.toString());
+        //int pageNo = 1; //페이지 넘버
+        String encodedKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8.toString()); //인코딩 작업
 
         //URL 생성
         String apiUrl = urlEndPoint + "searchKeyword1?serviceKey=" + serviceKey + "&numOfRows=" + numOfRows
