@@ -5,82 +5,86 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.example.tripit.chat.dto.ChatMessage;
+import com.example.tripit.chat.entity.ChatMessage;
 import com.example.tripit.chat.service.ChatService;
-
-import aj.org.objectweb.asm.Attribute;
-import ch.qos.logback.core.model.Model;
 
 @Controller
 public class ChatController {
 
-	@Autowired
-	ChatService chatService;
+    @Autowired
+    private ChatService chatService;
+    //http://localhost:8080/chat/room?roomId=1
+    // 채팅방 열기
+    @GetMapping("/chat/room")
+    public String showRoom(@RequestParam("roomId") int roomId) {
+        return "chat/room";
+    }
 
-	// 채팅방 열기
-	@GetMapping("/chat/room")
-	public String showRoom(@RequestParam("roomId") int roomId) {
-//		ModelAndView mav = new ModelAndView();
-//	    mav.addObject("roomId", roomId);
-//	    mav.setViewName("chat/room");
-		return "chat/room";
-	}
+    // 채팅 메세지 전송
+    @RequestMapping("/chat/doAddMessage")
+    @ResponseBody
+    public Map<String, Object> doAddMessage(@RequestParam("roomId") int roomId, @RequestParam("userId") int userId, @RequestParam("content") String content) {
+        chatService.addMessage(roomId, userId, content);
 
-	// 채팅 메세지 전송
-	@PostMapping("/chat/doAddMessage")
-	@ResponseBody
-	public Map<String, Object> doAddMessage(@RequestParam("roomId") int roomId, @RequestParam("writer") String writer,
-			@RequestParam("body") String body) {
-		Map<String, Object> rs = new HashMap<>();
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("resultCode", "S-1");
+        rs.put("msg", "채팅 메시지가 추가되었습니다.");
+        return rs;
+    }
 
-		chatService.addMessage(roomId, writer, body);
+  //http://localhost:8080/chat/getMessages
+    // 채팅 메세지 가져오기
+    @GetMapping("/chat/getMessages")
+    @ResponseBody
+    public List<ChatMessage> getMessages() {
+        return chatService.getMessages();
+    }
 
-		rs.put("result", "S-1");
-		rs.put("msg", "채팅 메시지가 추가되었습니다.");
-		return rs;
-	}// doAddMessage() end
+    // 새로운 메세지 출력
+    @GetMapping("/chat/getMessagesFrom")
+    @ResponseBody
+    public Map<String, Object> getMessages(@RequestParam("roomId") int roomId, @RequestParam("fromId") Long fromId) {
+        List<ChatMessage> messages = chatService.getMessagesFrom(roomId, fromId);
 
-	// 채팅 메세지 저장
-	@GetMapping("/chat/getMessages")
-	@ResponseBody
-	public List<ChatMessage> getMessages() {
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("resultCode", "S-1");
+        rs.put("msg", "새 메세지들을 가져왔습니다.");
+        rs.put("messages", messages);
+        return rs;
+    }
 
-		return chatService.getMessages();
-	}// doAddMessage() end
+    // 모든 메세지 삭제
+    @GetMapping("/chat/clearAllMessages")
+    @ResponseBody
+    public Map<String, Object> clearAllMessages() {
+        chatService.clearAllMessages();
 
-	//새로운 메세지 출력
-	@GetMapping("/chat/getMessagesFrom")
-	@ResponseBody
-	public Map<String, Object> getMessages(@RequestParam("roomId") int roomId, @RequestParam("from") int from) {
-		List<ChatMessage> messages = chatService.getMessagesFrom(roomId, from);
+        Map<String, Object> rs = new HashMap<>();
+        rs.put("resultCode", "S-1");
+        rs.put("msg", "모든 메세지들을 삭제 하였습니다.");
+        return rs;
+    }
+    
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/public")
+    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+        return chatMessage;
+    }
 
-		Map<String, Object> rs = new HashMap<>();
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage) {
+        return chatMessage;
+    }
+    
 
-		rs.put("resultCode", "s-1");
-		rs.put("msg", "새 메세지들을 가져왔습니다.");
-		rs.put("messages", messages);
-
-		return rs;
-	}// doAddMessage() end
-
-	// 데이터 삭제
-	@GetMapping("/chat/clearAllMessages")
-	@ResponseBody
-	public Map<String, Object> clearAllMessages() {
-		chatService.clearAllMessages();
-
-		Map<String, Object> rs = new HashMap<>();
-
-		rs.put("resultCode", "s-1");
-		rs.put("msg", "모든 메세지들을 삭제 하였습니다.");
-		return rs;
-	}// doAddMessage() end
-
-}// class end
+}
