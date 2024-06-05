@@ -14,17 +14,19 @@ public class TripItApplication {
 	}
 
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedMethods("*")
-						.allowedOrigins("http://localhost:3000");
-			}
-
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//						.allowedMethods("*")
+//						.allowedOrigins("http://172.16.1.100:3000/")
+//						.allowedHeaders("*")
+//						.allowCredentials(true);
+//			}
+//
+//		};
+//	}
 
 }
 

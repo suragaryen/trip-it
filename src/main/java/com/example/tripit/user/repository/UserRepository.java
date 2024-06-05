@@ -7,12 +7,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 
-    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
+    Boolean existsByNickname(String nickname);
 
     //nickname를 받아 DB테이블에서 회원을 조회하는 메소드 작성
 
     UserEntity findByEmail(String email);
 
+    //UserEntity findByNickname(String nickname);
 
     //MemberEntity findByUsername(String id);
     //JpaRepository의 findById 메서드는 Optional을 반환하도록 설계되어 있음.
