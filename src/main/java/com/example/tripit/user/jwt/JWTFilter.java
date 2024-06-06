@@ -4,11 +4,16 @@ package com.example.tripit.user.jwt;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.dto.LoginDTO;
 import com.example.tripit.user.entity.UserEntity;
+import com.example.tripit.user.repository.UserRepository;
+import com.example.tripit.user.result.ResultCode;
+import com.example.tripit.user.result.ResultResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +24,9 @@ import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 
+
     private final JWTUtil jwtUtil;
+
 
     public JWTFilter(JWTUtil jwtUtil) {
 
@@ -47,12 +54,31 @@ public class JWTFilter extends OncePerRequestFilter {
 
         } catch (ExpiredJwtException e) {
 
-            //response body
+
+
+            ResultResponse result = ResultResponse.of(ResultCode.ACCESS_TOKEN_EXPIRED, "","","");
+
+            //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(result);
+
+            //응답 본문에 JSON 작성
             PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            writer.print(jsonResponse);
+            writer.flush();
+
+
+
+
+
+            //response body
+//            PrintWriter writer = response.getWriter();
+//            writer.print("access token expired");
 
             //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
             //프론트측과 협의된 응답코드
             //프론트측에서 토큰이 만료되었들때 400이나 401 응답을 주어서 만료 되었을때
@@ -79,26 +105,23 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //헤더에 access 토큰이 유효하다면
 
-        String username = jwtUtil.getUsername(accessToken);
+        String username = jwtUtil.getUsername(accessToken); //email
         String role = jwtUtil.getRole(accessToken);
 
+
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(username);
+        userEntity.setEmail(username);
         userEntity.setRole(role);
-
-
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken); //시큐리티 콘텍스터 홀더에 해당 유저 등록
 
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail(username);
-        loginDTO.setRole(role);
 
-        logger.info("User: " + username + " 시큐리티 콘텍스터 홀더에 해당 유저 등록 ");
-        //logger.info("로그인DRO" + loginDTO.getEmail());
+
+
+        logger.info("User: " + username + " 시큐리티 콘텍스터 홀더에 해당 유저 등록 완료 ");
 
         filterChain.doFilter(request, response);
 

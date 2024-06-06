@@ -25,19 +25,15 @@ public class JoinController {
     }
 
     @PostMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResultResponse> joinProcessJson(@RequestBody JoinDTO joinDTO) {
-        //System.out.println(joinDTO.getUsername());
+    public ResponseEntity<?> joinProcessJson(@RequestBody JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
-        ResultResponse result = ResultResponse.of(ResultCode.REGISTER_SUCCESS,joinDTO.getEmail());
-        return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
+        return (ResponseEntity<?>) ResponseEntity.ok();
     }
 
     @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResultResponse> joinProcessForm(@ModelAttribute JoinDTO joinDTO) {
-        //System.out.println(joinDTO.getUsername());
+    public ResponseEntity<?> joinProcessForm(@ModelAttribute JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
-        ResultResponse result = ResultResponse.of(ResultCode.REGISTER_SUCCESS,joinDTO.getEmail());
-        return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
+        return (ResponseEntity<?>) ResponseEntity.ok();
     }
 
 //    @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

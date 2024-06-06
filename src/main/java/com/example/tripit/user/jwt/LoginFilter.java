@@ -1,9 +1,10 @@
 package com.example.tripit.user.jwt;
 
-import com.example.tripit.error.InvalidInputException;
-import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.repository.RefreshRepository;
+import com.example.tripit.user.result.ResultCode;
+import com.example.tripit.user.result.ResultResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -75,10 +75,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, 1200000L);
+        //60000L = 1분
+        String access = jwtUtil.createJwt("access", email, role, 60000L);
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
-        //Refresh 토큰 저장
+        //Refresh 토큰 DB에 저장
         addRefreshEntity(email, refresh, 86400000L);
 
         //응답설정
@@ -86,8 +87,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
         response.setStatus(HttpStatus.OK.value());
 
-//        PrintWriter writer = response.getWriter();
-//        writer.print(access);
+
+        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh);
+
+        //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(result);
+
+        //응답 본문에 JSON 작성
+        PrintWriter writer = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        writer.print(jsonResponse);
+        writer.flush();
 
         logger.info("토큰 :" + access);
         logger.info("refresh :" + refresh);

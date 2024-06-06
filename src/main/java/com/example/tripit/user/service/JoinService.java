@@ -34,9 +34,9 @@ public class JoinService {
         Boolean isNicknameExist = userRepository.existsByNickname(nickname);
 
         if (isEmailExist) {
-            throw new InvalidInputException("email", email, "이미 존재하는 이메일 입니다.");
+            throw new InvalidInputException("email", email, "1");
         }else if(isNicknameExist){
-            throw new InvalidInputException("nickname", nickname, "이미 존재하는 닉네임 입니다.");
+            throw new InvalidInputException("nickname", nickname, "2");
         }
 
 
