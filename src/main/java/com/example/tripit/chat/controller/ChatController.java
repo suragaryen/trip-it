@@ -22,7 +22,7 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-    //http://localhost:8080/chat/room?roomId=1
+    //http://localhost:8080/chat/room?roomId=1 
     // 채팅방 열기
     @GetMapping("/chat/room")
     public String showRoom(@RequestParam("roomId") int roomId) {
