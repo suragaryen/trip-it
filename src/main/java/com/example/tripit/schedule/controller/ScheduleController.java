@@ -4,6 +4,7 @@ import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.service.ApiConnection;
 import com.example.tripit.schedule.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,10 +50,14 @@ public class ScheduleController {
     }
 
     @PostMapping("/save")
-    public String saveSchedule(@RequestBody ScheduleDto scheduleDto){
-        System.out.println(scheduleDto);
-        scheduleService.saveSchedule(scheduleDto);
-        return "아";
+    public ResponseEntity<String> saveSchedule(@RequestBody ScheduleDto scheduleDto){
+        try {
+            scheduleService.saveSchedule(scheduleDto);
+            return ResponseEntity.ok("일정 저장 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 저장 실패 : " + e.getMessage());
+        }
     }
+
 
 }

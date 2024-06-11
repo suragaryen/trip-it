@@ -26,8 +26,8 @@ public class ScheduleDto {
     private LocalDate start_date;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
-    @JsonProperty("start_end")
-    private LocalDate start_end;
+    @JsonProperty("end_date")
+    private LocalDate end_date;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("register_date")

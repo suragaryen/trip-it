@@ -29,7 +29,7 @@ public class ScheduleEntity {
     private LocalDate start_date;
 
     @Column(nullable = false)
-    private LocalDate start_end;
+    private LocalDate end_date;
 
     @Column(nullable = false)
     private LocalDate register_date;
