@@ -97,10 +97,67 @@ function submitChatMessageForm(form){
 
 
 
+
+
+let roomIdCounter = 1;
+
+function openChatRoom() {
+    const roomId = roomIdCounter++;
+    const chatRoomUrl = `http://localhost:8080/chat/room?roomId=${roomId}`;
+    window.open(chatRoomUrl, `_blank`);
+}
+
+
+async function openChatRoom() {
+    event.preventDefault(); // 폼의 기본 동작 방지
+    const form = event.target; // 이벤트가 발생한 폼 요소
+
+    const chatRoomName = form.chatRoomName.value.trim(); // 입력된 방 이름
+    if (!chatRoomName) {
+        alert("방 이름을 입력해주세요.");
+        return;
+    }
+
+    const chatRoomData = {
+        chatroomName: chatRoomName,
+        chatroomType: '0' // 단체 채팅방 예시
+    };
+
+    try {
+        const response = await fetch('/chat/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chatRoomData)
+        });
+
+        if (response.ok) {
+            const chatRoom = await response.json();
+            const roomId = chatRoom.roomId;
+            const chatRoomUrl = "http://localhost:8080/chat/room?roomId=${roomId}";
+            window.open(chatRoomUrl, '_blank');
+        } else {
+            console.error('Failed to create chat room:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error creating chat room:', error);
+    }
+}
+
 </script>
+
 
 </head>
 <body>
+<form action="post" onsubmit="return openChatRoom()">
+	<input type="text" name="chatRoomName" placeholder="방이름 작성">
+	<input type="submit" value="방만들기">
+</form>
+	
+<!-- 	<button onclick="openChatRoom()">방 만들기</button> -->
+	   <div id="chat_rooms_container"></div>
+	
 	<h1>${param.roomId}번방</h1>
 	<form onsubmit="submitChatMessageForm(this); return false;">
 		<div>
@@ -114,6 +171,5 @@ function submitChatMessageForm(form){
 		</div>
 	</form>
 	<div class="chat_messages"></div>
-	
 </body>
 </html>
