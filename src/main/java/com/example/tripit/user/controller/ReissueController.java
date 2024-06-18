@@ -10,10 +10,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Controller
 @ResponseBody //RestController + Contoller + ResponseBody
@@ -29,14 +36,19 @@ public class ReissueController {
         this.refreshRepository =  refreshRepository;
     }
 
+
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response
+            //, @CookieValue("refresh") String refresh2
+    ) {
 
         //서비스단을 따로 만드는것을 추천
 
-        //get refresh token
+
+            //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies(); //쿠키 순회 후 refresh 변수가 있는지?
+
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
@@ -96,6 +108,9 @@ public class ReissueController {
         //response
         response.setHeader("access", newAccess);
         response.addCookie(createCookie("refresh", newRefresh));
+
+
+        System.out.println("reissue 성공");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

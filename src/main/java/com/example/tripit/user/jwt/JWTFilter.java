@@ -55,7 +55,7 @@ public class JWTFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
 
 
-
+            response.setStatus(401);
             ResultResponse result = ResultResponse.of(ResultCode.ACCESS_TOKEN_EXPIRED, "","","");
 
             //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
@@ -68,10 +68,6 @@ public class JWTFilter extends OncePerRequestFilter {
             response.setCharacterEncoding("UTF-8");
             writer.print(jsonResponse);
             writer.flush();
-
-
-
-
 
             //response body
 //            PrintWriter writer = response.getWriter();

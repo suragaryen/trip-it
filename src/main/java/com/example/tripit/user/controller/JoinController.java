@@ -30,18 +30,11 @@ public class JoinController {
         return (ResponseEntity<?>) ResponseEntity.ok();
     }
 
+
     @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> joinProcessForm(@ModelAttribute JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
         return (ResponseEntity<?>) ResponseEntity.ok();
     }
-
-//    @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public String joinProcessForm(@ModelAttribute JoinDTO joinDTO) {
-//        System.out.println(joinDTO.getUsername());
-//        joinService.joinProcess(joinDTO);
-//        return "ok";
-//    }
-
 
 }
