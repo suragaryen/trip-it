@@ -13,13 +13,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDto {
-    private Long schedule_id;
+    @JsonProperty("schedule_id")
+    private Long scheduleId;
 
     @JsonProperty("metro_id")
     private String metro_id;
 
     @JsonProperty("user_id")
-    private Long user_id;
+    private Long userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("start_date")
