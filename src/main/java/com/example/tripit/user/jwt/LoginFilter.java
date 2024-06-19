@@ -61,7 +61,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
-
         //유저 정보
         String email = authentication.getName();
 
@@ -74,28 +73,28 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //토큰 생성
         //60000L = 1분
-        String access = jwtUtil.createJwt("access", email, role, 60000L);
+        String access = jwtUtil.createJwt("access", email, role, 6000L);
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
         //Refresh 토큰 DB에 저장
         addRefreshEntity(email, refresh, 86400000L);
 
+
         //응답설정
-        response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
-        response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
+//        response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
+//        response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
         response.setStatus(HttpStatus.OK.value());
 
-        String setCookie = "";
+//        String setCookie = "";
+//
+//        if (response.containsHeader("Set-Cookie")) {
+//            setCookie = response.getHeader("Set-Cookie");
+//            logger.info("Set-Cookie: " + setCookie);
+//        } else {
+//            logger.info("Set-Cookie header not found");
+//        }
 
-        if (response.containsHeader("Set-Cookie")) {
-            setCookie = response.getHeader("Set-Cookie");
-            logger.info("Set-Cookie: " + setCookie);
-        } else {
-            logger.info("Set-Cookie header not found");
-        }
-
-
-        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, setCookie);
+        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh);
 
 
         //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
@@ -112,13 +111,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         logger.info("토큰 :" + access);
         logger.info("refresh :" + refresh);
 
-        // 로그 추가: 응답 헤더 확인
-//        response.getHeaderNames().forEach(headerName -> {
-//            logger.info(headerName + ": " + response.getHeader(headerName));
-//        });
-
-
-
+        //로그 추가: 응답 헤더 확인
+        response.getHeaderNames().forEach(headerName -> {
+            logger.info(headerName + ": " + response.getHeader(headerName));
+        });
     }
 
     // 로그인 실패시 실행하는 메소드
@@ -153,11 +149,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60); //생명주기
-        cookie.setHttpOnly(true);
+        //cookie.setHttpOnly(true);
         //cookie.setSecure(true); //https 통신을 할 경우
         //cookie.setDomain("172.16.1.184");
-        //cookie.setPath("/"); //쿠키의 범위
-        //cookie.setAttribute("SameSite","Strict");
+        cookie.setPath("/"); //쿠키의 범위
+        //cookie.setAttribute("SameSite","None");
         return cookie;
     }
 }

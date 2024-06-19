@@ -5,6 +5,8 @@ import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 import com.example.tripit.user.result.ResultCode;
 import com.example.tripit.user.result.ResultResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,10 +41,11 @@ public class TestController {
 
     @GetMapping("/test")
     @ResponseBody
-    public String test() {
+    public String test(HttpServletRequest request, HttpServletResponse response) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("test cont " + username);
+
         return username;
     }
 
