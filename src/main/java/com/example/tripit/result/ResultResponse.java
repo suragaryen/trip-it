@@ -1,4 +1,4 @@
-package com.example.tripit.user.result;
+package com.example.tripit.result;
 
 import lombok.Getter;
 

@@ -1,19 +1,16 @@
 package com.example.tripit.user.jwt;
 
 
+import com.example.tripit.error.ErrorCode;
+import com.example.tripit.error.ErrorResponse;
 import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.dto.LoginDTO;
 import com.example.tripit.user.entity.UserEntity;
-import com.example.tripit.user.repository.UserRepository;
-import com.example.tripit.user.result.ResultCode;
-import com.example.tripit.user.result.ResultResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,14 +50,18 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(accessToken);
 
         } catch (ExpiredJwtException e) {
-
+            //토큰 만료 에러
 
             response.setStatus(401);
-            ResultResponse result = ResultResponse.of(ResultCode.ACCESS_TOKEN_EXPIRED, "","","");
 
-            //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
+            //CustomException customException = new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.ACCESS_TOKEN_EXPIRED);
+
+//            //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonResponse = objectMapper.writeValueAsString(result);
+            String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
 
             //응답 본문에 JSON 작성
             PrintWriter writer = response.getWriter();
@@ -69,16 +70,19 @@ public class JWTFilter extends OncePerRequestFilter {
             writer.print(jsonResponse);
             writer.flush();
 
-            //response body
-//            PrintWriter writer = response.getWriter();
-//            writer.print("access token expired");
-
             //response status code
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
             //프론트측과 협의된 응답코드
             //프론트측에서 토큰이 만료되었들때 400이나 401 응답을 주어서 만료 되었을때
             //리프레시 토큰을 주고 재발급 받을 수 있도록 특정한 상태코드와 응답메세지 규약
+
+
+//            List<CustomException.ErrorDetail> errorDetail = Collections.singletonList(
+//                    new CustomException.ErrorDetail("token", "access", "expired")
+//            );
+//
+//            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED, errorDetail);
 
             return;
         }

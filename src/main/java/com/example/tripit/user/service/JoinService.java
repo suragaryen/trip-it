@@ -1,7 +1,7 @@
 package com.example.tripit.user.service;
 
+import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
-import com.example.tripit.error.InvalidInputException;
 import com.example.tripit.user.dto.JoinDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
@@ -34,9 +34,15 @@ public class JoinService {
         Boolean isNicknameExist = userRepository.existsByNickname(nickname);
 
         if (isEmailExist) {
-            throw new InvalidInputException("email", email, "1");
+            //throw new InvalidInputException("email", email, "1");
+
+
+            throw new CustomException(ErrorCode.USER_EMAIL_ALREADY_EXISTS
+                    //,(List<CustomException.ErrorDetail>) new CustomException.ErrorDetail("","","")
+                     );
         }else if(isNicknameExist){
-            throw new InvalidInputException("nickname", nickname, "2");
+            //throw new InvalidInputException("nickname", nickname, "2");
+            throw new CustomException((ErrorCode.USER_NICKNAME_ALREADY_EXISTS));
         }
 
 

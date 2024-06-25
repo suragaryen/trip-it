@@ -2,8 +2,8 @@ package com.example.tripit.user.jwt;
 
 import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.repository.RefreshRepository;
-import com.example.tripit.user.result.ResultCode;
-import com.example.tripit.user.result.ResultResponse;
+import com.example.tripit.result.ResultCode;
+import com.example.tripit.result.ResultResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -75,6 +75,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //60000L = 1분
         String access = jwtUtil.createJwt("access", email, role, 6000L);
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
+
 
         //Refresh 토큰 DB에 저장
         addRefreshEntity(email, refresh, 86400000L);

@@ -1,11 +1,12 @@
 package com.example.tripit.user.controller;
 
+import com.example.tripit.error.ErrorCode;
+import com.example.tripit.error.ErrorResponse;
 import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.jwt.JWTUtil;
 import com.example.tripit.user.repository.RefreshRepository;
-import com.example.tripit.user.result.ResultCode;
-import com.example.tripit.user.result.ResultResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.tripit.result.ResultCode;
+import com.example.tripit.result.ResultResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -14,19 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Controller
 @ResponseBody //RestController + Contoller + ResponseBody
@@ -50,7 +44,7 @@ public class ReissueController {
 
         //서비스단을 따로 만드는것을 추천
 
-            //get refresh token
+            //get refresh token by cookie
 //        String refresh = null;
 //        Cookie[] cookies = request.getCookies(); //쿠키 순회 후 refresh 변수가 있는지?
 //
@@ -72,10 +66,13 @@ public class ReissueController {
 
             //response status code
 //            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST); //응답은 프론트와 협업
-            ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"refresh null","", "");
+            //ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"refresh null","", "");
+
+
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         }
 
@@ -84,13 +81,13 @@ public class ReissueController {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
+            //리프레시 만료
 
             //response status code
-//            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST); //리프레시 또한 만료
-            ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"리프레시 또한 만료","", "");
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         }
 
@@ -100,11 +97,10 @@ public class ReissueController {
         if (!category.equals("refresh")) {
 
             //response status code
-//            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
-            ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"리프레시가 아님","", "");
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         }
 
@@ -112,16 +108,11 @@ public class ReissueController {
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         if (!isExist) {
 
-//            ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"","", "");
-//
-//            //response body
-//            return new ResponseEntity<>("db에 없음", HttpStatus.BAD_REQUEST);
-//
-
-            ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"db에 없음","", "");
+            //response status code
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         }
 
@@ -130,7 +121,8 @@ public class ReissueController {
         String role = jwtUtil.getRole(refresh);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
+       // String newAccess = jwtUtil.createJwt("access", username, role, 600000L);//10분
+        String newAccess = jwtUtil.createJwt("access", username, role, 10000L); //10초
 
         //Refresh Rotate
         //Reissue 엔트포인트에서 Refresh 토큰을 받아 Access 토큰 갱신 시 Refresh 토큰도 함께 갱신

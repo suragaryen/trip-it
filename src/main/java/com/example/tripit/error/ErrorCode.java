@@ -15,8 +15,9 @@ public enum ErrorCode {
     BAD_CREDENTIALS(400, "C005", "bad credentials"),
 
     // Member
-    MEMBER_NOT_EXIST(404, "M001", "member not exist"),
-    USER_EMAIL_ALREADY_EXISTS(400, "M002", "user email already exists"),
+    USER_EMAIL_ALREADY_EXISTS(400, "1", "user email already exists"),
+    USER_NICKNAME_ALREADY_EXISTS(400, "2", "user email already exists"),
+    USER_NOT_EXISTS(400, "2", "user not exists"),
     NO_AUTHORITY(403, "M003", "no authority"),
     NEED_LOGIN(401, "M004", "need login"),
     AUTHENTICATION_NOT_FOUND(401, "M005", "Security Context에 인증 정보가 없습니다."),
@@ -24,6 +25,8 @@ public enum ErrorCode {
 
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
+    ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
+    LOGGOUT_REQUEST(400, "2", "logout request"),
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid");
 
     private int status;

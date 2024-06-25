@@ -1,6 +1,8 @@
 package com.example.tripit.user.service;
 
-import com.example.tripit.error.InvalidInputException;
+
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
@@ -26,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // 이메일 형식 유효성 검사 (예시)
         if (!email.matches("[^@]+@[^\\.]+\\..+")) {
-            throw new InvalidInputException("email", email, "이메일의 형식이 맞지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
         }
         // DB에서 조회
         UserEntity userData = userRepository.findByEmail(email);
@@ -36,8 +38,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             // UserDetails에 담아서 return하면 AuthenticationManager가 검증함
             logger.info("Found user: " + userData.getEmail());
             return new CustomUserDetails(userData);
+
         } else if(userData == null) {
-            throw new InvalidInputException("email", email, "사용자를 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.USER_NOT_EXISTS);
         }
         return null;
     }

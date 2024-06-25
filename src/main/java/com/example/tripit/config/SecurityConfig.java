@@ -66,7 +66,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.184:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.104:3000"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -103,7 +103,7 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                 );
 
-
+        //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user").permitAll()

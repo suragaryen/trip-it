@@ -1,10 +1,7 @@
 package com.example.tripit.user.controller;
 
 import com.example.tripit.user.dto.JoinDTO;
-import com.example.tripit.user.result.ResultCode;
-import com.example.tripit.user.result.ResultResponse;
 import com.example.tripit.user.service.JoinService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,14 +24,14 @@ public class JoinController {
     @PostMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> joinProcessJson(@RequestBody JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
-        return (ResponseEntity<?>) ResponseEntity.ok();
+        return ResponseEntity.ok("회원가입이 성공적으로 완료 되었습니다. ");
     }
 
 
     @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> joinProcessForm(@ModelAttribute JoinDTO joinDTO) {
         joinService.joinProcess(joinDTO);
-        return (ResponseEntity<?>) ResponseEntity.ok();
+        return ResponseEntity.ok("회원가입이 성공적으로 완료 되었습니다. ");
     }
 
 }
