@@ -89,7 +89,7 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/myPage/{scheduleId}")
+    @GetMapping("/{scheduleId}")
     public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
