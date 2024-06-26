@@ -42,6 +42,4 @@ public class ResultResponse {
         return new ResultResponse(resultCode, email, access, refresh);
     }
 
-
-
 }

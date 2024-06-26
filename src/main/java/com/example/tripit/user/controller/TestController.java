@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -50,13 +51,14 @@ public class TestController {
 
 
     //@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "access")
-    //@PreAuthorize("hasRole('ROLE_USER')")
+
     //@CrossOrigin(origins = "http://172.16.1.97:3000", exposedHeaders = "access")
     @GetMapping("/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, HttpServletResponse response
     ) {
 
-        String email = customUserDetails.getUsername();
+        String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
         Integer userId = userRepository.findUserIdByEmail(email);
 
@@ -75,7 +77,5 @@ public class TestController {
         return new ResponseEntity<>(resultError, HttpStatus.UNAUTHORIZED);
 
     }
-
-
 
 }
