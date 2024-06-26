@@ -15,10 +15,9 @@ public class RefreshEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long user_id;
+    private Integer userId;
+    private String schedule_title;
 
-    private String email;
-    private String refresh;
-    private String expiration;
 
 }

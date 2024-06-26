@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
+
+
 @Controller
 @ResponseBody //RestController + Contoller + ResponseBody
 public class ReissueController {
@@ -60,7 +62,7 @@ public class ReissueController {
 
         // "refresh" 헤더의 값을 가져오기
         String refresh = request.getHeader("refresh");
-        System.out.println(refresh);
+
 
         if (refresh == null) {
 
@@ -68,6 +70,7 @@ public class ReissueController {
 //            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST); //응답은 프론트와 협업
             //ResultResponse result = ResultResponse.of(ResultCode.LOGGOUT_REQUEST,"refresh null","", "");
 
+            System.out.println("refresh is null");
 
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
@@ -83,6 +86,8 @@ public class ReissueController {
         } catch (ExpiredJwtException e) {
             //리프레시 만료
 
+            System.out.println("refresh expired");
+
             //response status code
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
@@ -95,6 +100,8 @@ public class ReissueController {
         String category = jwtUtil.getCategory(refresh);
 
         if (!category.equals("refresh")) {
+
+            System.out.println("not refresh");
 
             //response status code
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
@@ -111,6 +118,7 @@ public class ReissueController {
             //response status code
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
+            System.out.println("not in db");
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
@@ -121,17 +129,17 @@ public class ReissueController {
         String role = jwtUtil.getRole(refresh);
 
         //make new JWT
-       // String newAccess = jwtUtil.createJwt("access", username, role, 600000L);//10분
-        String newAccess = jwtUtil.createJwt("access", username, role, 10000L); //10초
+        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);//10분
+        //String newAccess = jwtUtil.createJwt("access", username, role, 10000L); //10초
 
         //Refresh Rotate
         //Reissue 엔트포인트에서 Refresh 토큰을 받아 Access 토큰 갱신 시 Refresh 토큰도 함께 갱신
         //주의점 : Rotate 되기 이전의 토큰을 가지고 서버측으로 가도 인증이 되기 때문에 서버측에서 발급했던 Refresh들을 기억한 뒤 블랙리스트 처리를 진행하는 로직을 작성해야 한다.
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        //String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshRepository.deleteByRefresh(refresh);
-        addRefreshEntity(username, newRefresh, 86400000L);
+        //refreshRepository.deleteByRefresh(refresh);
+        //addRefreshEntity(username, newRefresh, 86400000L);
 
         //response
         //response.setHeader("access", newAccess);
@@ -139,7 +147,8 @@ public class ReissueController {
 
         //바디로 전달
 
-        ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, newRefresh);
+        //ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, newRefresh);
+        ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, refresh);
 
 
         //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
