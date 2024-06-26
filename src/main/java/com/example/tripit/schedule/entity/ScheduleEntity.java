@@ -1,5 +1,6 @@
 package com.example.tripit.schedule.entity;
 
+import com.example.tripit.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +24,9 @@ public class ScheduleEntity {
     @Column(nullable = false)
     private String metro_id;
 
-    @Column(name = "user_id", nullable = false) //필드명을 user_id로 변경
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @Column(nullable = false)
     private LocalDate start_date;

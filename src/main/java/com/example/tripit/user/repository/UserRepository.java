@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
+public interface UserRepository extends JpaRepository<UserEntity, Long>{
 
     Boolean existsByEmail(String email);
     Boolean existsByNickname(String nickname);

@@ -71,7 +71,7 @@ public class CustomUserDetails  implements UserDetails {
         return true;
     }
 
-    public Long getUserId() {
-        return (long) userEntity.getUserId();
+    public Integer getUserId() {
+        return  userEntity.getUserId();
     }
 }

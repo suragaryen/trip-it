@@ -30,9 +30,9 @@ public class ScheduleService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest) throws Exception {
+    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest, Integer userId) throws Exception {
         ScheduleDto scheduleDto = scheduleRequest.getScheduleDto();
-
+        scheduleDto.setUserId(userId);
         try {
             //ModelMapper를 사용하여 DTO를 엔티티로 변환
             ScheduleEntity scheduleEntity = modelMapper.map(scheduleDto, ScheduleEntity.class);
@@ -40,9 +40,8 @@ public class ScheduleService {
             //엔티티 DB 저장
             scheduleRepository.save(scheduleEntity);
             Long scheduleId = scheduleEntity.getScheduleId();
-            Long userId = scheduleEntity.getUserId();
 
-            System.out.println("User ID from DTO: " + scheduleDto.getUserId());
+            System.out.println(userId);
 
             return saveDetailSchedule(scheduleId, userId,scheduleRequest);
 
@@ -53,7 +52,7 @@ public class ScheduleService {
         }
     }
 
-    public List<ScheduleDto> saveDetailSchedule(Long scheduleId, Long userId, ScheduleRequest scheduleRequest) {
+    public List<ScheduleDto> saveDetailSchedule(Long scheduleId, Integer userId, ScheduleRequest scheduleRequest) {
         List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
 
         for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
@@ -70,7 +69,7 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> detailSchedule(Long userId, Long scheduleId) {
+    public ResponseEntity<?> detailSchedule(Integer userId, Long scheduleId) {
         // 1. ScheduleEntity 조회
         Optional<ScheduleEntity> scheduleEntityOpt = scheduleRepository.findByUserIdAndScheduleId(userId, scheduleId);
         if (scheduleEntityOpt.isEmpty()) {

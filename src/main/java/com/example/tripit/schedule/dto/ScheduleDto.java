@@ -20,7 +20,7 @@ public class ScheduleDto {
     private String metro_id;
 
     @JsonProperty("user_id")
-    private Long userId;
+    private Integer userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("start_date")
