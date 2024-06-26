@@ -1,5 +1,6 @@
 package com.example.tripit.schedule.controller;
 
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleRequest;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -85,6 +87,8 @@ public class ScheduleController {
 
             // 클라이언트에게 전달할 에러 메시지
             String errorMessage = "일정 저장 실패: " + e.getMessage();
+            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }

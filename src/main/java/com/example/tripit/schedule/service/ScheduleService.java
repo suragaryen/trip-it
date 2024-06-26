@@ -64,6 +64,8 @@ public class ScheduleService {
         }
         List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
 
+        //System.out.println(scheduleEntities);
+
         return scheduleEntities.stream()
                 .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
                 .collect(Collectors.toList());

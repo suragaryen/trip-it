@@ -27,7 +27,10 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
     ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
     LOGGOUT_REQUEST(400, "2", "logout request"),
-    ACCESS_TOKEN_INVALID(400, "A002", "access token invalid");
+    ACCESS_TOKEN_INVALID(400, "A002", "access token invalid"),
+
+    //Schedule
+    SCHEDULE_FAIL(400,"2","스케쥴 로드하는데 실패");
 
     private int status;
     private final String code;
