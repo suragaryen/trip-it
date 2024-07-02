@@ -30,7 +30,7 @@ public enum ErrorCode {
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid"),
 
     //Schedule
-    SCHEDULE_FAIL(400,"2","스케쥴 로드하는데 실패");
+    NO_CONTENT(204, "N001", "No content");
 
     private int status;
     private final String code;

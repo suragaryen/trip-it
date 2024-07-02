@@ -48,12 +48,6 @@ public class ScheduleController {
             contentTypeId = "12";
         }
 
-//        String username = customUserDetails.getUsername();
-//
-//        System.out.println("11111111");
-//        System.out.println(username);
-
-
         //apiConnection 메서드 호출 및 반환
         return apiConnection.cultureFacilityApi(metroId, pageNo, contentTypeId);
     }
@@ -93,13 +87,13 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/{scheduleId}")
-    public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
-        String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
-        System.out.println(userId);
-        return scheduleService.detailSchedule(userId, scheduleId);
-    }
+//    @GetMapping("/{scheduleId}")
+//    public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
+//        String email = customUserDetails.getUsername();
+//        Integer userId = userRepository.findUserIdByEmail(email);
+//        System.out.println(userId);
+//        return scheduleService.detailSchedule(userId, scheduleId);
+//    }
 
 
 }

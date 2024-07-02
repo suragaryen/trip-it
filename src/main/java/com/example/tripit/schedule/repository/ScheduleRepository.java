@@ -16,7 +16,6 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
     @Override
     ScheduleEntity save(ScheduleEntity scheduleEntity);
 
-
     @Query("SELECT s FROM ScheduleEntity s WHERE s.user.id = :userId")
     List<ScheduleEntity> findByUserId(Integer userId);
 

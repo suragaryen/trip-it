@@ -1,5 +1,7 @@
 package com.example.tripit.schedule.service;
 
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -15,6 +18,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.tripit.error.ErrorCode.NO_CONTENT;
 
 @Service
 public class ApiConnection {
@@ -70,13 +75,12 @@ public class ApiConnection {
                     errorResponse.append(line);
                 }
                 rd.close();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api 연결 실패: " + errorResponse.toString());
+                throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
             }
 
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println("에러");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예외: " + e.getMessage());
+            throw new CustomException(NO_CONTENT);
         } finally {
             if (connection != null) {
                 connection.disconnect(); //HTTP 연결 닫기
@@ -86,7 +90,6 @@ public class ApiConnection {
 
     public ResponseEntity<Object> cultureFacilityApi(String metroId, String pageNo, String contentTypeId)  {
         int numOfRows = 8; //가져올 갯수
-        //int pageNo = 1; //페이지 넘버
 
         //URL 생성
         String apiUrl = urlEndPoint + "areaBasedSyncList1?serviceKey=" + serviceKey + "&numOfRows=" + numOfRows
