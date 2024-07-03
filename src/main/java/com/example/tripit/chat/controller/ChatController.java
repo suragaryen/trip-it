@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,8 @@ import com.example.tripit.chat.entity.ChatRoom;
 import com.example.tripit.chat.service.ChatJoinService;
 import com.example.tripit.chat.service.ChatMessageService;
 import com.example.tripit.chat.service.ChatRoomService;
+import com.example.tripit.user.dto.CustomUserDetails;
+import com.example.tripit.user.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 @Controller
@@ -43,6 +46,8 @@ public class ChatController {
     @Autowired
     private ChatJoinService chatJoinService;
 
+    @Autowired
+    private UserRepository userRepository;
     
     @Autowired
     public ChatController(ChatRoomService chatRoomService) {
@@ -70,11 +75,19 @@ public class ChatController {
         return chatRooms;
     }
 
+    
+    
     // 채팅방 만들기	
     @PostMapping(value = "/createChatRoom", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createChatRoom(@RequestBody ChatRoomDto chatRoomDto,
-                                            HttpSession session) {
-    	
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    										) {
+    	// 유저정보 시큐리티 확인
+    	String email = customUserDetails.getUsername();//email
+        String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
+        Integer userId = userRepository.findUserIdByEmail(email);
+         			
+        System.out.println(userId);
     	
     	 // postId로 이미 존재하는 채팅방이 있는지 확인
         ChatRoom existingChatRoom = chatRoomService.findByPostId(chatRoomDto.getPostId());
@@ -90,7 +103,7 @@ public class ChatController {
         
         
         // 채팅방에 입장하는 URL 생성 (예시로 http://localhost:8080/chat/joinChatRoom/{roomId})
-        String enterChatRoomUrl = "http://localhost:8080/chat/joinChatRoom/" + chatRoom.getRoomId();
+//        String enterChatRoomUrl = "http://localhost:8080/chat/joinChatRoom/" + chatRoom.getRoomId();
         
         
 //
