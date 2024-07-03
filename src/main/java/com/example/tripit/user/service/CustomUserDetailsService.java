@@ -1,17 +1,18 @@
 package com.example.tripit.user.service;
 
 
-import com.example.tripit.error.CustomException;
-import com.example.tripit.error.ErrorCode;
-import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.entity.UserEntity;
-import com.example.tripit.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
+import com.example.tripit.user.dto.CustomUserDetails;
+import com.example.tripit.user.entity.UserEntity;
+import com.example.tripit.user.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

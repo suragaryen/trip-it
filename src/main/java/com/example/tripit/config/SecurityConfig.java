@@ -1,12 +1,7 @@
 package com.example.tripit.config;
 
-import com.example.tripit.user.jwt.JWTFilter;
-import com.example.tripit.user.jwt.JWTUtil;
-import com.example.tripit.user.jwt.LoginFilter;
-import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
-import com.example.tripit.user.oAuth2.CustomSuccessHandler;
-import com.example.tripit.user.repository.RefreshRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +15,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Collections;
+import com.example.tripit.user.jwt.JWTFilter;
+import com.example.tripit.user.jwt.JWTUtil;
+import com.example.tripit.user.jwt.LoginFilter;
+import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
+import com.example.tripit.user.oAuth2.CustomSuccessHandler;
+import com.example.tripit.user.repository.RefreshRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
