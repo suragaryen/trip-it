@@ -36,7 +36,7 @@ public class ScheduleService {
         try {
             //ModelMapper를 사용하여 DTO를 엔티티로 변환
             ScheduleEntity scheduleEntity = modelMapper.map(scheduleDto, ScheduleEntity.class);
-            scheduleEntity.setRegister_date(LocalDate.now());
+            scheduleEntity.setRegisterDate(LocalDate.now());
             //엔티티 DB 저장
             scheduleRepository.save(scheduleEntity);
             Long scheduleId = scheduleEntity.getScheduleId();
@@ -57,7 +57,7 @@ public class ScheduleService {
 
         for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
             DetailScheduleEntity detailScheduleEntity = modelMapper.map(detailScheduleDto, DetailScheduleEntity.class);
-            detailScheduleEntity.setRegister_time(LocalDateTime.now());
+            detailScheduleEntity.setRegisterTime(LocalDateTime.now());
             detailScheduleEntity.setScheduleId(scheduleId);
             //엔티티 DB 저장
             detailScheduleRepository.save(detailScheduleEntity);

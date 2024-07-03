@@ -17,25 +17,25 @@ public class ScheduleDto {
     private Long scheduleId;
 
     @JsonProperty("metro_id")
-    private String metro_id;
+    private String metroId;
 
     @JsonProperty("user_id")
     private Integer userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("start_date")
-    private LocalDate start_date;
+    private LocalDate startDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("end_date")
-    private LocalDate end_date;
+    private LocalDate endDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     @JsonProperty("register_date")
-    private LocalDate register_date;
+    private LocalDate registerDate;
 
     @JsonProperty("schedule_title")
-    private String schedule_title;
+    private String scheduleTitle;
 
 
 }

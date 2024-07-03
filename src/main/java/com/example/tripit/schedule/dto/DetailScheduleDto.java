@@ -20,17 +20,22 @@ public class DetailScheduleDto {
     @JsonProperty("schedule_id")
     private Long scheduleId;
 
-    private int schedule_order;
+    @JsonProperty("schedule_order")
+    private int scheduleOrder;
 
+    @JsonProperty("start_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
-    private LocalTime start_time;
+    private LocalTime startTime;
 
+    @JsonProperty("end_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
-    private LocalTime end_time;
+    private LocalTime endTime;
 
-    private String content_id;
+    @JsonProperty("content_id")
+    private String contentId;
 
+    @JsonProperty("register_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime register_time;
+    private LocalDateTime registerTime;
 
 }

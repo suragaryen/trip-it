@@ -20,23 +20,24 @@ public class DetailScheduleEntity {
 
     @Id //PK 값 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //PK 값 DB에서 자동 생성
-    private Long schedule_detail_id;
+    @Column(name = "schedule_detail_id")
+    private Long scheduleDetailId;
 
     @Column(name = "schedule_id")
     private Long scheduleId;
 
-    @Column(nullable = false)
-    private int schedule_order;
+    @Column(nullable = false, name = "schedule_order")
+    private int scheduleOrder;
 
-    @Column(nullable = false)
-    private LocalTime start_time;
+    @Column(nullable = false, name = "start_time")
+    private LocalTime startTime;
 
-    @Column(nullable = false)
-    private LocalTime end_time;
+    @Column(nullable = false, name = "end_time")
+    private LocalTime endTime;
 
-    @Column(nullable = false)
-    private String content_id;
+    @Column(nullable = false, name = "content_id")
+    private String contentId;
 
-    @Column(nullable = false)
-    private LocalDateTime register_time;
+    @Column(nullable = false, name = "register_time")
+    private LocalDateTime registerTime;
 }
