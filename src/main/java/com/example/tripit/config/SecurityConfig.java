@@ -106,7 +106,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**").permitAll()
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**", "/mypage/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());

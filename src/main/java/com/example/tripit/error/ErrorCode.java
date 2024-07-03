@@ -32,6 +32,8 @@ public enum ErrorCode {
     //Schedule
     NO_CONTENT(204, "N001", "No content");
 
+    //MyPage
+
     private int status;
     private final String code;
     private final String message;

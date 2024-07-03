@@ -44,7 +44,8 @@ public class UserEntity {
     //영속화란 객체를 데이터베이스가 이해할 수 있는 형태로 변환하고 저장하는 것.
 
     private String social_type;
-    //private String userpic;
+    private String userpic;
+
     //private int reportCount;
     //private Timestamp endDate;
 }
