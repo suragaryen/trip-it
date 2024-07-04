@@ -79,7 +79,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setRole("ROLE_USER");
             userEntity.setBirth(birth);
             userEntity.setGender(oAuth2Response.getGender());
-            userEntity.setSocial_type(registrationId);
+            userEntity.setSocialType(registrationId);
 
             userRepository.save(userEntity);
 

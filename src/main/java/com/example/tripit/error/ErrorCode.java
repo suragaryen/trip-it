@@ -26,10 +26,13 @@ public enum ErrorCode {
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
     ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
-    LOGGOUT_REQUEST(400, "2", "logout request"),
+    LOGOUT_REQUEST(400, "2", "logout request"),
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid");
 
+
+    //Community
     private int status;
     private final String code;
     private final String message;
+
 }

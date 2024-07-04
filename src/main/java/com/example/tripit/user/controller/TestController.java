@@ -32,13 +32,6 @@ public class TestController {
     }
 
 
-
-    @GetMapping(path = "/{email}")
-    public UserEntity helloWorld(@PathVariable String email) {
-
-        return userRepository.findByEmail(email);
-   }
-
     @GetMapping("/test")
     @ResponseBody
     public String test(HttpServletRequest request, HttpServletResponse response) {
@@ -50,11 +43,7 @@ public class TestController {
     }
 
 
-    //@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "access")
-
-    //@CrossOrigin(origins = "http://172.16.1.97:3000", exposedHeaders = "access")
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, HttpServletResponse response
     ) {
 
@@ -62,10 +51,12 @@ public class TestController {
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
         Integer userId = userRepository.findUserIdByEmail(email);
 
+
        //토큰 살아있을 때 유저 정보
         ResultResponse result = ResultResponse.of(ResultCode.GET_MY_INFO_SUCCESS, email, userId, role);
         //토큰 만료 되었을 때
         ResultResponse resultError = ResultResponse.of(ResultCode.ACCESS_TOKEN_EXPIRED,email, userId, role);
+
 
         if (email != null) {
             System.out.println(email);

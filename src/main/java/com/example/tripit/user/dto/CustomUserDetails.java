@@ -47,6 +47,12 @@ public class CustomUserDetails  implements UserDetails {
         return userEntity.getEmail();
     }
 
+    public Integer getUserId() {
+        System.out.println("userDetail" + userEntity.getUserId());
+        return userEntity.getUserId();
+    }
+
+
     @Override
     public boolean isAccountNonExpired() {
 
@@ -71,7 +77,5 @@ public class CustomUserDetails  implements UserDetails {
         return true;
     }
 
-    public Integer getUserId() {
-        return  userEntity.getUserId();
-    }
 }
+

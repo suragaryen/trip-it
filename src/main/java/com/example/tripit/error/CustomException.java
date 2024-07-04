@@ -30,6 +30,7 @@ public class CustomException extends RuntimeException {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.errors = errors;
+        //this.errors = new ArrayList<>(); // 기본값으로 빈 리스트를 설정
     }
 
 

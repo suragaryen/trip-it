@@ -1,10 +1,7 @@
 package com.example.tripit.user.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +12,15 @@ public class RefreshEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
-    private Integer userId;
-    private String schedule_title;
+    @Column(name = "id")
+    private Integer id;
 
+    @Column(name = "refresh", nullable = false, length = 500)
+    private String refresh;
+
+    @Column(name = "expiration", nullable = false, length = 50)
+    private String expiration;
+
+    private String email;
 
 }
