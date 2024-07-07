@@ -70,4 +70,20 @@ public class CommunityController {
 
         return ResponseEntity.ok(communityDTOS);
     }
+
+    @GetMapping("/communityDetail/{userId}")
+    public ResponseEntity<?> CommunityDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                            @PathVariable int userId) {
+
+        String email = customUserDetails.getUsername();//email
+        //Integer userId = userRepository.findUserIdByEmail(email);
+
+        //System.out.println(postEntity.toString());
+
+        List<CommunityDTO> communityDTOS = communityService.loadCommunityList();
+
+        //System.out.println(communityDTOS.toString());
+
+        return ResponseEntity.ok(communityDTOS);
+    }
 }

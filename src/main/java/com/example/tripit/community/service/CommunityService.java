@@ -55,4 +55,31 @@ public class CommunityService {
                 })
                 .collect(Collectors.toList());
     }
+
+//    public List<CommunityDTO> loadCommunityById(userId) {
+//        List<PostEntity> posts = postRepository.findAll();
+//        return posts.stream()
+//                .map(post -> {
+//                    UserEntity user = post.getUser();
+//                    ScheduleEntity schedule = post.getSchedule();
+//
+//                    return new CommunityDTO(
+//                            post.getPostId(),
+//                            post.getPostTitle(),
+//                            post.getPostContent(),
+//                            post.getPersonnel(),
+//                            post.getViewCount(),
+//                            post.getExposureStatus(),
+//                            post.getPostPic(),
+//                            user.getUserId(),
+//                            user.getNickname(),
+//                            user.getGender(),
+//                            user.getBirth(),
+//                            schedule.getMetro_id(),
+//                            schedule.getStart_date(),
+//                            schedule.getEnd_date()
+//                    );
+//                })
+//                .collect(Collectors.toList());
+//    }
 }
