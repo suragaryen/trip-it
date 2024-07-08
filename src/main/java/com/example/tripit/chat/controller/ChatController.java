@@ -27,8 +27,6 @@ import com.example.tripit.chat.service.ChatMessageService;
 import com.example.tripit.chat.service.ChatRoomService;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.repository.UserRepository;
-
-import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/chat")
 @RestController
