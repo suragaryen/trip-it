@@ -70,7 +70,7 @@ public class ScheduleController {
         //CustomUserDetails에서 userId 추출
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
-
+        System.out.println("저장");
         try {
             List<ScheduleDto> scheduleDtos = scheduleService.saveSchedule(scheduleRequest, userId);
 

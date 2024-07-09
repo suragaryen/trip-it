@@ -56,6 +56,7 @@ public class MyPageController {
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
         List<ScheduleDto> scheduleDtos = myPageService.findScheduleList(userId);
+        System.out.println(scheduleDtos);
         return ResponseEntity.ok(scheduleDtos);
     }
 
@@ -63,6 +64,7 @@ public class MyPageController {
     public ResponseEntity<?> schedulesDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> scheduleIds){
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
+        System.out.println("삭제요청");
         try {
             List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
             return ResponseEntity.ok(scheduleDtos);
