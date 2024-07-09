@@ -12,6 +12,8 @@ import com.example.tripit.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +36,14 @@ public class MyPageService {
     @Autowired
     private ModelMapper modelMapper;
 
+    //userId 엔티티 찾기
     public Optional<ProfileDTO> getUserDTOById(Integer userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
 
         return userEntityOptional.map(this::mapToProfileDTO);
     }
 
+    //user엔티티를 DTO로 변환하기
     private ProfileDTO mapToProfileDTO(UserEntity userEntity) {
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO.setNickname(userEntity.getNickname());
@@ -61,6 +65,7 @@ public class MyPageService {
         return profileDTO;
     }
 
+    //프로필 수정
     @Transactional
     public ProfileDTO profileUpdate(ProfileDTO profileDTO, Integer userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
@@ -89,6 +94,27 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<ScheduleDto> schedulesDelete(List<Long> scheduleIds, Integer userId) {
+        List<ScheduleEntity> schedules = scheduleRepository.findAllById(scheduleIds);
+
+        if (schedules.size() != scheduleIds.size()) {
+            throw new IllegalArgumentException("일정을 찾을 수 없음");
+        }
+
+        if (scheduleIds.size() == 1) {
+            Long scheduleId = scheduleIds.get(0);
+            scheduleRepository.deleteById(scheduleId);
+        }
+
+        scheduleRepository.deleteAllById(scheduleIds);
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
+
+        return scheduleEntities.stream()
+                .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
+                .collect(Collectors.toList());
+    }
+
 
     //상세 일정
     public List<DetailScheduleDto> detailSchedule(Long scheduleId) {
@@ -99,6 +125,14 @@ public class MyPageService {
         return detailSchedulesEntities.stream()
                 .map(detailScheduleEntity -> modelMapper.map(detailScheduleEntity, DetailScheduleDto.class))
                 .collect(Collectors.toList());
+    }
+
+    public void scheduleDelete(Long scheduleId) {
+        Optional<ScheduleEntity> scheduleEntity = scheduleRepository.findById(scheduleId);
+        if (scheduleEntity.isEmpty()) {
+            throw new IllegalArgumentException("일정을 찾을 수 없음");
+        }
+        scheduleRepository.deleteById(scheduleId);
     }
 
 }

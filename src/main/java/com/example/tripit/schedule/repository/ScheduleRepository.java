@@ -21,5 +21,6 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     @Query("SELECT s FROM ScheduleEntity s WHERE s.user.id = :userId AND s.scheduleId = :scheduleId")
     Optional<ScheduleEntity> findByUserIdAndScheduleId(@Param("userId")Integer userId, @Param("scheduleId") Long scheduleId);
+
 }
 

@@ -42,7 +42,6 @@ public class MyPageController {
         }
     }
 
-//    /mypage/profile/update
     @PostMapping("profile/update")
     public ResponseEntity<?> profileUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProfileDTO profileDTO) {
         String email = customUserDetails.getUsername();
@@ -60,13 +59,40 @@ public class MyPageController {
         return ResponseEntity.ok(scheduleDtos);
     }
 
+    @PostMapping("schedules/delete-schedules") //일정 복수 삭제
+    public ResponseEntity<?> schedulesDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> scheduleIds){
+        String email = customUserDetails.getUsername();
+        Integer userId = userRepository.findUserIdByEmail(email);
+        try {
+            List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
+            return ResponseEntity.ok(scheduleDtos);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("schedules/{scheduleId}") //상세 일정
     public ResponseEntity<?> detailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                             @PathVariable Long scheduleId) {
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
         List<DetailScheduleDto> detailScheduleDtos = myPageService.detailSchedule(scheduleId);
+        System.out.println(detailScheduleDtos);
         return ResponseEntity.ok(detailScheduleDtos);
     }
+
+    @DeleteMapping("schedules/{scheduleId}")
+    public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {
+        try {
+            myPageService.scheduleDelete(scheduleId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 일정을 찾을 수 없을 때 NOT_FOUND 상태 코드 반환
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }

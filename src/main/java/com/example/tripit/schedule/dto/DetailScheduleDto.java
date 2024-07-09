@@ -15,7 +15,9 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailScheduleDto {
-    private Long schedule_detail_id;
+
+    @JsonProperty("schedule_detail_id")
+    private Long scheduleDetailId;
 
     @JsonProperty("schedule_id")
     private Long scheduleId;

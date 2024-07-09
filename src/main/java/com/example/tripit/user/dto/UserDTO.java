@@ -26,7 +26,7 @@ public class UserDTO {
     private String birth;
     private String gender;
 
-    private String intro;
+    private String userIntro;
 
     private String role;
 
