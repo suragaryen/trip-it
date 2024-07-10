@@ -4,7 +4,7 @@ import com.example.tripit.mypage.service.MyPageService;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.dto.ProfileDTO;
+import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,23 +31,43 @@ public class MyPageController {
     }
 
     @GetMapping("profile")
-    public ResponseEntity<?> profile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
-        Optional<ProfileDTO> profileDTOOptional = myPageService.getUserDTOById(userId);
-        if (profileDTOOptional.isPresent()) {
-            return ResponseEntity.ok(profileDTOOptional.get());
+        Optional<UserDTO> userDTOOptionalDTOOptional = myPageService.getUserDTOById(userId);
+        if (userDTOOptionalDTOOptional.isPresent()) {
+            return ResponseEntity.ok(userDTOOptionalDTOOptional.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
 
     @PostMapping("profile/update")
-    public ResponseEntity<?> profileUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
         Integer userId = userRepository.findUserIdByEmail(email);
-        profileDTO = myPageService.profileUpdate(profileDTO, userId);
-        return ResponseEntity.ok(profileDTO);
+        userDTO = myPageService.profileUpdate(userDTO, userId);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("personal")
+    public ResponseEntity<?> getPersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String email = customUserDetails.getUsername();
+        Integer userId = userRepository.findUserIdByEmail(email);
+        Optional<UserDTO> userDTOOptionalDTOOptional = myPageService.getUserDTOById(userId);
+        if (userDTOOptionalDTOOptional.isPresent()) {
+            return ResponseEntity.ok(userDTOOptionalDTOOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    @PostMapping("personal/update")
+    public ResponseEntity<?> updatePersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
+        String email = customUserDetails.getUsername();
+        Integer userId = userRepository.findUserIdByEmail(email);
+        userDTO = myPageService.personalUpdate(userDTO, userId);
+        return ResponseEntity.ok(userDTO);
     }
 
 

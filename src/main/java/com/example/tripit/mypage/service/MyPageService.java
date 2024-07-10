@@ -6,14 +6,13 @@ import com.example.tripit.schedule.entity.DetailScheduleEntity;
 import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.schedule.repository.DetailScheduleRepository;
 import com.example.tripit.schedule.repository.ScheduleRepository;
-import com.example.tripit.user.dto.ProfileDTO;
+import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +35,24 @@ public class MyPageService {
     @Autowired
     private ModelMapper modelMapper;
 
-    //userId 엔티티 찾기
-    public Optional<ProfileDTO> getUserDTOById(Integer userId) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-        return userEntityOptional.map(this::mapToProfileDTO);
+    public MyPageService(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+
+    //userId 엔티티 찾기
+    public Optional<UserDTO> getUserDTOById(Integer userId) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+        return userEntityOptional.map(this::mapToUserDTO);
     }
 
     //user엔티티를 DTO로 변환하기
-    private ProfileDTO mapToProfileDTO(UserEntity userEntity) {
-        ProfileDTO profileDTO = new ProfileDTO();
-        profileDTO.setNickname(userEntity.getNickname());
+    private UserDTO mapToUserDTO(UserEntity userEntity) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setNickname(userEntity.getNickname()); //닉네임
         String userPic = userEntity.getUserpic();
         String intro = userEntity.getIntro();
 
@@ -58,32 +64,59 @@ public class MyPageService {
             intro = "";
         }
 
-        profileDTO.setIntro(intro);
-        profileDTO.setUserpic(userPic);
-        profileDTO.setGender(userEntity.getGender());
+        userDTO.setUserIntro(intro); //자기소개
+        userDTO.setUserpic(userPic); //사진
+        userDTO.setGender(userEntity.getGender()); //성별
+        userDTO.setEmail(userEntity.getEmail()); //이메일
+        userDTO.setPassword(userEntity.getPassword()); //비밀번호
+        userDTO.setUsername(userEntity.getUsername()); //이름
+        userDTO.setBirth(userEntity.getBirth());
 
-        return profileDTO;
+        return userDTO;
     }
 
     //프로필 수정
     @Transactional
-    public ProfileDTO profileUpdate(ProfileDTO profileDTO, Integer userId) {
+    public UserDTO profileUpdate(UserDTO userDTO, Integer userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
 
             //엔티티의 필드 업데이트
-            userEntity.setNickname(profileDTO.getNickname());
-            userEntity.setIntro(profileDTO.getIntro());
-            userEntity.setUserpic(profileDTO.getUserpic());
+            userEntity.setNickname(userDTO.getNickname());
+            userEntity.setIntro(userDTO.getUserIntro());
+            userEntity.setUserpic(userDTO.getUserpic());
+
             //Dirty Checking
 
             //엔티티를 DTO로 변환하여 반환
-            return mapToProfileDTO(userEntity);
+            return mapToUserDTO(userEntity);
         } else {
             throw new EntityNotFoundException("User not found with id: " + userId);
         }
     }
+
+    //개인정보 수정
+    @Transactional
+    public UserDTO personalUpdate(UserDTO userDTO, Integer userId) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+
+            //엔티티의 필드 업데이트
+            //userEntity.setPassword(userDTO.getPassword());
+            userEntity.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+
+            //Dirty Checking
+
+            //엔티티를 DTO로 변환하여 반환
+            return mapToUserDTO(userEntity);
+        } else {
+            throw new EntityNotFoundException("User not found with id: " + userId);
+        }
+    }
+
+
 
     //전체 일정 목록
     public List<ScheduleDto> findScheduleList(Integer userId) {
