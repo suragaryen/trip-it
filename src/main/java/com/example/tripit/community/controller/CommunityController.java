@@ -95,11 +95,13 @@ public class CommunityController {
         return ResponseEntity.ok(communityDTOS);
     }
 
-//    @PostMapping("/communityDetail/{userId}/{postId}")
-//    public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId) {
-//
-//        List<CommunityDTO> communityDTOS = communityService.getPostsByUserIdAndPostId(userId,postId);
-//
-//        return ResponseEntity.ok("ok");
-//    }
+    @PostMapping("/communityDetail/{userId}/{postId}")
+    public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId) {
+
+        List<CommunityDTO> detail = communityService.loadCommunityList(userId, postId);
+
+        System.out.println(detail);
+
+        return ResponseEntity.ok(detail);
+    }
 }

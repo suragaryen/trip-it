@@ -43,7 +43,9 @@ public class UserEntity {
 
     @Column(name="social_type")
     private String socialType;
-    //private String userpic;
+
+    @Column(name="userpic")
+    private String userpic;
     //private int reportCount;
     //private Timestamp endDate;
 }
