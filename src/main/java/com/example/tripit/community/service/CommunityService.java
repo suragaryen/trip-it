@@ -50,6 +50,7 @@ public class CommunityService {
                             user.getNickname(),
                             user.getGender(),
                             user.getBirth(),
+                            user.getUserpic(),
                             schedule.getMetroId(),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -58,42 +59,35 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
-//    public List<CommunityDTO> loadCommunityDetail(long userId, long postId) {
-//        List<PostEntity> posts = postRepository.findByUserIdAndPostId(userId, postId);
-//
-//
-//
-//
-//        return posts.stream()
-//                .map(post -> {
-//                    UserEntity user = post.getUser();
-//                    ScheduleEntity schedule = post.getSchedule();
-//
-//                    return new CommunityDTO(
-//                            post.getPostId(),
-//                            post.getPostTitle(),
-//                            post.getPostContent(),
-//                            post.getPersonnel(),
-//                            post.getViewCount(),
-//                            post.getExposureStatus(),
-//                            post.getPostPic(),
-//                            user.getUserId(),
-//                            user.getNickname(),
-//                            user.getGender(),
-//                            user.getBirth(),
-//                            schedule.getMetro_id(),
-//                            schedule.getStart_date(),
-//                            schedule.getEnd_date()
-//                    );
-//                })
-//                .collect(Collectors.toList());
-//    }
+    public List<CommunityDTO> loadCommunityList(Long userId, Long postId) {
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
 
-//    public List<CommunityDTO> getPostsByUserIdAndPostId(long userId, long postId) {
-//        List<CommunityDTO> communityDTOS = postRepository.findByUserIdAndPostId(userId, postId);
-//
-//        System.out.println(communityDTOS.toString());
-//
-//        return postRepository.findByUserIdAndPostId(userId, postId);
-//    }
+        List<PostEntity> posts = postRepository.findByUserIdAndPostId(user, postId);
+        return posts.stream()
+                .map(post -> {
+                    UserEntity userEntity = post.getUserId();
+                    ScheduleEntity schedule = post.getScheduleId();
+
+                    return new CommunityDTO(
+                            post.getPostId(),
+                            post.getPostTitle(),
+                            post.getPostContent(),
+                            post.getPersonnel(),
+                            post.getViewCount(),
+                            post.getExposureStatus(),
+                            post.getPostPic(),
+                            userEntity.getUserId(),
+                            userEntity.getNickname(),
+                            userEntity.getGender(),
+                            userEntity.getBirth(),
+                            userEntity.getUserpic(),
+                            schedule.getMetroId(),
+                            schedule.getStartDate(),
+                            schedule.getEndDate()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
 }

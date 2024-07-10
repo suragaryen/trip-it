@@ -18,6 +18,7 @@ public class CommunityDTO {
     private String nickname;
     private String gender;
     private String birth;
+    private String userPic;
 
     //Schedule
     private LocalDate startDate;
@@ -35,7 +36,7 @@ public class CommunityDTO {
 
     public CommunityDTO(Long postId, String postTitle, String postContent, Short personnel,
                         Integer viewCount, Boolean exposureStatus, String postPic, long userId,
-                        String nickname, String gender, String birth,
+                        String nickname, String gender, String birth, String userPic,
                         String metroId, LocalDate startDate, LocalDate endDate) {
         this.postId = postId;
         this.postTitle = postTitle;
@@ -48,6 +49,7 @@ public class CommunityDTO {
         this.nickname = nickname;
         this.gender = gender;
         this.birth = birth;
+        this.userPic = userPic;
         this.metroId = metroId;
         this.startDate = startDate;
         this.endDate = endDate;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
+public interface UserRepository extends JpaRepository<UserEntity, Long>{
 
     Boolean existsByEmail(String email);
     Boolean existsByNickname(String nickname);

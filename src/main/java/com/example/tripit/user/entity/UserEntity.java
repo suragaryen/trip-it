@@ -43,6 +43,7 @@ public class UserEntity {
 
     @Column(name="social_type")
     private String socialType;
+
     private String userpic;
 
     //private int reportCount;
