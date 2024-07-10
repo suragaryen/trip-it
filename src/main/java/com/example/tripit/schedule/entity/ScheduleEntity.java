@@ -21,23 +21,23 @@ public class ScheduleEntity {
     @Column(name = "schedule_id")
     private Long scheduleId;
 
-    @Column(nullable = false)
-    private String metro_id;
+    @Column(nullable = false, name = "metro_id")
+    private String metroId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @Column(nullable = false)
-    private LocalDate start_date;
+    @Column(nullable = false, name = "start_date")
+    private LocalDate startDate;
 
-    @Column(nullable = false)
-    private LocalDate end_date;
+    @Column(nullable = false, name = "end_date")
+    private LocalDate endDate;
 
-    @Column(nullable = false)
-    private LocalDate register_date;
+    @Column(nullable = false, name = "register_date")
+    private LocalDate registerDate;
 
-    @Column(nullable = false)
-    private String schedule_title;
+    @Column(nullable = false, name = "schedule_title")
+    private String scheduleTitle;
 
 }

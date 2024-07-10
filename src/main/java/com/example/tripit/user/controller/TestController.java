@@ -32,15 +32,15 @@ public class TestController {
     }
 
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String test(HttpServletRequest request, HttpServletResponse response) {
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("test cont " + username);
-
-        return username;
-    }
+//    @GetMapping("/test")
+//    @ResponseBody
+//    public String test(HttpServletRequest request, HttpServletResponse response) {
+//
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        System.out.println("test cont " + username);
+//
+//        return username;
+//    }
 
 
     @GetMapping("/user")
@@ -49,7 +49,7 @@ public class TestController {
 
         String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        long userId = userRepository.findUserIdByEmail(email);
 
 
        //토큰 살아있을 때 유저 정보

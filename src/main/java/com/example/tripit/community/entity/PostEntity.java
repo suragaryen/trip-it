@@ -8,13 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@Entity(name="post")
+@Entity
+@Table(name="post")
 public class PostEntity {
 
     @Id
@@ -54,10 +53,10 @@ public class PostEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")
-    private ScheduleEntity schedule;
+    private ScheduleEntity scheduleId;
 
 }

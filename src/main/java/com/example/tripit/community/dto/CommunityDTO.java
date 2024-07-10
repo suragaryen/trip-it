@@ -14,15 +14,15 @@ import java.time.LocalDate;
 public class CommunityDTO {
 
     //User
-    private Integer userId;
+    private long userId;
     private String nickname;
     private String gender;
     private String birth;
 
     //Schedule
-    private LocalDate start_date;
-    private LocalDate end_date;
-    private String metro_id;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String metroId;
 
     //Post
     private Long postId;
@@ -34,9 +34,9 @@ public class CommunityDTO {
     private Integer viewCount;
 
     public CommunityDTO(Long postId, String postTitle, String postContent, Short personnel,
-                        Integer viewCount, Boolean exposureStatus, String postPic,Integer userId,
+                        Integer viewCount, Boolean exposureStatus, String postPic, long userId,
                         String nickname, String gender, String birth,
-                        String metro_id, LocalDate startDate, LocalDate endDate) {
+                        String metroId, LocalDate startDate, LocalDate endDate) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
@@ -48,9 +48,9 @@ public class CommunityDTO {
         this.nickname = nickname;
         this.gender = gender;
         this.birth = birth;
-        this.metro_id = metro_id;
-        this.start_date = startDate;
-        this.end_date = endDate;
+        this.metroId = metroId;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     //채팅쪽은 나중에 추가

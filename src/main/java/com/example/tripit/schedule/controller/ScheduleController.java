@@ -73,7 +73,7 @@ public class ScheduleController {
     public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
         //CustomUserDetails에서 userId 추출
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        long userId = userRepository.findUserIdByEmail(email);
 
         try {
             List<ScheduleDto> scheduleDtos = scheduleService.saveSchedule(scheduleRequest, userId);
@@ -92,7 +92,7 @@ public class ScheduleController {
     @GetMapping("/myPage/{scheduleId}")
     public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        long userId = userRepository.findUserIdByEmail(email);
         System.out.println(userId);
         return scheduleService.detailSchedule(userId, scheduleId);
     }

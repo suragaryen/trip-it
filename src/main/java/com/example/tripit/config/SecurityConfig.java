@@ -66,8 +66,8 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        //configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.106:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("https://moonmoon96.github.io"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.112:3000"));
+                        //configuration.setAllowedOrigins(Collections.singletonList("https://moonmoon96.github.io"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
