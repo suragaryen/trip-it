@@ -44,7 +44,7 @@ public class MyPageService {
 
 
     //userId 엔티티 찾기
-    public Optional<UserDTO> getUserDTOById(Integer userId) {
+    public Optional<UserDTO> getUserDTOById(Long userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
         return userEntityOptional.map(this::mapToUserDTO);
     }
@@ -77,7 +77,7 @@ public class MyPageService {
 
     //프로필 수정
     @Transactional
-    public UserDTO profileUpdate(UserDTO userDTO, Integer userId) {
+    public UserDTO profileUpdate(UserDTO userDTO, Long userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
@@ -98,7 +98,7 @@ public class MyPageService {
 
     //개인정보 수정
     @Transactional
-    public UserDTO personalUpdate(UserDTO userDTO, Integer userId) {
+    public UserDTO personalUpdate(UserDTO userDTO, Long userId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
@@ -119,7 +119,7 @@ public class MyPageService {
 
 
     //전체 일정 목록
-    public List<ScheduleDto> findScheduleList(Integer userId) {
+    public List<ScheduleDto> findScheduleList(Long userId) {
         List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
 
         return scheduleEntities.stream()
@@ -128,7 +128,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public List<ScheduleDto> schedulesDelete(List<Long> scheduleIds, Integer userId) {
+    public List<ScheduleDto> schedulesDelete(List<Long> scheduleIds, Long userId) {
         List<ScheduleEntity> schedules = scheduleRepository.findAllById(scheduleIds);
 
         if (schedules.size() != scheduleIds.size()) {

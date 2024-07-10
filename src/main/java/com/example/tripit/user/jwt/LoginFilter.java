@@ -71,9 +71,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
+
+
         //토큰 생성
         //60000L = 1분
         String access = jwtUtil.createJwt("access", email, role, 864000000L);
+
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
 
@@ -82,10 +85,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         //응답설정
-//        response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
-//        response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
+        //response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
+        // response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
         response.setStatus(HttpStatus.OK.value());
-
 //        String setCookie = "";
 //
 //        if (response.containsHeader("Set-Cookie")) {

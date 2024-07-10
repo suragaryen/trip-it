@@ -30,7 +30,7 @@ public class ScheduleService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest, Integer userId) throws Exception {
+    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest, long userId) throws Exception {
         ScheduleDto scheduleDto = scheduleRequest.getScheduleDto();
         scheduleDto.setUserId(userId);
         try {
@@ -52,7 +52,7 @@ public class ScheduleService {
         }
     }
 
-    public List<ScheduleDto> saveDetailSchedule(Long scheduleId, Integer userId, ScheduleRequest scheduleRequest) {
+    public List<ScheduleDto> saveDetailSchedule(Long scheduleId, long userId, ScheduleRequest scheduleRequest) {
         List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
 
         for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
@@ -71,7 +71,7 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> detailSchedule(Integer userId, Long scheduleId) {
+    public ResponseEntity<?> detailSchedule(long userId, Long scheduleId) {
         // 1. ScheduleEntity 조회
         Optional<ScheduleEntity> scheduleEntityOpt = scheduleRepository.findByUserIdAndScheduleId(userId, scheduleId);
         if (scheduleEntityOpt.isEmpty()) {

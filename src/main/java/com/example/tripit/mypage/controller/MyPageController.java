@@ -33,7 +33,7 @@ public class MyPageController {
     @GetMapping("profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         Optional<UserDTO> userDTOOptionalDTOOptional = myPageService.getUserDTOById(userId);
         if (userDTOOptionalDTOOptional.isPresent()) {
             return ResponseEntity.ok(userDTOOptionalDTOOptional.get());
@@ -45,7 +45,7 @@ public class MyPageController {
     @PostMapping("profile/update")
     public ResponseEntity<?> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         userDTO = myPageService.profileUpdate(userDTO, userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -53,7 +53,7 @@ public class MyPageController {
     @GetMapping("personal")
     public ResponseEntity<?> getPersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         Optional<UserDTO> userDTOOptionalDTOOptional = myPageService.getUserDTOById(userId);
         if (userDTOOptionalDTOOptional.isPresent()) {
             return ResponseEntity.ok(userDTOOptionalDTOOptional.get());
@@ -65,7 +65,7 @@ public class MyPageController {
     @PostMapping("personal/update")
     public ResponseEntity<?> updatePersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         userDTO = myPageService.personalUpdate(userDTO, userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -74,7 +74,7 @@ public class MyPageController {
     @GetMapping("schedules") //전체 일정 목록
     public ResponseEntity<?> schedulesList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         List<ScheduleDto> scheduleDtos = myPageService.findScheduleList(userId);
         System.out.println(scheduleDtos);
         return ResponseEntity.ok(scheduleDtos);
@@ -83,7 +83,7 @@ public class MyPageController {
     @PostMapping("schedules/delete-schedules") //일정 복수 삭제
     public ResponseEntity<?> schedulesDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> scheduleIds){
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         System.out.println("삭제요청");
         try {
             List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
@@ -97,7 +97,7 @@ public class MyPageController {
     public ResponseEntity<?> detailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                             @PathVariable Long scheduleId) {
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         List<DetailScheduleDto> detailScheduleDtos = myPageService.detailSchedule(scheduleId);
         System.out.println(detailScheduleDtos);
         return ResponseEntity.ok(detailScheduleDtos);

@@ -26,17 +26,21 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // 이메일 형식 유효성 검사 (예시)
+
         if (!email.matches("[^@]+@[^\\.]+\\..+")) {
+
             throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
         }
+
         // DB에서 조회
         UserEntity userData = userRepository.findByEmail(email);
         logger.info("userDetail: " + email);
 
         if (userData != null) {
             // UserDetails에 담아서 return하면 AuthenticationManager가 검증함
-            logger.info("Found user: " + userData.getEmail());
+            logger.info("Found user: " + userData.getUserId());
+
             return new CustomUserDetails(userData);
 
         } else if(userData == null) {
