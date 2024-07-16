@@ -52,15 +52,22 @@ public class BlockedListController {
 
         // userId를 blockedList에 설정
         blockedList.setUserId(userId);
-        
+
+        // 자기 자신인지 확인
+        if (userId.equals(blockedList.getUserId())) {
+            throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다.");
+        }
+
+
         // 차단 추가 서비스 호출
         blockedListService.addBlock(userId, blockedList.getNickname());
-        
+
         // 업데이트된 차단 리스트 가져오기
         List<BlockedList> updatedBlockedList = blockedListService.getBlockedForUser(userId);
-       
+
         return ResponseEntity.ok(updatedBlockedList);
     }
+
 
     
     // 전체 차단자 표시
