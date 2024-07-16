@@ -25,7 +25,7 @@ public class BlockedList {
     private String nickname;
 
     @Column(name = "block_date")
-    private LocalDate blockDate;
+    private String blockDate;
 
 	public int getBlockId() {
 		return blockId;
@@ -51,12 +51,12 @@ public class BlockedList {
 		this.nickname = nickname;
 	}
 
-	public LocalDate getBlockDate() {
+	public String getBlockDate() {
 		return blockDate;
 	}
 
-	public void setBlockDate(LocalDate blockDate) {
-		this.blockDate = blockDate;
+	public void setBlockDate(String formattedDate) {
+		this.blockDate = formattedDate;
 	}
 
     
