@@ -31,7 +31,7 @@ public class TestController {
     	
         String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        long userId = userRepository.findUserIdByEmail(email);
     	
     	System.out.println(userId);
         return "main Controller";

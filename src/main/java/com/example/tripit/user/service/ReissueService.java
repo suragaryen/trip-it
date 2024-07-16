@@ -68,7 +68,7 @@ public class ReissueService {
 
             log.info("refresh is null");
 
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -85,7 +85,7 @@ public class ReissueService {
             log.info("refresh expired");
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -100,7 +100,7 @@ public class ReissueService {
             log.info("not refresh");
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -112,7 +112,7 @@ public class ReissueService {
         if (!isExist) {
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
 
             log.info("not in db");
 
