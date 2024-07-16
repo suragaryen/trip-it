@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserDTO {
 
-    private Integer userId;
+    private Long userId;
 
     private String email;
     private String username;

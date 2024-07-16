@@ -1,6 +1,14 @@
 package com.example.tripit.user.service;
 
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.error.ErrorResponse;
 import com.example.tripit.result.ResultCode;
@@ -9,18 +17,12 @@ import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.jwt.JWTUtil;
 import com.example.tripit.user.repository.RefreshRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 
 
 @Slf4j

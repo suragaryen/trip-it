@@ -27,20 +27,26 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
     ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
 
-    LOGGOUT_REQUEST(400, "2", "logout request"),
+    LOGOUT_REQUEST(400, "2", "logout request"),
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid"),
     
     //Chat
     MESSAGE_NULL(400,"1","message is null"),
     //Schedule
-    NO_CONTENT(204, "N001", "No content");
+    NO_CONTENT(204, "N001", "No content"),
 
     //MyPage
+	
+	
+	//block
+	BLOCK_EXISTS(500, "1", "자기 자신을 차단할 수 없습니다."),
+	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다.");
 
 
     //Community
     private int status;
     private final String code;
     private final String message;
+    
 
 }

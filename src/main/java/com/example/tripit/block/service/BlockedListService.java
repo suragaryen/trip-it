@@ -1,6 +1,4 @@
 package com.example.tripit.block.service;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,43 +6,71 @@ import org.springframework.stereotype.Service;
 
 import com.example.tripit.block.entity.BlockedList;
 import com.example.tripit.block.repository.BlockedListRepository;
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 
 @Service
 public class BlockedListService {
 
     private final BlockedListRepository blockedListRepository;
-
+    
     @Autowired
     public BlockedListService(BlockedListRepository blockedListRepository) {
         this.blockedListRepository = blockedListRepository;
     }
 
     // 차단 추가 메서드
-    public BlockedList addBlock(int userId, String nickname) {
+    public BlockedList addBlock(Long userId, String nickname) {
         BlockedList blockedList = new BlockedList();
         blockedList.setUserId(userId);
         blockedList.setNickname(nickname);
-        
-        // 현재 날짜를 가져와 yyyyMMdd 형식으로 변환
-        LocalDate now = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formattedDate = now.format(formatter);
-        
-        // 변환된 날짜를 blockDate에 설정
-        blockedList.setBlockDate(formattedDate);
-        
+        if (blockedListRepository.existsByUserIdAndNickname(userId, nickname)) {
+            throw new CustomException(ErrorCode.BLOCK_EXISTS2);
+        }
         // 블록리스트 저장
         return blockedListRepository.save(blockedList);
     }
-
+    private boolean isNicknameBlocked(Long userId, String nickname) {
+        return blockedListRepository.existsByUserIdAndNickname(userId, nickname);
+    }
+    
     // 모든 차단 목록 조회 메서드
     public List<BlockedList> getAllBlocked() {
         return blockedListRepository.findAllOrderByBlockDateDesc();
     }
-
+    
+    //차단 목록 전체검색
+    public List<BlockedList> getBlockedForUser(Long userId) {
+    		return  blockedListRepository.findAll();
+    }
+    
     // 특정 사용자의 차단 목록 조회 메서드
-    public List<BlockedList> getBlockedForUser(int userId) {
-        return blockedListRepository.findByUserId(userId);
+    public List<BlockedList> getBlockedForUser(Long userId, String sortKey, String sortValue) {
+    	if(sortKey == "blockDate" && sortValue == "desc") {
+    		return  blockedListRepository.findAllOrderByBlockDateDesc();
+    	}else if(sortKey == "blockDate" && sortValue == "asc") {
+    		return  blockedListRepository.findAllOrderByBlockDateASCList();
+    	}else if(sortKey == "nickname" && sortValue == "desc") {
+    		return  blockedListRepository.findAllOrderByNickListdescList();
+    	}else if(sortKey == "nickname" && sortValue == "asc") {
+    		return  blockedListRepository.findAllOrderByNickListascList();
+    	}
+		return null;
+    }
+    
+    
+    // 특정 사용자의 차단 목록 조회 메서드
+    public List<BlockedList> getBlockedForAdmin(String sortKey, String sortValue) {
+    	if(sortKey == "blockDate" && sortValue == "desc") {
+    		return  blockedListRepository.findAllOrderByBlockDateDesc();
+    	}else if(sortKey == "blockDate" && sortValue == "asc") {
+    		return  blockedListRepository.findAllOrderByBlockDateASCList();
+    	}else if(sortKey == "nickname" && sortValue == "desc") {
+    		return  blockedListRepository.findAllOrderByNickListdescList();
+    	}else if(sortKey == "nickname" && sortValue == "asc") {
+    		return  blockedListRepository.findAllOrderByNickListascList();
+    	}
+		return null;
     }
     
 
@@ -71,7 +97,7 @@ public class BlockedListService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자의 차단 항목이 없습니다"));
 
         // 차단 항목 삭제
-        blockedListRepository.deleteById(blockedList.getBlockId());
+//        blockedListRepository.deleteById(blockedList.getBlockId());
         
         return blockedListRepository.findAll();
     }

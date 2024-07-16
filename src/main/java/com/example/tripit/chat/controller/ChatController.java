@@ -83,7 +83,7 @@ public class ChatController {
     	// 유저정보 시큐리티 확인
     	String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
          			
         System.out.println(userId);
     	

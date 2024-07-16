@@ -1,10 +1,24 @@
 package com.example.tripit.block.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.example.tripit.user.entity.UserEntity;
-import jakarta.persistence.*;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "blockedlist")
 public class BlockedList {
@@ -12,49 +26,18 @@ public class BlockedList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "block_id")
-    private int blockId;
+    private Long blockId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private UserEntity userId;
+	@Column(name = "user_id")
+	private Long userId; 
 
     @Column(name = "nickname")
     private String nickname;
 
     @Column(name = "block_date")
-    private String blockDate;
+    private LocalDateTime blockDate = LocalDateTime.now();
 
-	public int getBlockId() {
-		return blockId;
-	}
 
-	public void setBlockId(int blockId) {
-		this.blockId = blockId;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getBlockDate() {
-		return blockDate;
-	}
-
-	public void setBlockDate(String formattedDate) {
-		this.blockDate = formattedDate;
-	}
 
     
 }

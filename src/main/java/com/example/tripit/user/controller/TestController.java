@@ -1,19 +1,18 @@
 package com.example.tripit.user.controller;
 
-import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.entity.UserEntity;
-import com.example.tripit.user.repository.UserRepository;
-import com.example.tripit.result.ResultCode;
-import com.example.tripit.result.ResultResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.tripit.result.ResultCode;
+import com.example.tripit.result.ResultResponse;
+import com.example.tripit.user.dto.CustomUserDetails;
+import com.example.tripit.user.repository.UserRepository;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class TestController {
@@ -31,7 +30,7 @@ public class TestController {
     	
         String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
     	
     	System.out.println(userId);
         return "main Controller";
