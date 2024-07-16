@@ -66,7 +66,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.112:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.110:3000"));
                         //configuration.setAllowedOrigins(Collections.singletonList("https://moonmoon96.github.io"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
@@ -107,7 +107,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost").permitAll()
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/community/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());

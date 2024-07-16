@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
     @Query("SELECT u.userId FROM user u WHERE u.email = :email")
     long findUserIdByEmail(@Param("email") String email);
 
-    //UserEntity findByNickname(String nickname);
+    UserEntity findByNickname(String nickname);
 
     //MemberEntity findByUsername(String id);
     //JpaRepository의 findById 메서드는 Optional을 반환하도록 설계되어 있음.

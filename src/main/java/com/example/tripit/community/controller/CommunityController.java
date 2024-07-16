@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/community")
 public class CommunityController {
 
     private final UserRepository userRepository;
@@ -80,27 +81,49 @@ public class CommunityController {
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/communityList")
-    public ResponseEntity<?> CommunityList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    // 커뮤니티 전체 리스트 날짜순
+    @GetMapping("/communityList")
+    public ResponseEntity<?> CommunityList(
+                                            @RequestParam (defaultValue = "0") int page,
+                                            @RequestParam (defaultValue = "12") int size
+    ) {
 
-        String email = customUserDetails.getUsername();//email
-        long userId = userRepository.findUserIdByEmail(email);
-
-        //System.out.println(postEntity.toString());
-
-        List<CommunityDTO> communityDTOS = communityService.loadCommunityList();
-
-        //System.out.println(communityDTOS.toString());
+        List<CommunityDTO> communityDTOS = communityService.loadCommunityListOrderByPostDate(page, size);
 
         return ResponseEntity.ok(communityDTOS);
     }
 
-    @PostMapping("/communityDetail/{userId}/{postId}")
+    // 커뮤니티 전체 리스트 조회순
+    @GetMapping("/communityListByView")
+    public ResponseEntity<?> CommunityListByViewCount(
+            @RequestParam (defaultValue = "0") int page,
+            @RequestParam (defaultValue = "12") int size
+    ) {
+
+        List<CommunityDTO> communityDTOS = communityService.loadCommunityListOrderByViewCount(page, size);
+
+        return ResponseEntity.ok(communityDTOS);
+    }
+
+    @GetMapping("/communitySearch")
+    public ResponseEntity<?> CommunitySearch(
+            @RequestParam (defaultValue = "") String query,
+            @RequestParam (defaultValue = "1") String metroId
+    ) {
+
+        List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
+
+        return ResponseEntity.ok(communityDTOS);
+    }
+
+
+
+    //커뮤니티 글 상세 조회
+    @GetMapping("/communityDetail/{userId}/{postId}")
     public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId) {
 
-        List<CommunityDTO> detail = communityService.loadCommunityList(userId, postId);
-
-        System.out.println(detail);
+        List<CommunityDTO> detail = communityService.loadCommunityDetail(userId, postId);
+        communityService.incrementViewCount(postId);
 
         return ResponseEntity.ok(detail);
     }

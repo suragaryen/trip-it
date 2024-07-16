@@ -52,6 +52,8 @@ public class TestController {
         long userId = userRepository.findUserIdByEmail(email);
 
 
+
+
        //토큰 살아있을 때 유저 정보
         ResultResponse result = ResultResponse.of(ResultCode.GET_MY_INFO_SUCCESS, email, userId, role);
         //토큰 만료 되었을 때

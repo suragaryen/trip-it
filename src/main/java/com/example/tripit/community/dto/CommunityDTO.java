@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,9 +19,10 @@ public class CommunityDTO {
     private String nickname;
     private String gender;
     private String birth;
-    private String userPic;
+    private String userpic;
 
     //Schedule
+    private long scheduleId;
     private LocalDate startDate;
     private LocalDate endDate;
     private String metroId;
@@ -33,23 +35,29 @@ public class CommunityDTO {
     private String postPic;
     private Boolean exposureStatus;
     private Integer viewCount;
+    private LocalDateTime postDate;
 
     public CommunityDTO(Long postId, String postTitle, String postContent, Short personnel,
-                        Integer viewCount, Boolean exposureStatus, String postPic, long userId,
-                        String nickname, String gender, String birth, String userPic,
+                        Integer viewCount, Boolean exposureStatus, String postPic, LocalDateTime postDate , long userId,
+                        String nickname, String gender, String birth, String userpic, long scheduleId,
                         String metroId, LocalDate startDate, LocalDate endDate) {
+
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
+        this.postPic = postPic;
         this.personnel = personnel;
         this.viewCount = viewCount;
         this.exposureStatus = exposureStatus;
+        this.postDate = postDate;
+
         this.userId = userId;
-        this.postPic = postPic;
+        this.userpic = userpic;
         this.nickname = nickname;
         this.gender = gender;
         this.birth = birth;
-        this.userPic = userPic;
+
+        this.scheduleId = scheduleId;
         this.metroId = metroId;
         this.startDate = startDate;
         this.endDate = endDate;
