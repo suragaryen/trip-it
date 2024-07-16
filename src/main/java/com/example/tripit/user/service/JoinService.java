@@ -1,12 +1,13 @@
 package com.example.tripit.user.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.user.dto.JoinDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 public class JoinService {
@@ -28,7 +29,7 @@ public class JoinService {
             String password = joinDTO.getPassword();
             String nickname = joinDTO.getNickname();
             String birth = joinDTO.getBirth();
-            String  gender = joinDTO.getGender();
+            String gender = joinDTO.getGender();
 
         Boolean isEmailExist = userRepository.existsByEmail(email);
         Boolean isNicknameExist = userRepository.existsByNickname(nickname);
