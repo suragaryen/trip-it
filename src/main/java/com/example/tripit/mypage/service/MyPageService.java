@@ -199,11 +199,13 @@ public class MyPageService {
                             post.getViewCount(),
                             post.getExposureStatus(),
                             post.getPostPic(),
-                            userEntity.getUserId(),
-                            userEntity.getNickname(),
-                            userEntity.getGender(),
-                            userEntity.getBirth(),
-                            userEntity.getUserpic(),
+                            post.getPostDate(),
+                            user.getUserId(),
+                            user.getNickname(),
+                            user.getGender(),
+                            user.getBirth(),
+                            user.getUserpic(),
+                            schedule.getScheduleId(),
                             schedule.getMetroId(),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -212,9 +214,9 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
-    public List<CommunityDTO> postDetail(Long userId, Long postId) {
-        return communityService.loadCommunityList(userId, postId);
-    }
+//    public List<CommunityDTO> postDetail(Long userId, Long postId) {
+//        return communityService.loadCommunityList(userId, postId);
+//    }
 
     public void postDelete(Long userId, Long postId) {
 

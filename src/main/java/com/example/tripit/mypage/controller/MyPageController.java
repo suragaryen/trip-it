@@ -127,17 +127,17 @@ public class MyPageController {
         return ResponseEntity.ok(postList);
     }
 
-    @GetMapping("/postDetail/{postId}")
-    public ResponseEntity<?> postDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
-        String email = customUserDetails.getUsername();
-        Long userId = userRepository.findUserIdByEmail(email);
-
-        List<CommunityDTO> detail = myPageService.postDetail(userId, postId);
-
-        System.out.println(detail);
-
-        return ResponseEntity.ok(detail);
-    }
+//    @GetMapping("/postDetail/{postId}")
+//    public ResponseEntity<?> postDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
+//        String email = customUserDetails.getUsername();
+//        Long userId = userRepository.findUserIdByEmail(email);
+//
+//        List<CommunityDTO> detail = myPageService.postDetail(userId, postId);
+//
+//        System.out.println(detail);
+//
+//        return ResponseEntity.ok(detail);
+//    }
 
     @DeleteMapping("postList/{postId}")
     public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
