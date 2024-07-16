@@ -2,12 +2,8 @@ package com.example.tripit.block.entity;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.tripit.user.entity.UserEntity;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "blockedlist")
@@ -18,8 +14,9 @@ public class BlockedList {
     @Column(name = "block_id")
     private int blockId;
 
-    @Column(name = "user_id")
-    private int userId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private UserEntity userId;
 
     @Column(name = "nickname")
     private String nickname;
@@ -39,7 +36,7 @@ public class BlockedList {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

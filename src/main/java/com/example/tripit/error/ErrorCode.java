@@ -26,13 +26,21 @@ public enum ErrorCode {
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
     ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
+
     LOGGOUT_REQUEST(400, "2", "logout request"),
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid"),
     
     //Chat
-    MESSAGE_NULL(400,"1","message is null");
+    MESSAGE_NULL(400,"1","message is null"),
+    //Schedule
+    NO_CONTENT(204, "N001", "No content");
 
+    //MyPage
+
+
+    //Community
     private int status;
     private final String code;
     private final String message;
+
 }

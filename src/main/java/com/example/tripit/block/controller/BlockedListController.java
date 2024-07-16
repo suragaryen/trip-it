@@ -48,7 +48,7 @@ public class BlockedListController {
     public ResponseEntity<List<BlockedList>> addBlock(@RequestBody BlockedList blockedList, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 유저정보 시큐리티 확인
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
 
         // userId를 blockedList에 설정
         blockedList.setUserId(userId);
@@ -85,7 +85,7 @@ public class BlockedListController {
     	// 유저정보 시큐리티 확인
     	String email = customUserDetails.getUsername();//email
     	//String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
         
     	List<BlockedList> blockedList = blockedListService.getBlockedForUser(userId);
         return ResponseEntity.ok(blockedList);
@@ -96,7 +96,7 @@ public class BlockedListController {
     public ResponseEntity<List<BlockedList>> removeBlock(@RequestBody Map<String, String> requestBody, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 유저정보 시큐리티 확인
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
 
         // 요청으로부터 blockId 가져오기
         String nickname = requestBody.get("nickname");

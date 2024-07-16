@@ -1,5 +1,6 @@
 package com.example.tripit.schedule.controller;
 
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleRequest;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -45,13 +47,7 @@ public class ScheduleController {
         if (contentTypeId == null) {
             contentTypeId = "12";
         }
-
-//        String username = customUserDetails.getUsername();
-//
-//        System.out.println("11111111");
-//        System.out.println(username);
-
-
+        System.out.println("????");
         //apiConnection 메서드 호출 및 반환
         return apiConnection.cultureFacilityApi(metroId, pageNo, contentTypeId);
     }
@@ -73,7 +69,7 @@ public class ScheduleController {
     public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
         //CustomUserDetails에서 userId 추출
         String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
+        long userId = userRepository.findUserIdByEmail(email);
 
         try {
             List<ScheduleDto> scheduleDtos = scheduleService.saveSchedule(scheduleRequest, userId);
@@ -85,17 +81,21 @@ public class ScheduleController {
 
             // 클라이언트에게 전달할 에러 메시지
             String errorMessage = "일정 저장 실패: " + e.getMessage();
+            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
 
-    @GetMapping("/{scheduleId}")
-    public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
-        String email = customUserDetails.getUsername();
-        Integer userId = userRepository.findUserIdByEmail(email);
-        System.out.println(userId);
-        return scheduleService.detailSchedule(userId, scheduleId);
-    }
+
+//    @GetMapping("/{scheduleId}")
+//    public ResponseEntity<?> getDetailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long scheduleId) {
+//        String email = customUserDetails.getUsername();
+//        Integer userId = userRepository.findUserIdByEmail(email);
+//        System.out.println(userId);
+//        return scheduleService.detailSchedule(userId, scheduleId);
+//    }
+
 
 
 }

@@ -11,10 +11,10 @@ public class ResultResponse {
     private String email;
     private String access;
     private String refresh;
-    private Integer userId;
+    private long userId;
     private String role;
 
-    public ResultResponse(ResultCode resultCode, String email, Integer userId, String role) {
+    public ResultResponse(ResultCode resultCode, String email, long userId, String role) {
         this.status = resultCode.getStatus();
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
@@ -33,7 +33,7 @@ public class ResultResponse {
     }
 
     // User info response
-    public static ResultResponse of(ResultCode resultCode, String email, Integer userId, String role) {
+    public static ResultResponse of(ResultCode resultCode, String email, long userId, String role) {
         return new ResultResponse(resultCode, email, userId, role);
     }
 
