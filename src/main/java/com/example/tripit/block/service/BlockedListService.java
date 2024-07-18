@@ -30,9 +30,8 @@ public class BlockedListService {
         // 블록리스트 저장
         return blockedListRepository.save(blockedList);
     }
-    private boolean isNicknameBlocked(Long userId, String nickname) {
-        return blockedListRepository.existsByUserIdAndNickname(userId, nickname);
-    }
+    
+ 
     
     // 모든 차단 목록 조회 메서드
     public List<BlockedList> getAllBlocked() {
@@ -47,12 +46,16 @@ public class BlockedListService {
     // 특정 사용자의 차단 목록 조회 메서드
     public List<BlockedList> getBlockedForUser(Long userId, String sortKey, String sortValue) {
     	if(sortKey == "blockDate" && sortValue == "desc") {
+    		// BlockDate 기준으로 내림차순 정렬
     		return  blockedListRepository.findAllOrderByBlockDateDesc();
     	}else if(sortKey == "blockDate" && sortValue == "asc") {
+    		// BlockDate 기준으로 오름차순정렬
     		return  blockedListRepository.findAllOrderByBlockDateASCList();
     	}else if(sortKey == "nickname" && sortValue == "desc") {
+    		// Nickname 기준으로 내림차순 정렬
     		return  blockedListRepository.findAllOrderByNickListdescList();
     	}else if(sortKey == "nickname" && sortValue == "asc") {
+    		// Nickname 기준으로 오름차순 정렬
     		return  blockedListRepository.findAllOrderByNickListascList();
     	}
 		return null;
@@ -63,11 +66,15 @@ public class BlockedListService {
     public List<BlockedList> getBlockedForAdmin(String sortKey, String sortValue) {
     	if(sortKey == "blockDate" && sortValue == "desc") {
     		return  blockedListRepository.findAllOrderByBlockDateDesc();
+    		// BlockDate 기준으로 내림차순 정렬
     	}else if(sortKey == "blockDate" && sortValue == "asc") {
+    		// BlockDate 기준으로 오름차순정렬
     		return  blockedListRepository.findAllOrderByBlockDateASCList();
     	}else if(sortKey == "nickname" && sortValue == "desc") {
+    		// Nickname 기준으로 내림차순 정렬
     		return  blockedListRepository.findAllOrderByNickListdescList();
     	}else if(sortKey == "nickname" && sortValue == "asc") {
+    		// Nickname 기준으로 오름차순 정렬
     		return  blockedListRepository.findAllOrderByNickListascList();
     	}
 		return null;

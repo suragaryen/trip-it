@@ -1,6 +1,7 @@
 package com.example.tripit.block.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,28 +57,22 @@ public class BlockedListController {
         Long userId = userRepository.findUserIdByEmail(email);
         Optional<UserEntity> entity = userRepository.findById(userId);
         String nickname = entity.get().getNickname();
-        System.out.println(nickname);
         
         // 자기 자신인지 확인
         if (nickname.equals(blockedList.getNickname())) {
             throw new CustomException(ErrorCode.BLOCK_EXISTS);
         }//if end
         
-//     // 이미 차단된 닉네임인지 확인
-//        if (blockedListService.isNicknameBlocked(userId, blockedList.getNickname())) {
-//            throw new CustomException(ErrorCode.BLOCK_EXISTS2);
-//        }
-
         // userId를 blockedList에 설정
         blockedList.setUserId(userId);
-        
-        
+               
         // 차단 추가 서비스 호출
         blockedListService.addBlock(userId, blockedList.getNickname());
 
         // 업데이트된 차단 리스트 가져오기
         List<BlockedList> updatedBlockedList = blockedListService.getBlockedForUser(userId);
-
+        
+        // 업데이트된 차단 리스트 리턴
         return ResponseEntity.ok(updatedBlockedList);
     }
 
@@ -92,14 +87,22 @@ public class BlockedListController {
     }
 
     // 특정 사용자의 차단자 목록 조회
-    @GetMapping("/user")
-    public ResponseEntity<List<BlockedList>> getBlockedForUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody String sortKey, @RequestBody String sortValue) {
+    @PostMapping("/user")
+    public ResponseEntity<List<BlockedList>> getBlockedForUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,  @RequestBody Map<String, String> requestBody) {
       
     	// 유저정보 시큐리티 확인
     	String email = customUserDetails.getUsername();//email
-    	//String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
         Long userId = userRepository.findUserIdByEmail(email);
+//    	// 유저 권환 확인
+//    	String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
+   
         
+        // 요청으로부터 sortKey와 sortValue 추출
+        String sortKey = requestBody.get("sortKey");
+        String sortValue = requestBody.get("sortValue");
+
+        // 유저의 차단 목록 조회 서비스 호출
+        // ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
     	List<BlockedList> blockedList = blockedListService.getBlockedForUser(userId ,sortKey, sortValue);
         return ResponseEntity.ok(blockedList);
     }
