@@ -1,6 +1,7 @@
 package com.example.tripit.community.controller;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.CommunityUpdateDTO;
 import com.example.tripit.community.dto.PostDTO;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.result.UserScheduleResponse;
@@ -52,7 +53,6 @@ public class CommunityController {
     @PostMapping("/submitPost")
     public ResponseEntity<?> submitPost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PostDTO postDTO) {
 
-
         // DTO를 Entity로 변환
         PostEntity postEntity = new PostEntity();
         postEntity.setPostTitle(postDTO.getPostTitle());
@@ -67,14 +67,10 @@ public class CommunityController {
         UserEntity user = userRepository.findById(postDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
         ScheduleEntity schedule = scheduleRepository.findById(postDTO.getScheduleId()).orElseThrow(() -> new RuntimeException("Schedule not found"));
 
-
         postEntity.setUserId(user);
         postEntity.setScheduleId(schedule);
 
-
         System.out.println(postEntity.toString());
-
-
 
         communityService.postProcess(postEntity);
 
@@ -87,9 +83,7 @@ public class CommunityController {
                                             @RequestParam (defaultValue = "0") int page,
                                             @RequestParam (defaultValue = "12") int size
     ) {
-
         List<CommunityDTO> communityDTOS = communityService.loadCommunityListOrderByPostDate(page, size);
-
         return ResponseEntity.ok(communityDTOS);
     }
 
@@ -120,11 +114,34 @@ public class CommunityController {
 
     //커뮤니티 글 상세 조회
     @GetMapping("/communityDetail/{userId}/{postId}")
-    public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId) {
+    public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId,
+                                             @AuthenticationPrincipal CustomUserDetails customUserDetails
+                                                    ) {
+        String email = customUserDetails.getUsername();//email
+        long loggedUserId = userRepository.findUserIdByEmail(email); //로그인 한 유저
 
         List<CommunityDTO> detail = communityService.loadCommunityDetail(userId, postId);
+        detail.forEach(communityDTO -> communityDTO.setLoggedUserId(loggedUserId));
         communityService.incrementViewCount(postId);
 
         return ResponseEntity.ok(detail);
     }
+
+    //커뮤니티 업데이트
+    @PostMapping("/communityDetail/update/{postId}")
+    public void communityDetailUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long postId, @RequestParam String postTitle,
+                                      @RequestParam String postContent){
+
+        String email = customUserDetails.getUsername();//email
+        long userId = userRepository.findUserIdByEmail(email);
+
+
+        System.out.println(userId+ postId+ postTitle+ postContent);
+
+        communityService.updatePost(userId, postId, postTitle, postContent);
+
+
+    }
+
 }

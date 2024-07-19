@@ -205,6 +205,7 @@ public class MyPageService {
                             user.getGender(),
                             user.getBirth(),
                             user.getUserpic(),
+
                             schedule.getScheduleId(),
                             schedule.getMetroId(),
                             schedule.getStartDate(),

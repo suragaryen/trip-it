@@ -38,8 +38,8 @@ public class PostEntity {
     @Column(name = "personnel")
     private Short personnel;
 
-    @Column(name = "post_date", nullable = false)
-    private LocalDateTime postDate;
+    @Column(name = "post_date")
+    private LocalDateTime postDate = LocalDateTime.now();
 
     @Column(name = "post_pic")
     private String postPic;

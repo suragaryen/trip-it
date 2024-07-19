@@ -1,6 +1,7 @@
 package com.example.tripit.community.service;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
 import com.example.tripit.schedule.entity.ScheduleEntity;
@@ -59,7 +60,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
-                            schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
                     );
@@ -92,7 +93,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
-                            schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
                     );
@@ -100,6 +101,7 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
+    //검색 서비스
     public List<CommunityDTO> searchCommunityByQueryAndMetroId(String query, String metroId) {
         List<PostEntity> posts = postRepository.searchByQueryAndMetroIdOrderByPostDateDesc(query, metroId);
 
@@ -123,7 +125,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
-                            schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
                     );
@@ -158,7 +160,7 @@ public class CommunityService {
                             userEntity.getBirth(),
                             userEntity.getUserpic(),
                             schedule.getScheduleId(),
-                            schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
                     );
@@ -171,4 +173,21 @@ public class CommunityService {
         postRepository.incrementViewCountByPostId(postId);
     }
 
+    public void updatePost(long userId, Long postId, String postTitle, String postContent) {
+
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        if(post.getUserId().equals(userId)){
+            post.setPostTitle(postTitle);
+            post.setPostContent(postContent);
+            postRepository.save(post);
+        }else{
+            System.out.println("logged" + userId);
+            System.out.println(post.toString());
+            throw new RuntimeException("User does not have permission to update this post");
+        }
+
+
+    }
 }
