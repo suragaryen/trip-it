@@ -1,5 +1,6 @@
 package com.example.tripit.community.repository;
 
+import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.user.entity.UserEntity;
 import org.springframework.data.domain.Page;
@@ -39,4 +40,13 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
 
     PostEntity findByPostId(Long postId);
+
+    @Query("SELECT new  com.example.tripit.community.dto.CommunityDTO(p.postId, p.postTitle, p.postContent, p.personnel, p.viewCount, p.exposureStatus, p.postPic, p.postDate, u.userId, u.nickname, u.gender, u.birth, u.userpic, s.scheduleId, s.metroId, s.startDate, s.endDate) " +
+            "FROM PostEntity p " +
+            "JOIN p.userId u " +
+            "JOIN p.scheduleId s " +
+            "WHERE u.userId = :userId " +
+            "ORDER BY p.postDate DESC")
+    List<CommunityDTO> findPostsByUserId(@Param("userId") Long userId);
+
 }

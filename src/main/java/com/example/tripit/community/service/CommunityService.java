@@ -178,13 +178,16 @@ public class CommunityService {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        if(post.getUserId().equals(userId)){
+        long postUserId = post.getUserId().getUserId();
+
+        if(postUserId == userId){
             post.setPostTitle(postTitle);
             post.setPostContent(postContent);
             postRepository.save(post);
+
         }else{
             System.out.println("logged" + userId);
-            System.out.println(post.toString());
+            System.out.println("postuserId" + post.getUserId().getUserId());
             throw new RuntimeException("User does not have permission to update this post");
         }
 
