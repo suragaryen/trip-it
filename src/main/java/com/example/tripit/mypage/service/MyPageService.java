@@ -1,6 +1,7 @@
 package com.example.tripit.mypage.service;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.dto.PostDTO;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
@@ -205,9 +206,9 @@ public class MyPageService {
                             user.getGender(),
                             user.getBirth(),
                             user.getUserpic(),
-
                             schedule.getScheduleId(),
                             schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
                     );

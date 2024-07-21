@@ -130,18 +130,35 @@ public class CommunityController {
     //커뮤니티 업데이트
     @PostMapping("/communityDetail/update/{postId}")
     public void communityDetailUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      @PathVariable Long postId, @RequestParam String postTitle,
-                                      @RequestParam String postContent){
+                                      @PathVariable Long postId, @RequestBody CommunityUpdateDTO updateDTO){
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
 
+        try {
+            communityService.updatePost(userId, postId, updateDTO);
+            System.out.println("포스트 업데이트 성공");
 
-        System.out.println(userId+ postId+ postTitle+ postContent);
-
-        communityService.updatePost(userId, postId, postTitle, postContent);
-
-
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    @DeleteMapping("/communityDetail/delete/{postId}")
+    public void communityDetailDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long postId){
+
+        String email = customUserDetails.getUsername();//email
+        long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            communityService.deletePost(userId, postId);
+            System.out.println("삭제 성공");
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
