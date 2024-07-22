@@ -17,6 +17,8 @@ import com.example.tripit.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,17 +74,25 @@ public class MyPageService {
 
     //프로필 수정
     @Transactional
-    public ProfileDTO profileUpdate(UserDTO userDTO, Long userId) {
+    public ResponseEntity<?> profileUpdate(UserDTO userDTO, Long userId) {
+        if (isNicknameExists(userDTO.getNickname())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 닉네임입니다.");
+        }
+
         return userRepository.findById(userId).map(userEntity -> {
             userEntity.setNickname(userDTO.getNickname());
             userEntity.setIntro(userDTO.getUserIntro());
             userEntity.setUserpic(userDTO.getUserpic());
-
-            return mapToUserDTO(userEntity);
+            ProfileDTO profileDTO = mapToUserDTO(userEntity);
+            return ResponseEntity.ok(profileDTO);
         }).orElseThrow(() -> new EntityNotFoundException("user가 존재하지 않음 : " + userId));
     }
 
-    //개인정보 수정
+    public boolean isNicknameExists(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    //비밀번호 수정
     @Transactional
     public ProfileDTO passwordUpdate(PasswordUpdateDTO dto, Long userId) {
         return userRepository.findById(userId).map(userEntity -> {
@@ -115,6 +125,7 @@ public class MyPageService {
     public List<ScheduleDto> schedulesDelete(List<Long> scheduleIds, Long userId) {
         List<ScheduleEntity> schedules = scheduleRepository.findAllById(scheduleIds);
 
+        //이부분 나중에 수정 필요할듯
         if (schedules.size() != scheduleIds.size()) {
             throw new IllegalArgumentException("일정을 찾을 수 없음");
         }
@@ -142,8 +153,6 @@ public class MyPageService {
     }
 
     public List<CommunityDTO> postList(Long userId) {
-        UserEntity user = new UserEntity();
-        user.setUserId(userId);
         return postRepository.findPostsByUserId(userId);
     }
 
@@ -151,15 +160,23 @@ public class MyPageService {
 //        return communityService.loadCommunityList(userId, postId);
 //    }
 
-    public void postDelete(Long userId, Long postId) {
+    public List<CommunityDTO> postDelete(List<Long> postIds, Long userId) {
 
-        Optional<PostEntity> postEntity = postRepository.findById(postId);
-        //System.out.println(postEntity + "d");
-        if (postEntity.isEmpty()) {
-            throw new IllegalArgumentException("글을 찾을 수 없음");
-        }
-        postRepository.deleteById(postId);
-        postList(userId);
+//        List<CommunityDTO> postList = postRepository.findPostsByUserId(userId);
+
+//        if (postList.size() != postIds.size())
+          if (postIds.size() == 1) {
+              Long postId = postIds.get(0);
+              postRepository.deleteById(postId);
+          }
+
+//        Optional<PostEntity> postEntity = postRepository.findById(postId);
+//        //System.out.println(postEntity + "d");
+//        if (postEntity.isEmpty()) {
+//            throw new IllegalArgumentException("글을 찾을 수 없음");
+//        }
+        postRepository.deleteAllById(postIds);
+
+        return postRepository.findPostsByUserId(userId);
     }
-
 }

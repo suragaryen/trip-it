@@ -49,8 +49,7 @@ public class MyPageController {
     public ResponseEntity<?> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        ProfileDTO profileDTO = myPageService.profileUpdate(userDTO, userId);
-        return ResponseEntity.ok(profileDTO);
+        return myPageService.profileUpdate(userDTO, userId);
     }
 
     @PostMapping("profile/passwordUpdate")
@@ -67,7 +66,7 @@ public class MyPageController {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
         List<ScheduleDto> scheduleDtos = myPageService.findScheduleList(userId);
-        System.out.println(scheduleDtos);
+        System.out.println(scheduleDtos + "dd");
         return ResponseEntity.ok(scheduleDtos);
     }
 
@@ -75,8 +74,8 @@ public class MyPageController {
     public ResponseEntity<?> schedulesDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> scheduleIds){
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        System.out.println(scheduleIds);
-        System.out.println("삭제요청");
+        //System.out.println(scheduleIds);
+        //System.out.println("삭제요청");
         try {
             List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
             return ResponseEntity.ok(scheduleDtos);
@@ -130,22 +129,19 @@ public class MyPageController {
 //        return ResponseEntity.ok(detail);
 //    }
 
-    @DeleteMapping("postList/{postId}")
-    public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
+    @PostMapping("postList/delete-post")
+    public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> postIds) {
 
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
 
         try {
-            myPageService.postDelete(userId, postId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //찾을 수 없을 때 NOT_FOUND 상태 코드 반환
+            List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
+            return ResponseEntity.ok(postList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
-
-
 
 }
