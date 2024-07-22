@@ -14,6 +14,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
+    //커뮤니티 상세글 조회
     List<PostEntity> findByUserIdAndPostId(UserEntity userId, Long postId);
 
     List<PostEntity> findByUserId(UserEntity userId);
@@ -30,6 +31,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Transactional
     void incrementViewCountByPostId(@Param("postId") long postId);
 
+    // 커뮤니티 검색
     @Query("SELECT p FROM PostEntity p WHERE " +
             "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(p.postContent) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +

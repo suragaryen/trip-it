@@ -50,6 +50,7 @@ public class CommunityController {
 
     }
 
+    //커뮤니티 글 작성
     @PostMapping("/submitPost")
     public ResponseEntity<?> submitPost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PostDTO postDTO) {
 
@@ -71,7 +72,6 @@ public class CommunityController {
         postEntity.setScheduleId(schedule);
 
         System.out.println(postEntity.toString());
-
         communityService.postProcess(postEntity);
 
         return ResponseEntity.ok("success");

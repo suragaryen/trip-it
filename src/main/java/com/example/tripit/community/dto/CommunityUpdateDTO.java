@@ -14,5 +14,4 @@ public class CommunityUpdateDTO {
     private String postTitle;
     private String postContent;
 
-
 }

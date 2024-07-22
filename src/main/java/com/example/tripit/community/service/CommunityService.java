@@ -202,6 +202,7 @@ public class CommunityService {
 
     }
 
+    //상세 글 삭제
     public void deletePost(long userId, Long postId) {
 
         PostEntity post = postRepository.findById(postId)
