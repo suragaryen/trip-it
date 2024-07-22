@@ -2,19 +2,20 @@ package com.example.tripit.block.dto;
 
 import java.time.LocalDateTime;
 
+import com.example.tripit.user.dto.UserDTO;
+import com.example.tripit.user.entity.UserEntity;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Getter
+@Setter
+@NoArgsConstructor
 public class BlockedListDTO {
 
     private Long blockId;
-    private String userNickname;
-    private String blockedUserNickname;
+    private UserDTO userId;
+    private String nickname;
     private LocalDateTime blockDate;
 
-    public BlockedListDTO(Long blockId, String userNickname, String blockedUserNickname, LocalDateTime blockDate) {
-        this.blockId = blockId;
-        this.userNickname = userNickname;
-        this.blockedUserNickname = blockedUserNickname;
-        this.blockDate = blockDate;
-    }
-
-    // Getters and Setters
 }
