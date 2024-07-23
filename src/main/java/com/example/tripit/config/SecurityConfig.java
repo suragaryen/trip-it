@@ -33,8 +33,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final RefreshRepository refreshRepository;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshRepository refreshRepository
+    private final CustomAccessDeniedHandler customAccessDeniedHandler; // 페이지 권한 없음 출력
+    
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshRepository refreshRepository,  CustomAccessDeniedHandler customAccessDeniedHandler
                                                                         ) {
 
         this.authenticationConfiguration = authenticationConfiguration;
@@ -42,6 +43,7 @@ public class SecurityConfig {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.refreshRepository = refreshRepository;
+        this.customAccessDeniedHandler =  customAccessDeniedHandler; // 페이지 권한 없음 출력
     }
 
     @Bean
@@ -111,7 +113,13 @@ public class SecurityConfig {
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost", "/block/add", "/block/user","/block/delete").permitAll()
                         .requestMatchers("/admin/**", "/block/all").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated())
+                
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedHandler(customAccessDeniedHandler) // 페이지 권한 없음 출력
+        );
+        
+        
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
