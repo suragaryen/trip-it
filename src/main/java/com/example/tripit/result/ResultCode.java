@@ -20,6 +20,9 @@ public enum ResultCode {
     SCHEDULETITLE_SUCCESS(200,"4", "schedule title success"),
     SCHEDULETITLE_NULL(200,"5", "schedule title null");
 
+    //mypage
+
+
     private int status;
     private String code;
     private String message;

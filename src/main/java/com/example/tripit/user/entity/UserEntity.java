@@ -46,6 +46,6 @@ public class UserEntity {
 
     private String userpic;
 
-    //private int reportCount;
+    private int reportCount;
     //private Timestamp endDate;
 }

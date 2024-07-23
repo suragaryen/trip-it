@@ -2,6 +2,8 @@ package com.example.tripit.mypage.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @ToString
@@ -17,6 +19,11 @@ public class ProfileDTO {
     private String gender;
     private String userIntro;
     private String userpic;
+    private String role;
+    //private LocalDate regdate;
+    private String social_type;
+    //private int reportCount;
+    private LocalDate endDate;
 
 
 }

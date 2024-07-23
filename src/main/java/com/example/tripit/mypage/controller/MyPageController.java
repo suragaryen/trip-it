@@ -1,7 +1,7 @@
 package com.example.tripit.mypage.controller;
 
 import com.example.tripit.community.dto.CommunityDTO;
-import com.example.tripit.mypage.dto.PasswordUpdateDTO;
+import com.example.tripit.mypage.dto.PasswordDTO;
 import com.example.tripit.mypage.dto.ProfileDTO;
 import com.example.tripit.mypage.service.MyPageService;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
@@ -46,18 +46,36 @@ public class MyPageController {
     }
 
     @PostMapping("profile/profileUpdate")
-    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        return myPageService.profileUpdate(userDTO, userId);
+        String status = myPageService.profileUpdate(userDTO, userId);
+        if (status.equals("닉네임 중복")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else if (status.equals("100 이상")){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    @PostMapping("profile/passwordCheck")
+    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PasswordDTO dto) {
+        String email = customUserDetails.getUsername();
+        Long userId = userRepository.findUserIdByEmail(email);
+        if (myPageService.passwordCheck(dto, userId)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("profile/passwordUpdate")
-    public ResponseEntity<?> passwordUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PasswordUpdateDTO dto) {
+    public ResponseEntity<String> passwordUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PasswordDTO dto) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        ProfileDTO profileDTO = myPageService.passwordUpdate(dto, userId);
-        return ResponseEntity.ok(profileDTO);
+        return myPageService.passwordUpdate(dto, userId);
     }
 
 

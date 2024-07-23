@@ -3,7 +3,7 @@ package com.example.tripit.mypage.service;
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
-import com.example.tripit.mypage.dto.PasswordUpdateDTO;
+import com.example.tripit.mypage.dto.PasswordDTO;
 import com.example.tripit.mypage.dto.ProfileDTO;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
@@ -68,36 +68,50 @@ public class MyPageService {
         dto.setGender(userEntity.getGender()); //성별
         dto.setEmail(userEntity.getEmail()); //이메일
         dto.setBirth(userEntity.getBirth()); //생년월일
+        dto.setRole(userEntity.getRole()); //권한
+        //dto.setRegdate(userEntity.getRegdate()); //가입일자
+        dto.setSocial_type(userEntity.getSocialType()); //소셜타입
+        //dto.setReportCount(userEntity.getReportCount()); //신고누적
 
         return dto;
     }
 
     //프로필 수정
     @Transactional
-    public ResponseEntity<?> profileUpdate(UserDTO userDTO, Long userId) {
-        if (isNicknameExists(userDTO.getNickname())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 닉네임입니다.");
+    public String profileUpdate(UserDTO userDTO, Long userId) {
+        if (isNicknameExists(userDTO.getNickname(), userId)) {
+            return "닉네임 중복"; //존재하는 닉네임 있음
+        }
+
+        if (userDTO.getUserIntro().length() > 100) {
+            return "100 이상";
         }
 
         return userRepository.findById(userId).map(userEntity -> {
             userEntity.setNickname(userDTO.getNickname());
             userEntity.setIntro(userDTO.getUserIntro());
             userEntity.setUserpic(userDTO.getUserpic());
-            ProfileDTO profileDTO = mapToUserDTO(userEntity);
-            return ResponseEntity.ok(profileDTO);
+            return "완료";
         }).orElseThrow(() -> new EntityNotFoundException("user가 존재하지 않음 : " + userId));
     }
 
-    public boolean isNicknameExists(String nickname) {
-        return userRepository.existsByNickname(nickname);
+    public boolean isNicknameExists(String nickname, Long userId) {
+        return userRepository.existsByNicknameAndUserIdNot(nickname, userId);
+    }
+
+    //비밀번호 확인
+    public boolean passwordCheck(PasswordDTO dto, Long userId) {
+        return userRepository.findById(userId)
+                .map(userEntity -> bCryptPasswordEncoder.matches(dto.getPassword(), userEntity.getPassword()))
+                .orElse(false);
     }
 
     //비밀번호 수정
     @Transactional
-    public ProfileDTO passwordUpdate(PasswordUpdateDTO dto, Long userId) {
+    public ResponseEntity<String> passwordUpdate(PasswordDTO dto, Long userId) {
         return userRepository.findById(userId).map(userEntity -> {
-            userEntity.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
-            return mapToUserDTO(userEntity);
+            userEntity.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+            return ResponseEntity.ok("수정완료");
         }).orElseThrow(() -> new EntityNotFoundException("user가 존재하지 않음 : " + userId));
     }
 

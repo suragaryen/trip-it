@@ -37,7 +37,6 @@ public enum ErrorCode {
 
     //MyPage
 
-
     //Community
     private int status;
     private final String code;
