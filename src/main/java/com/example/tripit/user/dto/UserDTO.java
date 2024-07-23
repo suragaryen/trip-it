@@ -1,6 +1,7 @@
 package com.example.tripit.user.dto;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,5 +37,5 @@ public class UserDTO {
     private String userpic;
 
     private int reportCount;
-    private LocalDate endDate;
+    private Date endDate;
 }

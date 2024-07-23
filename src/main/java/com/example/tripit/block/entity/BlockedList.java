@@ -3,7 +3,7 @@ package com.example.tripit.block.entity;
 import java.time.LocalDateTime;
 
 import com.example.tripit.user.entity.UserEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,9 +41,8 @@ public class BlockedList {
     private String nickname;
 
     @Column(name = "block_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime blockDate = LocalDateTime.now();
-
-
 
     
 }

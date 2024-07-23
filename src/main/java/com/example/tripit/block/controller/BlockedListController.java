@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tripit.block.dto.BlockedListDTO;
+import com.example.tripit.block.dto.DeleteRequest;
 import com.example.tripit.block.entity.BlockedList;
 import com.example.tripit.block.repository.BlockedListRepository;
 import com.example.tripit.block.service.BlockedListService;
@@ -54,34 +55,17 @@ public class BlockedListController {
         // 차단 추가 서비스 호출
         blockedListService.addBlock(userId, blockedList.getNickname());
         
-        // 업데이트된 차단 리스트 가져오기
-        List<BlockedList> updatedBlockedList = blockedListService.getBlockedForUser(userId) ;
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
         
+        // 업데이트된 차단 리스트 가져오기
+        List<BlockedList> updatedBlockedList = blockedListService.findByUserId(user);
+
         // 업데이트된 차단 리스트 리턴
         return ResponseEntity.ok(updatedBlockedList);
     }
 
 
-
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -117,7 +101,34 @@ public class BlockedListController {
     }
     
     
+   
     
+    // 차단 삭제
+    @PostMapping("/delete")
+    public ResponseEntity<List<BlockedList>> deleteBlock(@RequestBody BlockedList blockList,
+                                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // 유저정보 시큐리티 확인
+        String email = customUserDetails.getUsername();
+        long userId = userRepository.findUserIdByEmail(email);
+
+//        // 요청된 userId와 로그인된 userId가 일치하는지 확인
+//        UserEntity user =  blockList.getUserId();
+//        user.setUserId(userId);
+
+        // 차단 삭제 서비스 호출
+        blockedListService.deleteForUser(userId, blockList.getNickname());
+        
+        // 유저 객체생성후 user에 userId 담기
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
+        
+        // 업데이트된 차단 리스트 가져오기
+        List<BlockedList> updatedBlockedList = blockedListService.findByUserId(user);
+        // 업데이트된 차단 리스트 리턴
+        return ResponseEntity.ok(updatedBlockedList);
+    }
+    
+ 
     
 //    // 특정 사용자의 차단자 목록 조회DTO
 //    @GetMapping("/user")

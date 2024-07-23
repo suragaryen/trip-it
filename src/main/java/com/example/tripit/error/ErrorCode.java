@@ -40,8 +40,8 @@ public enum ErrorCode {
 	
 	//block
 	BLOCK_EXISTS(500, "1", "자기 자신을 차단할 수 없습니다."),
-	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다.");
-
+	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다."),
+	BLOCK_EXISTS3(500, "3", "차단한 대상이 아닙니다");
 
     //Community
     private int status;

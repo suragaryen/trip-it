@@ -1,20 +1,19 @@
 package com.example.tripit.block.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.tripit.block.dto.BlockedListDTO;
 import com.example.tripit.block.entity.BlockedList;
 import com.example.tripit.block.repository.BlockedListRepository;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
-import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class BlockedListService {
@@ -23,7 +22,6 @@ public class BlockedListService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
 	public BlockedListService(BlockedListRepository blockedListRepository) {
 		this.blockedListRepository = blockedListRepository;
 	}
@@ -36,9 +34,9 @@ public class BlockedListService {
 		// 이미 차단된 상대방의 닉네임인지 확인
 		if (blockedListRepository.existsByUserIdAndNickname(user, nickname)) {
 			throw new CustomException(ErrorCode.BLOCK_EXISTS2);
-		}// if() end
-		
-		// 블록시스트 객체 생성			
+		} // if() end
+
+		// 블록시스트 객체 생성
 		BlockedList blockedList = new BlockedList();
 		blockedList.setUserId(user);
 		blockedList.setNickname(nickname);
@@ -47,10 +45,6 @@ public class BlockedListService {
 		// 블록리스트 저장
 		return blockedListRepository.save(blockedList);
 	}
-
-	
-	
-	
 
 //    public List<BlockedListDTO> getBlockedForUser(String sortKey, String sortValue, Long userId) {
 //    	Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
@@ -91,15 +85,7 @@ public class BlockedListService {
 //
 //        return dto;
 //    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// sort 특정 사용자의 차단 목록 조회 메서드
 	public List<BlockedList> getBlockedForUser(String sortKey, String sortValue, Long userId) {
 		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
@@ -117,11 +103,28 @@ public class BlockedListService {
 		return blockedListRepository.findAll(sort);
 	}
 
-//    
-	// 차단 목록 전체검색
-	public List<BlockedList> getBlockedForUser(Long userId) {
-		return blockedListRepository.findAll();
+	@Transactional
+	public void deleteForUser(Long userId, String nickname) {
+		// 유저 엔티티 확인
+		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		// 이미 차단된 상대방의 닉네임인지 확인
+				if (!blockedListRepository.existsByUserIdAndNickname(user, nickname)) {
+					throw new CustomException(ErrorCode.BLOCK_EXISTS3);
+				} // if() end
+
+		// 블록시스트 객체 생성
+		BlockedList blockedList = new BlockedList();
+		blockedList.setUserId(user);
+		blockedList.setNickname(nickname);
+		// 차단 리스트에서 항목 삭제
+		blockedListRepository.deleteByUserIdAndNickname(user, nickname);
 	}
+
+	// 차단 목록 전체검색
+		public List<BlockedList> findByUserId(UserEntity userId) {
+			return blockedListRepository.findByUserId(userId);
+		}
+
 
 //    public List<BlockedListDTO> blockedListAdmin() {
 //    	
