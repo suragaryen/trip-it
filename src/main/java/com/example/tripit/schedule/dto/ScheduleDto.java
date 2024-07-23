@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDto {
+
     @JsonProperty("schedule_id")
     private Long scheduleId;
 
@@ -36,6 +37,5 @@ public class ScheduleDto {
 
     @JsonProperty("schedule_title")
     private String scheduleTitle;
-
 
 }

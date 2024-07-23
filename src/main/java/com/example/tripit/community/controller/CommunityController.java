@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/community")
@@ -43,8 +45,11 @@ public class CommunityController {
 
         UserScheduleResponse response = new UserScheduleResponse(userId, titlesByUserId, scheduleIdByUserId, ResultCode.SCHEDULETITLE_SUCCESS);
 
-        if(titlesByUserId.isEmpty()){
-            return ResponseEntity.ok("schedule is null");
+
+        if(titlesByUserId == null || titlesByUserId.isEmpty()){
+            Map<String, String> responseNone = new HashMap<>();
+            responseNone.put("msg", "none");
+            return ResponseEntity.ok(responseNone);
         }
         return ResponseEntity.ok(response);
 
@@ -104,8 +109,13 @@ public class CommunityController {
             @RequestParam (defaultValue = "") String query,
             @RequestParam (defaultValue = "1") String metroId
     ) {
+            List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
 
-        List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
+            if(communityDTOS == null || communityDTOS.isEmpty()){
+                Map<String, String> response = new HashMap<>();
+                response.put("msg", "none");
+                return ResponseEntity.ok(response);
+            }
 
         return ResponseEntity.ok(communityDTOS);
     }
@@ -154,6 +164,23 @@ public class CommunityController {
         try {
             communityService.deletePost(userId, postId);
             System.out.println("삭제 성공");
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //모집상태 업데이트
+    @PostMapping("/communityDetail/CompletedPost/{postId}")
+    public void communityCompletedPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long postId){
+
+        String email = customUserDetails.getUsername();//email
+        long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            communityService.updateExposureState(userId, postId);
+            System.out.println("exposureState false done");
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -37,4 +37,5 @@ public class UserDTO {
 
     private int reportCount;
     private LocalDate endDate;
+
 }

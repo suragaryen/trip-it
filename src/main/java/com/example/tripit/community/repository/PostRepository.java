@@ -39,6 +39,17 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
 
+    @Query("SELECT p FROM PostEntity p WHERE " +
+            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(p.postContent) LIKE LOWER(CONCAT('%', :query, '%')))" +
+            "ORDER BY p.postDate DESC")
+    List<PostEntity> searchByQuerydOrderByPostDateDesc(@Param("query") String query);
+
+    //모집완료 설정
+    @Modifying
+    @Transactional
+    @Query("UPDATE PostEntity p SET p.exposureStatus = false WHERE p.postId = :postId")
+    void updateExposureStatus(@Param("postId") Long postId);
 
     PostEntity findByPostId(Long postId);
 }

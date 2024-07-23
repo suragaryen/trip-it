@@ -106,8 +106,13 @@ public class CommunityService {
 
     //검색 서비스
     public List<CommunityDTO> searchCommunityByQueryAndMetroId(String query, String metroId) {
-        List<PostEntity> posts = postRepository.searchByQueryAndMetroIdOrderByPostDateDesc(query, metroId);
+        List<PostEntity> posts;
 
+        if (metroId.equals("0")) {
+            posts = postRepository.searchByQuerydOrderByPostDateDesc(query);
+        } else {
+            posts = postRepository.searchByQueryAndMetroIdOrderByPostDateDesc(query, metroId);
+        }
         return posts.stream()
                 .map(post -> {
                     UserEntity user = post.getUserId();
@@ -221,5 +226,23 @@ public class CommunityService {
             throw new RuntimeException("User does not have permission to update this post");
         }
 
+    }
+
+    public void updateExposureState(long userId, Long postId) {
+
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        long postUserId = post.getUserId().getUserId(); //글쓴이userId
+        System.out.println("posted" + postUserId);
+        System.out.println("logged" + userId);
+
+        if(postUserId == userId){
+            postRepository.updateExposureStatus(postId);
+            System.out.println("exposureStatus updated");
+        }else{
+
+            throw new RuntimeException("User does not have permission to update this post");
+        }
     }
 }
