@@ -111,7 +111,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost", "/block/add", "/block/user","/block/delete").permitAll()
-                        .requestMatchers("/admin/**", "/block/all").hasRole("ADMIN")
+                        .requestMatchers("/admin/**", "/block/**").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated())
                 

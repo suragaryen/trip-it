@@ -35,7 +35,7 @@ public class ReportController {
     }
     
     //신고추가
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<String> addReport(@RequestBody Report report) {
     	reportService.addReport(report.getUserId());
     	

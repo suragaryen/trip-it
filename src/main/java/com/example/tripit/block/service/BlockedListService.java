@@ -1,11 +1,16 @@
 package com.example.tripit.block.service;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.tripit.block.dto.BlockedListDTO;
 import com.example.tripit.block.entity.BlockedList;
 import com.example.tripit.block.repository.BlockedListRepository;
 import com.example.tripit.error.CustomException;
@@ -17,8 +22,9 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class BlockedListService {
-
+	@Autowired
 	final BlockedListRepository blockedListRepository;
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -103,28 +109,39 @@ public class BlockedListService {
 		return blockedListRepository.findAll(sort);
 	}
 
+	//페이징
+		public Page<BlockedList> blockListPage(int page, int size, String sortValue, String sortKey) {
+////	        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("blockId")));
+//	        Pageable pageable = PageRequest.of(page, size);
+//	        Page<BlockedList> blocks = (Page<BlockedList>)blockedListRepository.findAllByOrderByBlockDateDesc(pageable);
+//	        
+//	        System.out.println(blocks);
+			
+		    Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortValue), sortKey));
+	        return blockedListRepository.findAll(pageable);
+	    }
+		
 	@Transactional
-	public void deleteForUser(Long userId, String nickname) {
+	public void deleteForUser(Long userId, Long BlockId) {
 		// 유저 엔티티 확인
 		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 		// 이미 차단된 상대방의 닉네임인지 확인
-				if (!blockedListRepository.existsByUserIdAndNickname(user, nickname)) {
-					throw new CustomException(ErrorCode.BLOCK_EXISTS3);
-				} // if() end
+		if (!blockedListRepository.existsByUserIdAndBlockId(user, BlockId)) {
+			throw new CustomException(ErrorCode.BLOCK_EXISTS3);
+		} // if() end
 
 		// 블록시스트 객체 생성
 		BlockedList blockedList = new BlockedList();
 		blockedList.setUserId(user);
-		blockedList.setNickname(nickname);
+		blockedList.setBlockId(BlockId);
 		// 차단 리스트에서 항목 삭제
-		blockedListRepository.deleteByUserIdAndNickname(user, nickname);
+		blockedListRepository.deleteByUserIdAndBlockId(user, BlockId);
 	}
 
 	// 차단 목록 전체검색
-		public List<BlockedList> findByUserId(UserEntity userId) {
-			return blockedListRepository.findByUserId(userId);
-		}
-
+	public List<BlockedList> findByUserId(UserEntity userId) {
+		return blockedListRepository.findByUserId(userId);
+	}
 
 //    public List<BlockedListDTO> blockedListAdmin() {
 //    	
@@ -147,6 +164,6 @@ public class BlockedListService {
 //    	                })
 //    	                .collect(Collectors.toList());
 //             }
-//    
-
+	 
+	
 }

@@ -3,8 +3,9 @@ package com.example.tripit.block.dto;
 import java.time.LocalDateTime;
 
 import com.example.tripit.user.dto.UserDTO;
-import com.example.tripit.user.entity.UserEntity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,5 +18,15 @@ public class BlockedListDTO {
     private UserDTO userId;
     private String nickname;
     private LocalDateTime blockDate;
+    
+    //페이징 전용 컬럼
+    private LocalDateTime createdDate;
+    
+    //페이징
+    @PrePersist
+    protected void onCreate() {
+    	createdDate = LocalDateTime.now();
+    }
+    
 
 }
