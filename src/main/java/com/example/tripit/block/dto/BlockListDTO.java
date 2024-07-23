@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BlockedListDTO {
+public class BlockListDTO {
 
     private Long blockId;
     private UserDTO userId;

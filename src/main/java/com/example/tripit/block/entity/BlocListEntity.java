@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "blockedlist")
-public class BlockedList {
+public class BlocListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +44,4 @@ public class BlockedList {
     @Column(name = "block_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime blockDate = LocalDateTime.now();
-    
-    
-    
-
-
 }
