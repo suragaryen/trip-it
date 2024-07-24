@@ -1,6 +1,5 @@
 package com.example.tripit.block.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.tripit.block.dto.BlockListDTO;
-import com.example.tripit.block.entity.BlocListEntity;
+import com.example.tripit.block.entity.BlockListEntity;
 import com.example.tripit.block.repository.BlockListRepository;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
+import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 
@@ -33,7 +33,7 @@ public class BlockListService {
 	}
 
 	// 차단 추가 메서드
-	public BlocListEntity addBlock(Long userId, String nickname) {
+	public BlockListEntity addBlock(Long userId, String nickname) {
 		// 유저 엔티티형식의 객체 생성
 		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -43,7 +43,7 @@ public class BlockListService {
 		} // if() end
 
 		// 블록시스트 객체 생성
-		BlocListEntity blockList = new BlocListEntity();
+		BlockListEntity blockList = new BlockListEntity();
 		blockList.setUserId(user);
 		blockList.setNickname(nickname);
 		blockListRepository.save(blockList);
@@ -52,48 +52,14 @@ public class BlockListService {
 		return blockListRepository.save(blockList);
 	}
 
-//    public List<blockListDTO> getblockForUser(String sortKey, String sortValue, Long userId) {
-//    	Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
-//        UserEntity user = userRepository.findById(userId).orElse(null);
-//        if (user != null) {
-//            List<blockList> blockList = blockListRepository.findByUserId(user, sort);
-//            return blockList.stream().map(this::convertToDTO).collect(Collectors.toList());
-//        }
-//        return List.of(); // 빈 리스트 반환
-//    }
-//    
-//    private blockListDTO convertToDTO(blockList blockList) {
-//        blockListDTO dto = new blockListDTO();
-//        dto.setBlockId(blockList.getBlockId());
-//
-//        // UserDTO로 변환
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setUserId(blockList.getUserId().getUserId());
-//        userDTO.setEmail(blockList.getUserId().getEmail());
-//        userDTO.setUsername(blockList.getUserId().getUsername());
-//        userDTO.setNickname(blockList.getUserId().getNickname());
-//        userDTO.setPassword(blockList.getUserId().getPassword());  // 비밀번호는 보통 DTO에 포함하지 않지만 필요 시 추가
-//        userDTO.setBirth(blockList.getUserId().getBirth());
-//        userDTO.setGender(blockList.getUserId().getGender());
-//        userDTO.setUserIntro(blockList.getUserId().getIntro());  // `userIntro`로 매핑
-//        userDTO.setRole(blockList.getUserId().getRole());
-////        userDTO.setRegdate(blockList.getUserId().getRegdate());
-//        userDTO.setSocial_type(blockList.getUserId().getSocialType());
-//        userDTO.setUserpic(blockList.getUserId().getUserpic());
-////        userDTO.setReportCount(blockList.getUserId().getReportCount());
-////        userDTO.setEndDate(blockList.getUserId().getEndDate());
-//        
-//        
-//   
-//        dto.setUserId(userDTO);
-//        dto.setNickname(blockList.getNickname());
-//        dto.setBlockDate(blockList.getBlockDate());
-//
-//        return dto;
-//    }
+	// mypage 조회
+	public List<BlockListEntity> mypageblockForUser(Long userId) {
+		UserEntity user = userRepository.findById(userId).orElse(null);
+		return blockListRepository.findByUserId(user); // 빈 리스트 반환
+	}
 
 	// sort 특정 사용자의 차단 목록 조회 메서드
-	public List<BlocListEntity> getblockForUser(String sortKey, String sortValue, Long userId) {
+	public List<BlockListEntity> getblockForUser(String sortKey, String sortValue, Long userId) {
 		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
 		UserEntity user = userRepository.findById(userId).orElse(null);
 		if (user != null) {
@@ -102,25 +68,78 @@ public class BlockListService {
 		return List.of(); // 빈 리스트 반환
 	}
 
-	// sort를 사용한 모든 차단 목록 조회 메서드+정렬
-	public List<BlocListEntity> getblockForAdmin(String sortKey, String sortValue) {
-		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
+	// sort 모든 사용자의 차단 목록 조회 메서드
+	public List<BlockListEntity> getBlockForAdmin(String sortKey, String sortValue) {
 
+		// Sort 객체 생성
+		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
+		// 모든 차단 목록 항목을 정렬하여 반환
 		return blockListRepository.findAll(sort);
 	}
 
-	//페이징
-		public Page<BlocListEntity> blockListPage(int page, int size, String sortValue, String sortKey) {
-////	        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("blockId")));
-//	        Pageable pageable = PageRequest.of(page, size);
-//	        Page<blockList> blocks = (Page<blockList>)blockListRepository.findAllByOrderByBlockDateDesc(pageable);
-//	        
-//	        System.out.println(blocks);
-			
-		    Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortValue), sortKey));
-	        return blockListRepository.findAll(pageable);
-	    }
-		
+	// UserDTO로 변환하는 메소드
+	private UserDTO convertToUserDTO(UserEntity userEntity) {
+		UserDTO userDTO = new UserDTO();
+		// UserEntity의 속성들을 UserDTO에 매핑
+		userDTO.setUserId(userEntity.getUserId());
+		userDTO.setEmail(userEntity.getEmail());
+		userDTO.setUsername(userEntity.getUsername());
+		userDTO.setNickname(userEntity.getNickname());
+		userDTO.setBirth(userEntity.getBirth());
+		userDTO.setGender(userEntity.getGender());
+		userDTO.setRole(userEntity.getRole());
+		return userDTO;
+	}
+
+	// DTO로 변환하는 메소드
+	public BlockListDTO convertToBlockListDTO(BlockListEntity BlockListEntity) {
+		BlockListDTO dto = new BlockListDTO();
+		dto.setBlockId(BlockListEntity.getBlockId());
+		dto.setUserId(convertToUserDTO(BlockListEntity.getUserId()));
+		dto.setNickname(BlockListEntity.getNickname());
+		dto.setBlockDate(BlockListEntity.getBlockDate());
+		// createdDate는 실제로 필요하지 않으면 설정하지 않을 수 있습니다.
+		return dto;
+	}
+
+	// DTO방식으로 조회,정렬,페이징
+	public Page<BlockListDTO> blockListPage(String sortKey, String sortValue, int page, int size) {
+//		 // 기본 정렬 필드 및 방향 설정
+		String defaultSortKey = "blockDate";
+		String defaultSortValue = "desc";
+
+		// 적절한 정렬 키 설정
+		String sortingField;
+		if (sortKey == null || sortKey.isEmpty()) {
+			sortingField = defaultSortKey;
+		} else if (sortKey.equals("userId")) {
+			sortingField = "userId.nickname"; // 연관된 UserEntity의 nickname
+		} else if (sortKey.equals("nickname")) {
+			sortingField = "nickname"; // BlockListEntity의 blockDate
+		} else if (sortKey.equals("blockDate")) {
+			sortingField = "blockDate";
+		} else {
+			sortingField = sortKey; // 기본적으로 sortKey로 설정된 필드를 사용
+		}
+
+		// Sort 객체 생성
+		Sort.Direction direction = Sort.Direction
+				.fromString(sortValue != null && !sortValue.isEmpty() ? sortValue : defaultSortValue);
+		Sort sort = Sort.by(direction, sortingField);
+
+		// 페이징 설정
+		Pageable pageable = PageRequest.of(page - 1, size, sort);
+		Page<BlockListEntity> entityPage = blockListRepository.findAll(pageable);
+
+		return entityPage.map(this::convertToBlockListDTO);
+	}
+
+	// 차단 목록 전체조회
+	public List<BlockListEntity> findByUserId(UserEntity userId) {
+		return blockListRepository.findByUserId(userId);
+	}
+
+	// 차단 삭제(해제)
 	@Transactional
 	public void deleteForUser(Long userId, Long BlockId) {
 		// 유저 엔티티 확인
@@ -131,39 +150,10 @@ public class BlockListService {
 		} // if() end
 
 		// 블록시스트 객체 생성
-		BlocListEntity blockList = new BlocListEntity();
+		BlockListEntity blockList = new BlockListEntity();
 		blockList.setUserId(user);
 		blockList.setBlockId(BlockId);
 		// 차단 리스트에서 항목 삭제
 		blockListRepository.deleteByUserIdAndBlockId(user, BlockId);
 	}
-
-	// 차단 목록 전체검색
-	public List<BlocListEntity> findByUserId(UserEntity userId) {
-		return blockListRepository.findByUserId(userId);
-	}
-
-//    public List<blockListDTO> blockListAdmin() {
-//    	
-//    	List<blockList> blockLists = blockListRepository.findAllByOrderByBlockDateDesc();
-//    	
-//    	
-//    		    return blockLists.stream()
-//    	                .map(blockList -> {
-//    	                    UserEntity user = blockList.getUser();
-//    	                 
-//
-//    	                    return new blockListDTO(
-//    	                    		user.getUserId(),
-//    	                    		blockList.getBlockId(),
-//    	                    		user.getNickname(),
-//    	                    		blockList.getNickname(),
-//    	                            blockList.getBlockDate()
-//    	                          
-//    	                    );
-//    	                })
-//    	                .collect(Collectors.toList());
-//             }
-	 
-	
 }

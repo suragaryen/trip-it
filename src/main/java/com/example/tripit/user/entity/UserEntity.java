@@ -2,6 +2,7 @@ package com.example.tripit.user.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //import com.nimbusds.openid.connect.sdk.claims.Gender;
@@ -32,7 +33,9 @@ public class UserEntity {
     private String email;
     private String username;
     private String nickname;
-    private String password;
+    
+    @JsonIgnore
+    private String password; // 직렬화에서 제외
     private String birth;
     private String gender;
 

@@ -27,6 +27,4 @@ public class BlockListDTO {
     protected void onCreate() {
     	createdDate = LocalDateTime.now();
     }
-    
-
 }

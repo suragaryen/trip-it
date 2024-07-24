@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "blockedlist")
-public class BlocListEntity {
+public class BlockListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
