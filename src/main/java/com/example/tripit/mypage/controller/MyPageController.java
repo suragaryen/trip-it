@@ -2,6 +2,7 @@ package com.example.tripit.mypage.controller;
 
 import com.example.tripit.block.entity.BlockListEntity;
 import com.example.tripit.block.service.BlockListService;
+import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.mypage.service.MyPageService;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
@@ -135,6 +136,44 @@ public class MyPageController {
 		List<BlockListEntity> blockList = blockListService.mypageblockForUser(userId);
 		return ResponseEntity.ok(blockList);
 	}
+    @GetMapping("postList")
+    public ResponseEntity<?> postList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String email = customUserDetails.getUsername();
+        Long userId = userRepository.findUserIdByEmail(email);
+        List<CommunityDTO> postList = myPageService.postList(userId);
+
+        System.out.println(postList);
+
+        return ResponseEntity.ok(postList);
+    }
+
+//    @GetMapping("/postDetail/{postId}")
+//    public ResponseEntity<?> postDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
+//        String email = customUserDetails.getUsername();
+//        Long userId = userRepository.findUserIdByEmail(email);
+//
+//        List<CommunityDTO> detail = myPageService.postDetail(userId, postId);
+//
+//        System.out.println(detail);
+//
+//        return ResponseEntity.ok(detail);
+//    }
+
+    @DeleteMapping("postList/{postId}")
+    public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
+
+        String email = customUserDetails.getUsername();
+        Long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            myPageService.postDelete(userId, postId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 일정을 찾을 수 없을 때 NOT_FOUND 상태 코드 반환
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

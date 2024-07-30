@@ -34,7 +34,6 @@ public class UserEntity {
     private String username;
     private String nickname;
     
-    @JsonIgnore
     private String password; // 직렬화에서 제외
     private String birth;
     private String gender;
@@ -58,6 +57,4 @@ public class UserEntity {
 
     private String userpic;
 
-    //private int reportCount;
-    //private Timestamp endDate;
 }

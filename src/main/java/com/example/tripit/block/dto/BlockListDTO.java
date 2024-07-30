@@ -19,13 +19,4 @@ public class BlockListDTO {
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime blockDate;
-//    
-//    //페이징 전용 컬럼
-//    private LocalDateTime createdDate;
-    
-//    //페이징
-//    @PrePersist
-//    protected void onCreate() {
-//    	createdDate = LocalDateTime.now();
-//    }
 }

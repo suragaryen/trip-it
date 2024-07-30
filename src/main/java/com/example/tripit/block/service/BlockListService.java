@@ -217,6 +217,6 @@ public class BlockListService {
 		blockList.setBlockId(blockId);
 		// 차단 리스트에서 항목 삭제
 		blockListRepository.deleteByUserIdAndBlockId(user, blockId);
-		
+
 	}
 }

@@ -19,7 +19,6 @@ import lombok.ToString;
 public class UserDTO {
 
     private Long userId;
-
     private String email;
     private String username;
     private String nickname;

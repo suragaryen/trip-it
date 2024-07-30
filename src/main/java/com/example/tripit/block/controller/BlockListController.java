@@ -71,9 +71,7 @@ public class BlockListController {
 			@RequestParam(value = "search", required = false) String search,
 			@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("sortKey") String sortKey,
 			@RequestParam("sortValue") String sortValue, @RequestParam("page") int page, @RequestParam("size") int size
-	/*
-	 * @RequestParam(value = "searchKeyword", required = false) String searchKeyword
-	 */) {
+	) {
 
 		// 유저 정보 시큐리티 확인
 		String email = customUserDetails.getUsername(); // email

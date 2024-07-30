@@ -112,6 +112,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost", "/block/add", "/block/user","/block/delete").permitAll()
                         .requestMatchers("/admin/**", "/block/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/community/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated())
                 

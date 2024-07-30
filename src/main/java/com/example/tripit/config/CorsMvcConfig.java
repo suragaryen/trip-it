@@ -14,6 +14,10 @@ public class CorsMvcConfig  implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins("http://172.16.1.78:3000")
 //                .allowedOrigins("http://172.16.1.140:3001")
+                //.allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://172.16.1.110:3000")
+                //.allowedOrigins("https://moonmoon96.github.io")
+
                 .allowCredentials(true);
     }
 }

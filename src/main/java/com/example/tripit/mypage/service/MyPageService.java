@@ -1,5 +1,10 @@
 package com.example.tripit.mypage.service;
 
+import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.PostDTO;
+import com.example.tripit.community.entity.PostEntity;
+import com.example.tripit.community.repository.PostRepository;
+import com.example.tripit.community.service.CommunityService;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.entity.DetailScheduleEntity;
@@ -16,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +43,12 @@ public class MyPageService {
 
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private CommunityService communityService;
 
     public MyPageService(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -166,6 +178,55 @@ public class MyPageService {
             throw new IllegalArgumentException("일정을 찾을 수 없음");
         }
         scheduleRepository.deleteById(scheduleId);
+    }
+
+    public List<CommunityDTO> postList(Long userId) {
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
+
+        List<PostEntity> postEntities = postRepository.findByUserId(user);
+
+        return postEntities.stream()
+                .map(post -> {
+                    UserEntity userEntity = post.getUserId();
+                    ScheduleEntity schedule = post.getScheduleId();
+
+                    return new CommunityDTO(
+                            post.getPostId(),
+                            post.getPostTitle(),
+                            post.getPostContent(),
+                            post.getPersonnel(),
+                            post.getViewCount(),
+                            post.getExposureStatus(),
+                            post.getPostPic(),
+                            post.getPostDate(),
+                            user.getUserId(),
+                            user.getNickname(),
+                            user.getGender(),
+                            user.getBirth(),
+                            user.getUserpic(),
+                            schedule.getScheduleId(),
+                            schedule.getMetroId(),
+                            schedule.getStartDate(),
+                            schedule.getEndDate()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+//    public List<CommunityDTO> postDetail(Long userId, Long postId) {
+//        return communityService.loadCommunityList(userId, postId);
+//    }
+
+    public void postDelete(Long userId, Long postId) {
+
+        Optional<PostEntity> postEntity = postRepository.findById(postId);
+        //System.out.println(postEntity + "d");
+        if (postEntity.isEmpty()) {
+            throw new IllegalArgumentException("글을 찾을 수 없음");
+        }
+        postRepository.deleteById(postId);
+        postList(userId);
     }
 
 }
