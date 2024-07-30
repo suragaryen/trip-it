@@ -17,7 +17,7 @@ public class ProfileDTO {
     private String nickname;
     private String birth;
     private String gender;
-    private String userIntro;
+    private String intro;
     private String userpic;
     private String role;
     //private LocalDate regdate;

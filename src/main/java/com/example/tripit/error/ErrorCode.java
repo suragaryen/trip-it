@@ -33,10 +33,11 @@ public enum ErrorCode {
     //Chat
     MESSAGE_NULL(400,"1","message is null"),
     //Schedule
-    NO_CONTENT(204, "N001", "No content");
+    NO_CONTENT(204, "N001", "No content"),
 
     //MyPage
-
+    DUPLICATE_NICKNAMES(409, "409", "Duplicate nicknames"),
+    INTRO_TOO_LONG(422, "422", "Intro too long");
     //Community
     private int status;
     private final String code;

@@ -23,7 +23,7 @@ public class DetailScheduleDto {
     private Long scheduleId;
 
     @JsonProperty("schedule_order")
-    private int scheduleOrder;
+    private Integer scheduleOrder;
 
     @JsonProperty("start_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")

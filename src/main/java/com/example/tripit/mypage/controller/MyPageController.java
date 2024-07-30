@@ -1,14 +1,19 @@
 package com.example.tripit.mypage.controller;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.mypage.dto.PasswordDTO;
 import com.example.tripit.mypage.dto.ProfileDTO;
+import com.example.tripit.mypage.dto.ProfileUpdateDTO;
 import com.example.tripit.mypage.service.MyPageService;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
+import com.example.tripit.schedule.dto.ScheduleRequest;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,19 +50,13 @@ public class MyPageController {
         }
     }
 
-    @PostMapping("profile/profileUpdate")
-    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
+    @PatchMapping("profile/profileUpdate")
+    public ResponseEntity<Void> updateProfile2(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProfileUpdateDTO profileUpdateDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        String status = myPageService.profileUpdate(userDTO, userId);
-        if (status.equals("닉네임 중복")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } else if (status.equals("100 이상")){
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
+        myPageService.profileUpdate(profileUpdateDTO, userId);
 
         return ResponseEntity.ok().build();
-
     }
 
     @PostMapping("profile/passwordCheck")
@@ -112,6 +111,24 @@ public class MyPageController {
         return ResponseEntity.ok(detailScheduleDtos);
     }
 
+    @PatchMapping("update-schedules")
+    public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
+        //CustomUserDetails에서 userId 추출
+        String email = customUserDetails.getUsername();
+        long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            List<ScheduleDto> scheduleDtos = myPageService.updateSchedule(scheduleRequest, userId);
+
+            return ResponseEntity.ok(scheduleDtos);
+        } catch (Exception e) {
+            // 클라이언트에게 전달할 에러 메시지
+            String errorMessage = "일정 저장 실패: " + e.getMessage();
+            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
+    }
     @DeleteMapping("schedules/{scheduleId}") //상세 페이지에서 삭제할 때
     public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {
         try {
