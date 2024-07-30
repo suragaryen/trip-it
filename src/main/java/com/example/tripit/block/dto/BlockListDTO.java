@@ -3,9 +3,8 @@ package com.example.tripit.block.dto;
 import java.time.LocalDateTime;
 
 import com.example.tripit.user.dto.UserDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,14 +16,16 @@ public class BlockListDTO {
     private Long blockId;
     private UserDTO userId;
     private String nickname;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime blockDate;
+//    
+//    //페이징 전용 컬럼
+//    private LocalDateTime createdDate;
     
-    //페이징 전용 컬럼
-    private LocalDateTime createdDate;
-    
-    //페이징
-    @PrePersist
-    protected void onCreate() {
-    	createdDate = LocalDateTime.now();
-    }
+//    //페이징
+//    @PrePersist
+//    protected void onCreate() {
+//    	createdDate = LocalDateTime.now();
+//    }
 }

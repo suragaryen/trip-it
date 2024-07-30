@@ -66,33 +66,31 @@ public class BlockListController {
 		return ResponseEntity.ok(updatedblockList);
 	}
 
-	
 	@GetMapping("/all")
 	public ResponseEntity<Page<BlockListDTO>> blockForAdmin(
-	        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-	        @RequestParam("sortKey") String sortKey,
-	        @RequestParam("sortValue") String sortValue,
-	        @RequestParam("page") int page,
-	        @RequestParam("size") int size
-	       /* @RequestParam(value = "searchKeyword", required = false) String searchKeyword*/) {
+			@RequestParam(value = "search", required = false) String search,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("sortKey") String sortKey,
+			@RequestParam("sortValue") String sortValue, @RequestParam("page") int page, @RequestParam("size") int size
+	/*
+	 * @RequestParam(value = "searchKeyword", required = false) String searchKeyword
+	 */) {
 
-	    // 유저 정보 시큐리티 확인
-	    String email = customUserDetails.getUsername(); // email
-	    Long userId = userRepository.findUserIdByEmail(email);
-	    
-	    // 정렬된 차단 리스트 조회
-	    List<BlockListEntity> blockList = blockListService.getBlockForAdmin(sortKey, sortValue);
-	    // 페이징 및
-	    Page<BlockListDTO> blocksPage = blockListService.blockListPage(sortKey, sortValue, page, size);
-	  
-	    // 응답 객체 구성 	
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("blocks", blockList);
-	    response.put("totalElements", blocksPage.getTotalElements());
+		// 유저 정보 시큐리티 확인
+		String email = customUserDetails.getUsername(); // email
+		Long userId = userRepository.findUserIdByEmail(email);
 
-	    return ResponseEntity.ok(blocksPage);
+		// 정렬된 차단 리스트 조회
+		List<BlockListEntity> blockList = blockListService.getBlockForAdmin(sortKey, sortValue);
+		// 페이징 및
+		Page<BlockListDTO> blocksPage = blockListService.blockListPage(search, sortKey, sortValue, page, size);
+
+		// 응답 객체 구성
+		Map<String, Object> response = new HashMap<>();
+		response.put("blocks", blockList);
+		response.put("totalElements", blocksPage.getTotalElements());
+
+		return ResponseEntity.ok(blocksPage);
 	}
-
 
 //    // 특정 사용자의 차단자 목록 조회
 	@GetMapping("/user")
@@ -109,12 +107,12 @@ public class BlockListController {
 		List<BlockListEntity> blockList = blockListService.getblockForUser(sortKey, sortValue, userId);
 		return ResponseEntity.ok(blockList);
 	}
-	
-	
+
+
 
 	// 차단 삭제
 	@PostMapping("/delete")
-	public ResponseEntity<List<BlockListEntity>> deleteBlock(@RequestBody BlockListEntity blockList,
+	public ResponseEntity<String> deleteBlock(@RequestBody BlockListEntity blockList,
 			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		// 유저정보 시큐리티 확인
 		String email = customUserDetails.getUsername();
@@ -135,7 +133,7 @@ public class BlockListController {
 		List<BlockListEntity> updatedblockList = blockListService.findByUserId(user);
 
 		// 업데이트된 차단 리스트 리턴
-		return ResponseEntity.ok(updatedblockList);
+		return ResponseEntity.ok("차단 해제 완료");
 	}
 
 //    // 특정 사용자의 차단자 목록 조회DTO
@@ -151,7 +149,5 @@ public class BlockListController {
 //        List<blockListDTO> blockList = blockListService.getblockForUser(sortKey, sortValue, userId);
 //        return ResponseEntity.ok(blockList);
 //    }
-
-	
 
 }

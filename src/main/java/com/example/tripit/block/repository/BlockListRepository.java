@@ -1,6 +1,8 @@
 package com.example.tripit.block.repository;
 
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -42,6 +44,9 @@ public interface BlockListRepository extends JpaRepository<BlockListEntity, Long
     // 사용자 ID로 차단 리스트 조회
     List<BlockListEntity> findByUserId(UserEntity userId);
     
-
+    // 닉네임으로 검색
+    Page<BlockListEntity> findByNicknameContainingIgnoreCase(String nickname, Pageable pageable);
+ // 날짜로 블록 리스트를 검색하는 메서드
+    Page<BlockListEntity> findByBlockDate(LocalDateTime blockDate, Pageable pageable);
 }
 	
