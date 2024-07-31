@@ -44,48 +44,38 @@ public class ReportController {
 		return reportService.findAll();
 	}
 
-//    //나의 신고대상자 확인
-//    @GetMapping("/{id}")
-//    public ReportEntity getReportById(@PathVariable int id) {
-//        return reportService.findById(id);
-//    }
-//    
 	// 신고추가
 	@PostMapping("/add")
 	public ResponseEntity<List<ReportEntity>> addReport(@RequestBody ReportRequest reportRequest,
 			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-	    // 유저 정보 시큐리티 확인
-	    String email = customUserDetails.getUsername();
-	    Long userId = userRepository.findUserIdByEmail(email);
+		// 유저 정보 시큐리티 확인
+		String email = customUserDetails.getUsername();
+		Long userId = userRepository.findUserIdByEmail(email);
 		Optional<UserEntity> entity = userRepository.findById(userId);
 
+		// 신고 추가 및 차단 처리
+		ReportEntity report = reportService.addReport(userId, reportRequest.getPostId(), reportRequest.getReportType(),
+				reportRequest.getReportDetail(), reportRequest.isBlockUser());
 
-	    // 신고 추가 및 차단 처리
-	    ReportEntity report = reportService.addReport(userId, reportRequest.getPostId(),
-	            reportRequest.getReportType(), reportRequest.getReportDetail(), reportRequest.isBlockUser());
+		// 업데이트된 신고 리스트 가져오기
+		List<ReportEntity> updatedReport = reportService.findAll();
 
-	    // 업데이트된 신고 리스트 가져오기
-	    List<ReportEntity> updatedReport = reportService.findAll();
-
-	    // 업데이트된 신고 리스트 리턴
-	    return ResponseEntity.ok(updatedReport);
+		// 업데이트된 신고 리스트 리턴
+		return ResponseEntity.ok(updatedReport);
 	}
 
 	// 특정 사용자의 신고자 목록 조회
 	@GetMapping("/user")
-	public ResponseEntity<List<ReportEntity>> blockForUser(
-	        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-	        @RequestParam("sortKey") String sortKey,
-	        @RequestParam("sortValue") String sortValue) {
+	public ResponseEntity<List<ReportEntity>> blockForUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@RequestParam("sortKey") String sortKey, @RequestParam("sortValue") String sortValue) {
 
-	    // 유저정보 시큐리티 확인
-	    String email = customUserDetails.getUsername();
-	    Long userId = userRepository.findUserIdByEmail(email);
+		// 유저정보 시큐리티 확인
+		String email = customUserDetails.getUsername();
+		Long userId = userRepository.findUserIdByEmail(email);
 
-	    // 유저의 신고 목록 조회 서비스 호출
-	    List<ReportEntity> report = reportService.reportForUser(sortKey, sortValue, userId);
-	    return ResponseEntity.ok(report);
+		// 유저의 신고 목록 조회 서비스 호출
+		List<ReportEntity> report = reportService.reportForUser(sortKey, sortValue, userId);
+		return ResponseEntity.ok(report);
 	}
-
 
 }

@@ -27,7 +27,8 @@ public class ReportService {
 	private final PostRepository postRepository; // 차단 서비스 주입
 
 	public ReportService(ReportRepository reportRepository, UserRepository userRepository,
-			ReportTypeRepository reportTypeRepository, BlockListService blockListService, PostRepository postRepository) {
+			ReportTypeRepository reportTypeRepository, BlockListService blockListService,
+			PostRepository postRepository) {
 		this.reportRepository = reportRepository;
 		this.userRepository = userRepository;
 		this.reportTypeRepository = reportTypeRepository;
@@ -43,6 +44,15 @@ public class ReportService {
 	public List<ReportEntity> reportForUser(String sortKey, String sortValue, Long userId) {
 		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
 		UserEntity user = userRepository.findById(userId).orElse(null);
+
+		// 기본 정렬 필드 및 방향 설정
+		String defaultSortKey = "reportDate";
+		String defaultSortValue = "desc";
+
+		// 기본값 설정
+		sortKey = defaultSortKey != null ? defaultSortKey : "defaultSortKey";
+		sortValue = defaultSortValue != null ? defaultSortValue : "asc";
+
 		return reportRepository.findByUserId(user, sort);
 	}
 

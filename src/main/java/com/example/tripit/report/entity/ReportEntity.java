@@ -38,7 +38,7 @@ public class ReportEntity {
 
 	@Column(name = "report_detail", length = 50, nullable = false, columnDefinition = "VARCHAR(50) DEFAULT ''")
 	private String reportDetail = ""; // 기본값으로 초기화
-	
+
 	@Column(name = "report_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime reportDate = LocalDateTime.now();

@@ -15,15 +15,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "report_type")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Hibernate 프록시 관련 필드 무시
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) // Hibernate 프록시 관련 필드 무시
 public class ReportTypeEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "report_type") // 컬럼 이름을 정확히 맞춰야 함
+	private String reportType;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_type") // 컬럼 이름을 정확히 맞춰야 함
-    private String reportType;
-
-    @Column(name = "report_reason", nullable = false)
-    private String reportReason;
+	@Column(name = "report_reason", nullable = false)
+	private String reportReason;
 }
