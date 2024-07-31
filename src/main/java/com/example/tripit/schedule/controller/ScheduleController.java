@@ -47,6 +47,7 @@ public class ScheduleController {
         if (contentTypeId == null) {
             contentTypeId = "12";
         }
+        System.out.println("호출");
         //apiConnection 메서드 호출 및 반환
         return apiConnection.cultureFacilityApi(metroId, pageNo, contentTypeId);
     }
