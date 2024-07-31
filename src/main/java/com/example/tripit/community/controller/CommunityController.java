@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/community")
@@ -43,13 +45,17 @@ public class CommunityController {
 
         UserScheduleResponse response = new UserScheduleResponse(userId, titlesByUserId, scheduleIdByUserId, ResultCode.SCHEDULETITLE_SUCCESS);
 
-        if(titlesByUserId.isEmpty()){
-            return ResponseEntity.ok("schedule is null");
+
+        if(titlesByUserId == null || titlesByUserId.isEmpty()){
+            Map<String, String> responseNone = new HashMap<>();
+            responseNone.put("msg", "none");
+            return ResponseEntity.ok(responseNone);
         }
         return ResponseEntity.ok(response);
 
     }
 
+    //커뮤니티 글 작성
     @PostMapping("/submitPost")
     public ResponseEntity<?> submitPost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PostDTO postDTO) {
 
@@ -71,7 +77,6 @@ public class CommunityController {
         postEntity.setScheduleId(schedule);
 
         System.out.println(postEntity.toString());
-
         communityService.postProcess(postEntity);
 
         return ResponseEntity.ok("success");
@@ -104,8 +109,13 @@ public class CommunityController {
             @RequestParam (defaultValue = "") String query,
             @RequestParam (defaultValue = "1") String metroId
     ) {
+            List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
 
-        List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
+            if(communityDTOS == null || communityDTOS.isEmpty()){
+                Map<String, String> response = new HashMap<>();
+                response.put("msg", "none");
+                return ResponseEntity.ok(response);
+            }
 
         return ResponseEntity.ok(communityDTOS);
     }
@@ -127,21 +137,66 @@ public class CommunityController {
         return ResponseEntity.ok(detail);
     }
 
+    //커뮤니티 글 비회원 상세 조회
+    @GetMapping("/communityDetailGuest/{userId}/{postId}")
+    public ResponseEntity<?> CommunityDetailGuest(@PathVariable long userId, @PathVariable long postId
+    ) {
+
+        List<CommunityDTO> detail = communityService.loadCommunityDetail(userId, postId);
+        communityService.incrementViewCount(postId);
+
+        return ResponseEntity.ok(detail);
+    }
+
     //커뮤니티 업데이트
     @PostMapping("/communityDetail/update/{postId}")
     public void communityDetailUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      @PathVariable Long postId, @RequestParam String postTitle,
-                                      @RequestParam String postContent){
+                                      @PathVariable Long postId, @RequestBody CommunityUpdateDTO updateDTO){
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
 
+        try {
+            communityService.updatePost(userId, postId, updateDTO);
+            System.out.println("포스트 업데이트 성공");
 
-        System.out.println(userId+ postId+ postTitle+ postContent);
-
-        communityService.updatePost(userId, postId, postTitle, postContent);
-
-
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    @DeleteMapping("/communityDetail/delete/{postId}")
+    public void communityDetailDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long postId){
+
+        String email = customUserDetails.getUsername();//email
+        long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            communityService.deletePost(userId, postId);
+            System.out.println("삭제 성공");
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //모집상태 업데이트
+    @PostMapping("/communityDetail/CompletedPost/{postId}")
+    public void communityCompletedPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long postId){
+
+        String email = customUserDetails.getUsername();//email
+        long userId = userRepository.findUserIdByEmail(email);
+
+        try {
+            communityService.updateExposureState(userId, postId);
+            System.out.println("exposureState false done");
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

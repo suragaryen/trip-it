@@ -1,6 +1,7 @@
 package com.example.tripit.mypage.service;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
 import com.example.tripit.error.CustomException;
@@ -260,6 +261,7 @@ public class MyPageService {
 
     public List<CommunityDTO> postList(Long userId) {
         return postRepository.findPostsByUserId(userId);
+
     }
 
 //    public List<CommunityDTO> postDetail(Long userId, Long postId) {

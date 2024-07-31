@@ -42,7 +42,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println("쿠키에 발급 완료 토큰 : " + token);
 
         response.addCookie(createCookie("Authorization", token));
-        //response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("http://http://172.16.1.120:3000");
     }
 
     private Cookie createCookie(String key, String value) {

@@ -1,6 +1,7 @@
 package com.example.tripit.community.service;
 
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.CommunityUpdateDTO;
 import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
@@ -60,6 +61,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
+                            schedule.getMetroId(),
                             MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -93,6 +95,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
+                            schedule.getMetroId(),
                             MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -103,8 +106,13 @@ public class CommunityService {
 
     //검색 서비스
     public List<CommunityDTO> searchCommunityByQueryAndMetroId(String query, String metroId) {
-        List<PostEntity> posts = postRepository.searchByQueryAndMetroIdOrderByPostDateDesc(query, metroId);
+        List<PostEntity> posts;
 
+        if (metroId.equals("0")) {
+            posts = postRepository.searchByQuerydOrderByPostDateDesc(query);
+        } else {
+            posts = postRepository.searchByQueryAndMetroIdOrderByPostDateDesc(query, metroId);
+        }
         return posts.stream()
                 .map(post -> {
                     UserEntity user = post.getUserId();
@@ -125,6 +133,7 @@ public class CommunityService {
                             user.getBirth(),
                             user.getUserpic(),
                             schedule.getScheduleId(),
+                            schedule.getMetroId(),
                             MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -160,6 +169,7 @@ public class CommunityService {
                             userEntity.getBirth(),
                             userEntity.getUserpic(),
                             schedule.getScheduleId(),
+                            schedule.getMetroId(),
                             MetroENUM.getNameById(schedule.getMetroId()),
                             schedule.getStartDate(),
                             schedule.getEndDate()
@@ -168,21 +178,25 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
-    //조회수
+    //조회수 증가
     public void incrementViewCount (long postId){
         postRepository.incrementViewCountByPostId(postId);
     }
 
-    public void updatePost(long userId, Long postId, String postTitle, String postContent) {
+    // 상세 글 수정
+    public void updatePost(long userId, Long postId, CommunityUpdateDTO updateDTO) {
+
 
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
+        
+        long postUserId = post.getUserId().getUserId(); //글쓴이userId
 
-        long postUserId = post.getUserId().getUserId();
 
         if(postUserId == userId){
-            post.setPostTitle(postTitle);
-            post.setPostContent(postContent);
+            post.setPostTitle(updateDTO.getPostTitle());
+            post.setPostContent(updateDTO.getPostContent());
+            post.setPostPic(updateDTO.getPostPic());
             postRepository.save(post);
 
         }else{
@@ -192,5 +206,40 @@ public class CommunityService {
         }
 
 
+    }
+
+    //상세 글 삭제
+    public void deletePost(long userId, Long postId) {
+
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        long postUserId = post.getUserId().getUserId(); //글쓴이userId
+        System.out.println("posted" + postUserId);
+        System.out.println("logged" + userId);
+
+        if(postUserId == userId){
+            postRepository.delete(post);
+        }else{
+            throw new RuntimeException("User does not have permission to update this post");
+        }
+    }
+
+    public void updateExposureState(long userId, Long postId) {
+
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        long postUserId = post.getUserId().getUserId(); //글쓴이userId
+        System.out.println("posted" + postUserId);
+        System.out.println("logged" + userId);
+
+        if(postUserId == userId){
+            postRepository.updateExposureStatus(postId);
+            System.out.println("exposureStatus updated");
+        }else{
+
+            throw new RuntimeException("User does not have permission to update this post");
+        }
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
+    //커뮤니티 상세글 조회
     List<PostEntity> findByUserIdAndPostId(UserEntity userId, Long postId);
 
     List<PostEntity> findByUserId(UserEntity userId);
@@ -31,13 +32,25 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Transactional
     void incrementViewCountByPostId(@Param("postId") long postId);
 
+    // 커뮤니티 검색
     @Query("SELECT p FROM PostEntity p WHERE " +
-            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(p.postContent) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
+            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
             "p.scheduleId.metroId = :metroId " +
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
 
+
+    //전체검색
+    @Query("SELECT p FROM PostEntity p WHERE " +
+            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "ORDER BY p.postDate DESC")
+    List<PostEntity> searchByQuerydOrderByPostDateDesc(@Param("query") String query);
+
+    //모집완료 설정
+    @Modifying
+    @Transactional
+    @Query("UPDATE PostEntity p SET p.exposureStatus = false WHERE p.postId = :postId")
+    void updateExposureStatus(@Param("postId") Long postId);
 
     PostEntity findByPostId(Long postId);
 
