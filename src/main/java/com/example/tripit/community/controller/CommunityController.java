@@ -137,6 +137,17 @@ public class CommunityController {
         return ResponseEntity.ok(detail);
     }
 
+    //커뮤니티 글 비회원 상세 조회
+    @GetMapping("/communityDetailGuest/{userId}/{postId}")
+    public ResponseEntity<?> CommunityDetailGuest(@PathVariable long userId, @PathVariable long postId
+    ) {
+
+        List<CommunityDTO> detail = communityService.loadCommunityDetail(userId, postId);
+        communityService.incrementViewCount(postId);
+
+        return ResponseEntity.ok(detail);
+    }
+
     //커뮤니티 업데이트
     @PostMapping("/communityDetail/update/{postId}")
     public void communityDetailUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails,

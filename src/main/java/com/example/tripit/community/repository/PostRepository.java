@@ -33,15 +33,15 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     // 커뮤니티 검색
     @Query("SELECT p FROM PostEntity p WHERE " +
-            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(p.postContent) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
+            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
             "p.scheduleId.metroId = :metroId " +
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
 
+
+    //전체검색
     @Query("SELECT p FROM PostEntity p WHERE " +
-            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(p.postContent) LIKE LOWER(CONCAT('%', :query, '%')))" +
+            "(LOWER(p.postTitle) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQuerydOrderByPostDateDesc(@Param("query") String query);
 

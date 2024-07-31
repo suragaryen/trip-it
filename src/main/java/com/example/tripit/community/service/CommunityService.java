@@ -196,6 +196,7 @@ public class CommunityService {
         if(postUserId == userId){
             post.setPostTitle(updateDTO.getPostTitle());
             post.setPostContent(updateDTO.getPostContent());
+            post.setPostPic(updateDTO.getPostPic());
             postRepository.save(post);
 
         }else{
@@ -218,14 +219,10 @@ public class CommunityService {
         System.out.println("logged" + userId);
 
         if(postUserId == userId){
-
             postRepository.delete(post);
-
         }else{
-
             throw new RuntimeException("User does not have permission to update this post");
         }
-
     }
 
     public void updateExposureState(long userId, Long postId) {
