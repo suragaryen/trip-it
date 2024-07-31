@@ -107,7 +107,6 @@ public class BlockListController {
 	}
 
 
-
 	// 차단 삭제
 	@PostMapping("/delete")
 	public ResponseEntity<String> deleteBlock(@RequestBody BlockListEntity blockList,

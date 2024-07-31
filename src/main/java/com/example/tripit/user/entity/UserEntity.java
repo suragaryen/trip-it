@@ -33,7 +33,7 @@ public class UserEntity {
     private String email;
     private String username;
     private String nickname;
-    
+    @JsonIgnore
     private String password; // 직렬화에서 제외
     private String birth;
     private String gender;

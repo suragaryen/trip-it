@@ -1,11 +1,10 @@
 package com.example.tripit.block.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,7 +50,6 @@ public class BlockListService {
 		BlockListEntity blockList = new BlockListEntity();
 		blockList.setUserId(user);
 		blockList.setNickname(nickname);
-		blockListRepository.save(blockList);
 
 		// 블록리스트 저장
 		return blockListRepository.save(blockList);
@@ -67,6 +65,7 @@ public class BlockListService {
 	public List<BlockListEntity> getblockForUser(String sortKey, String sortValue, Long userId) {
 		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
 		UserEntity user = userRepository.findById(userId).orElse(null);
+
 		if (user != null) {
 			return blockListRepository.findByUserId(user, sort);
 		}

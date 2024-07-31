@@ -76,7 +76,7 @@ public class MyPageService {
             intro = "";
         }
 
-        userDTO.setUserIntro(intro); //자기소개
+        userDTO.setIntro(intro); //자기소개
         userDTO.setUserpic(userPic); //사진
         userDTO.setGender(userEntity.getGender()); //성별
         userDTO.setEmail(userEntity.getEmail()); //이메일
@@ -96,7 +96,7 @@ public class MyPageService {
 
             //엔티티의 필드 업데이트
             userEntity.setNickname(userDTO.getNickname());
-            userEntity.setIntro(userDTO.getUserIntro());
+            userEntity.setIntro(userDTO.getIntro());
             userEntity.setUserpic(userDTO.getUserpic());
 
             //Dirty Checking
