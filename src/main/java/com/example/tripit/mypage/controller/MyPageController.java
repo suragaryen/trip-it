@@ -47,7 +47,7 @@ public class MyPageController {
     }
 
     @PatchMapping("profile/profileUpdate")
-    public ResponseEntity<Void> updateProfile2(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProfileUpdateDTO profileUpdateDTO) {
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ProfileUpdateDTO profileUpdateDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
         myPageService.profileUpdate(profileUpdateDTO, userId);
@@ -124,7 +124,7 @@ public class MyPageController {
     @DeleteMapping("schedules/{scheduleId}") //상세 페이지에서 삭제할 때
     public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {
             myPageService.scheduleDelete(scheduleId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("postList")

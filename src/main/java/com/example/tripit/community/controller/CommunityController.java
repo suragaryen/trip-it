@@ -76,7 +76,7 @@ public class CommunityController {
         postEntity.setUserId(user);
         postEntity.setScheduleId(schedule);
 
-        System.out.println(postEntity.toString());
+        //System.out.println(postEntity.toString());
         communityService.postProcess(postEntity);
 
         return ResponseEntity.ok("success");

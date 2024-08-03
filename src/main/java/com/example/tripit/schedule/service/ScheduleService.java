@@ -77,19 +77,19 @@ public class ScheduleService {
         }
     }
 
-    public ResponseEntity<?> detailSchedule(long userId, Long scheduleId) {
-        // 1. ScheduleEntity 조회
-        Optional<ScheduleEntity> scheduleEntityOpt = scheduleRepository.findByUserIdAndScheduleId(userId, scheduleId);
-        if (scheduleEntityOpt.isEmpty()) {
-            // ScheduleEntity가 없을 경우 처리
-            return ResponseEntity.notFound().build();
-        }
-
-        // 2. DetailScheduleEntity 조회
-        List<DetailScheduleEntity> detailSchedules = detailScheduleRepository.findByScheduleId(scheduleId);
-
-        // 조회된 데이터 반환
-        return ResponseEntity.ok(detailSchedules);
-    }
+//    public ResponseEntity<?> detailSchedule(long userId, Long scheduleId) {
+//        // 1. ScheduleEntity 조회
+//        Optional<ScheduleEntity> scheduleEntityOpt = scheduleRepository.findByUserIdAndScheduleId(userId, scheduleId);
+//        if (scheduleEntityOpt.isEmpty()) {
+//            // ScheduleEntity가 없을 경우 처리
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        // 2. DetailScheduleEntity 조회
+//        List<DetailScheduleEntity> detailSchedules = detailScheduleRepository.findByScheduleId(scheduleId);
+//
+//        // 조회된 데이터 반환
+//        return ResponseEntity.ok(detailSchedules);
+//    }
 
 }

@@ -104,24 +104,24 @@ public class MyPageService {
     @Transactional
     public void profileUpdate(ProfileUpdateDTO profileUpdateDTO, Long userId) {
 
-            //닉네임 중복 검증
-            if (isNicknameExists(profileUpdateDTO.getNickname(), userId)) {
-                throw new CustomException(ErrorCode.DUPLICATE_NICKNAMES); //존재하는 닉네임 있음
-            }
+        //닉네임 중복 검증
+        if (isNicknameExists(profileUpdateDTO.getNickname(), userId)) {
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAMES); //존재하는 닉네임 있음
+        }
 
-            //글자수 검증
-            if (profileUpdateDTO.getIntro() != null) {
-                String intro = profileUpdateDTO.getIntro();
-                if (intro.length() > 100) {
-                    throw new CustomException(ErrorCode.INTRO_TOO_LONG); //100자 이상
-                }
+        //글자수 검증
+        if (profileUpdateDTO.getIntro() != null) {
+            String intro = profileUpdateDTO.getIntro();
+            if (intro.length() > 100) {
+                throw new CustomException(ErrorCode.INTRO_TOO_LONG); //100자 이상
             }
+        }
 
-            UserEntity userEntity = userRepository.findById(userId)
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)); // 엔티티가 존재하지 않음
 
-            userMapper.updateUserFromDto(profileUpdateDTO, userEntity);
-            userRepository.save(userEntity);
+        userMapper.updateUserFromDto(profileUpdateDTO, userEntity);
+        userRepository.save(userEntity);
 
     }
     public boolean isNicknameExists(String nickname, Long userId) {
@@ -157,7 +157,10 @@ public class MyPageService {
     public List<DetailScheduleDto> detailSchedule(Long scheduleId) {
         // DetailScheduleEntity 조회
         List<DetailScheduleEntity> detailSchedulesEntities = detailScheduleRepository.findByScheduleId(scheduleId);
+        if (detailSchedulesEntities.isEmpty()) {
+            throw new CustomException(ErrorCode.SCHEDULE_NOT_FOUND);
 
+        }
         // 조회된 데이터 반환
         return detailSchedulesEntities.stream()
                 .map(detailScheduleEntity -> modelMapper.map(detailScheduleEntity, DetailScheduleDto.class))
@@ -270,8 +273,37 @@ public class MyPageService {
 
     //글 목록
     public List<CommunityDTO> postList(Long userId) {
-        return postRepository.findPostsByUserId(userId);
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
 
+        List<PostEntity> posts = postRepository.findByUserId(user);
+        return posts.stream()
+                .map(post -> {
+                    UserEntity userEntity = post.getUserId();
+                    ScheduleEntity schedule = post.getScheduleId();
+
+                    return new CommunityDTO(
+                            post.getPostId(),
+                            post.getPostTitle(),
+                            post.getPostContent(),
+                            post.getPersonnel(),
+                            post.getViewCount(),
+                            post.getExposureStatus(),
+                            post.getPostPic(),
+                            post.getPostDate(),
+                            userEntity.getUserId(),
+                            userEntity.getNickname(),
+                            userEntity.getGender(),
+                            userEntity.getBirth(),
+                            userEntity.getUserpic(),
+                            schedule.getScheduleId(),
+                            schedule.getMetroId(),
+                            MetroENUM.getNameById(schedule.getMetroId()),
+                            schedule.getStartDate(),
+                            schedule.getEndDate()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -285,7 +317,7 @@ public class MyPageService {
 
         postRepository.deleteAllById(postIds);
 
-        return postRepository.findPostsByUserId(userId);
+        return postList(userId);
 
     }
 }
