@@ -20,7 +20,7 @@ public class ProfileDTO {
     private String intro;
     private String userpic;
     private String role;
-    //private LocalDate regdate;
+    private LocalDate regdate;
     private String social_type;
     //private int reportCount;
     private LocalDate endDate;

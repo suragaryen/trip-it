@@ -32,12 +32,18 @@ public enum ErrorCode {
     
     //Chat
     MESSAGE_NULL(400,"1","message is null"),
+
     //Schedule
+    SCHEDULE_NOT_FOUND(404, "404", "Schedule not found"),
+    FAIL_SAVE_SCHEDULE(500, "500", "schedule save fails"),
     NO_CONTENT(204, "N001", "No content"),
 
     //MyPage
     DUPLICATE_NICKNAMES(409, "409", "Duplicate nicknames"),
+    USER_NOT_FOUND(404, "404", "User not found"),
+    POST_NOT_FOUND(404, "404", "Post not found"),
     INTRO_TOO_LONG(422, "422", "Intro too long");
+
     //Community
     private int status;
     private final String code;

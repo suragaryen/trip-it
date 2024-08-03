@@ -9,8 +9,5 @@ import java.util.List;
 @Repository
 public interface DetailScheduleRepository extends JpaRepository<DetailScheduleEntity, Long> {
 
-    @Override
-    DetailScheduleEntity save(DetailScheduleEntity detailScheduleEntity);
-
     List<DetailScheduleEntity> findByScheduleId(Long scheduleId);
 }

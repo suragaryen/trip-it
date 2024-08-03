@@ -19,6 +19,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -69,22 +70,11 @@ public class ScheduleController {
     public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
         //CustomUserDetails에서 userId 추출
         String email = customUserDetails.getUsername();
-        long userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
 
-        try {
-            List<ScheduleDto> scheduleDtos = scheduleService.saveSchedule(scheduleRequest, userId);
-
-            return ResponseEntity.ok(scheduleDtos);
-        } catch (Exception e) {
-            // 예외 로그 출력
-            logger.error("일정 저장 실패: {}", e.getMessage(), e);
-
-            // 클라이언트에게 전달할 에러 메시지
-            String errorMessage = "일정 저장 실패: " + e.getMessage();
-            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-        }
+        //일정 저장 및 결과 반환
+        List<ScheduleDto> scheduleDtoList = scheduleService.saveSchedule(scheduleRequest, userId);
+        return ResponseEntity.ok(scheduleDtoList);
     }
 
 

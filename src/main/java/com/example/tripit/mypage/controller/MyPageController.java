@@ -42,12 +42,8 @@ public class MyPageController {
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
-        Optional<ProfileDTO> profileDTO = myPageService.getUserDTOById(userId);
-        if (profileDTO.isPresent()) {
-            return ResponseEntity.ok(profileDTO.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        ProfileDTO profileDTO = myPageService.getUserDTOById(userId);
+            return ResponseEntity.ok(profileDTO);
     }
 
     @PatchMapping("profile/profileUpdate")
@@ -83,7 +79,6 @@ public class MyPageController {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
         List<ScheduleDto> scheduleDtos = myPageService.findScheduleList(userId);
-        System.out.println(scheduleDtos + "dd");
         return ResponseEntity.ok(scheduleDtos);
     }
 
@@ -93,12 +88,9 @@ public class MyPageController {
         Long userId = userRepository.findUserIdByEmail(email);
         //System.out.println(scheduleIds);
         //System.out.println("삭제요청");
-        try {
-            List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
-            return ResponseEntity.ok(scheduleDtos);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        List<ScheduleDto> scheduleDtos = myPageService.schedulesDelete(scheduleIds, userId);
+        return ResponseEntity.ok(scheduleDtos);
     }
 
     @GetMapping("schedules/{scheduleId}") //상세 일정
@@ -131,14 +123,8 @@ public class MyPageController {
     }
     @DeleteMapping("schedules/{scheduleId}") //상세 페이지에서 삭제할 때
     public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {
-        try {
             myPageService.scheduleDelete(scheduleId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 일정을 찾을 수 없을 때 NOT_FOUND 상태 코드 반환
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("postList")
@@ -147,22 +133,8 @@ public class MyPageController {
         Long userId = userRepository.findUserIdByEmail(email);
         List<CommunityDTO> postList = myPageService.postList(userId);
 
-        System.out.println(postList);
-
         return ResponseEntity.ok(postList);
     }
-
-//    @GetMapping("/postDetail/{postId}")
-//    public ResponseEntity<?> postDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
-//        String email = customUserDetails.getUsername();
-//        Long userId = userRepository.findUserIdByEmail(email);
-//
-//        List<CommunityDTO> detail = myPageService.postDetail(userId, postId);
-//
-//        System.out.println(detail);
-//
-//        return ResponseEntity.ok(detail);
-//    }
 
     @PostMapping("postList/delete-post")
     public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> postIds) {
@@ -170,12 +142,8 @@ public class MyPageController {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
 
-        try {
-            List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
-            return ResponseEntity.ok(postList);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
+        return ResponseEntity.ok(postList);
 
     }
 

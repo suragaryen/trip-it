@@ -64,8 +64,21 @@ public class MyPageService {
     }
 
     //userId 엔티티 찾기
-    public Optional<ProfileDTO> getUserDTOById(Long userId) {
-        return userRepository.findById(userId).map(this::mapToUserDTO);
+    public ProfileDTO getUserDTOById(Long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        ProfileDTO profileDTO = modelMapper.map(userEntity, ProfileDTO.class);
+
+        if (profileDTO.getIntro() == null) {
+            profileDTO.setIntro("");
+        }
+
+        if (profileDTO.getUserpic() == null) {
+            profileDTO.setUserpic("");
+        }
+
+        return profileDTO;
     }
 
     //user엔티티를 DTO로 변환하기
@@ -105,7 +118,7 @@ public class MyPageService {
             }
 
             UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTS)); // 엔티티가 존재하지 않음)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)); // 엔티티가 존재하지 않음
 
             userMapper.updateUserFromDto(profileUpdateDTO, userEntity);
             userRepository.save(userEntity);
@@ -133,7 +146,7 @@ public class MyPageService {
 
     //전체 일정 목록
     public List<ScheduleDto> findScheduleList(Long userId) {
-        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUser_UserIdOrderByScheduleIdDesc(userId);
 
         return scheduleEntities.stream()
                 .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
@@ -144,29 +157,25 @@ public class MyPageService {
     public List<DetailScheduleDto> detailSchedule(Long scheduleId) {
         // DetailScheduleEntity 조회
         List<DetailScheduleEntity> detailSchedulesEntities = detailScheduleRepository.findByScheduleId(scheduleId);
-        System.out.println(detailSchedulesEntities); // 콘솔 출력
+
         // 조회된 데이터 반환
         return detailSchedulesEntities.stream()
                 .map(detailScheduleEntity -> modelMapper.map(detailScheduleEntity, DetailScheduleDto.class))
                 .collect(Collectors.toList());
     }
 
+    //목록에서 일정 삭제
     @Transactional
     public List<ScheduleDto> schedulesDelete(List<Long> scheduleIds, Long userId) {
         List<ScheduleEntity> schedules = scheduleRepository.findAllById(scheduleIds);
 
-        //이부분 나중에 수정 필요할듯
-        if (schedules.size() != scheduleIds.size()) {
-            throw new IllegalArgumentException("일정을 찾을 수 없음");
-        }
-
-        if (scheduleIds.size() == 1) {
-            Long scheduleId = scheduleIds.get(0);
-            scheduleRepository.deleteById(scheduleId);
+        if (scheduleIds.size() != schedules.size() || schedules.isEmpty()) {
+            throw new CustomException(ErrorCode.SCHEDULE_NOT_FOUND);
         }
 
         scheduleRepository.deleteAllById(scheduleIds);
-        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
+
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUser_UserIdOrderByScheduleIdDesc(userId);
 
         return scheduleEntities.stream()
                 .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
@@ -248,43 +257,35 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
-
-
     //상세 페이지에서 일정 삭제
+    @Transactional
     public void scheduleDelete(Long scheduleId) {
         Optional<ScheduleEntity> scheduleEntity = scheduleRepository.findById(scheduleId);
         if (scheduleEntity.isEmpty()) {
-            throw new IllegalArgumentException("일정을 찾을 수 없음");
+            throw new CustomException(ErrorCode.SCHEDULE_NOT_FOUND);
         }
+
         scheduleRepository.deleteById(scheduleId);
     }
 
+    //글 목록
     public List<CommunityDTO> postList(Long userId) {
         return postRepository.findPostsByUserId(userId);
 
     }
 
-//    public List<CommunityDTO> postDetail(Long userId, Long postId) {
-//        return communityService.loadCommunityList(userId, postId);
-//    }
-
+    @Transactional
     public List<CommunityDTO> postDelete(List<Long> postIds, Long userId) {
 
-//        List<CommunityDTO> postList = postRepository.findPostsByUserId(userId);
+        List<PostEntity> postList = postRepository.findAllById(postIds);
 
-//        if (postList.size() != postIds.size())
-          if (postIds.size() == 1) {
-              Long postId = postIds.get(0);
-              postRepository.deleteById(postId);
-          }
+        if (postList.size() != postIds.size() || postList.isEmpty()) {
+            throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        }
 
-//        Optional<PostEntity> postEntity = postRepository.findById(postId);
-//        //System.out.println(postEntity + "d");
-//        if (postEntity.isEmpty()) {
-//            throw new IllegalArgumentException("글을 찾을 수 없음");
-//        }
         postRepository.deleteAllById(postIds);
 
         return postRepository.findPostsByUserId(userId);
+
     }
 }

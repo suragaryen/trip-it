@@ -1,4 +1,4 @@
-package com.example.tripit.schedule;
+package com.example.tripit.schedule.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

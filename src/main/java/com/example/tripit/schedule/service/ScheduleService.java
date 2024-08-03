@@ -1,5 +1,7 @@
 package com.example.tripit.schedule.service;
 
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleRequest;
@@ -11,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,45 +33,48 @@ public class ScheduleService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest, long userId) throws Exception {
+    @Transactional
+    public List<ScheduleDto> saveSchedule(ScheduleRequest scheduleRequest, Long userId) {
         ScheduleDto scheduleDto = scheduleRequest.getScheduleDto();
         scheduleDto.setUserId(userId);
+
         try {
             //ModelMapper를 사용하여 DTO를 엔티티로 변환
-            ScheduleEntity scheduleEntity = modelMapper.map(scheduleDto, ScheduleEntity.class);
-            scheduleEntity.setRegisterDate(LocalDate.now());
-            //엔티티 DB 저장
-            scheduleRepository.save(scheduleEntity);
-            Long scheduleId = scheduleEntity.getScheduleId();
 
-            System.out.println(userId);
+            //전체 일정 변환 및 저장
+            ScheduleEntity saveScheduleEntity = modelMapper.map(scheduleDto, ScheduleEntity.class);
+            saveScheduleEntity.setRegisterDate(LocalDate.now()); //현재시간으로 set
+            //전체 일정 DB 저장
+            scheduleRepository.save(saveScheduleEntity);
 
-            return saveDetailSchedule(scheduleId, userId, scheduleRequest);
+            //자동 생성된 PK값 변수 저장
+            Long scheduleId = saveScheduleEntity.getScheduleId();
+
+            //전체 일정 저장 성공 여부 확인
+            if (scheduleId == null || scheduleId <= 0) {
+                throw new RuntimeException("전체 일정 저장 실패. scheduleId 생성되지 않음");
+            }
+
+            //상세 일정 변환 및 저장
+            List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
+
+            //반복문 사용한 엔티티 매핑
+            for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
+                DetailScheduleEntity detailScheduleEntity = modelMapper.map(detailScheduleDto, DetailScheduleEntity.class);
+                detailScheduleEntity.setRegisterTime(LocalDateTime.now());
+                detailScheduleEntity.setScheduleId(scheduleId);
+                detailScheduleRepository.save(detailScheduleEntity);
+            }
+
+            //저장된 일정을 조회 및 DTO로 반환
+            List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUser_UserIdOrderByScheduleIdDesc(userId);
+            return scheduleEntities.stream()
+                    .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
+                    .collect(Collectors.toList());
 
         } catch (Exception e) {
-
-            throw new Exception("일정 저장 실패", e);
-
+            throw new CustomException(ErrorCode.FAIL_SAVE_SCHEDULE);
         }
-    }
-
-    public List<ScheduleDto> saveDetailSchedule(Long scheduleId, long userId, ScheduleRequest scheduleRequest) {
-        List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
-
-        for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
-            DetailScheduleEntity detailScheduleEntity = modelMapper.map(detailScheduleDto, DetailScheduleEntity.class);
-            detailScheduleEntity.setRegisterTime(LocalDateTime.now());
-            detailScheduleEntity.setScheduleId(scheduleId);
-            //엔티티 DB 저장
-            detailScheduleRepository.save(detailScheduleEntity);
-        }
-        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
-
-        //System.out.println(scheduleEntities);
-
-        return scheduleEntities.stream()
-                .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
-                .collect(Collectors.toList());
     }
 
     public ResponseEntity<?> detailSchedule(long userId, Long scheduleId) {

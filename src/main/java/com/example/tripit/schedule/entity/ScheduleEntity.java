@@ -1,10 +1,12 @@
 package com.example.tripit.schedule.entity;
 
+import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,5 +41,8 @@ public class ScheduleEntity {
 
     @Column(nullable = false, name = "schedule_title")
     private String scheduleTitle;
+
+    @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostEntity> PostEntity;
 
 }

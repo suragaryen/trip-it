@@ -12,8 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
 
-    @Override
-    ScheduleEntity save(ScheduleEntity scheduleEntity);
+    List<ScheduleEntity> findByUser_UserIdOrderByScheduleIdDesc(Long userId);
 
     @Query("SELECT s FROM ScheduleEntity s WHERE s.user.id = :userId ORDER BY s.scheduleId DESC")
     List<ScheduleEntity> findByUserId(long userId);
