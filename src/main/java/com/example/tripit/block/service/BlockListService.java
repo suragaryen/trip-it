@@ -46,7 +46,7 @@ public class BlockListService {
 			throw new CustomException(ErrorCode.BLOCK_EXISTS2);
 		} // if() end
 
-		// 블록시스트 객체 생성
+		// 블록리스트 객체 생성
 		BlockListEntity blockList = new BlockListEntity();
 		blockList.setUserId(user);
 		blockList.setNickname(nickname);
@@ -86,12 +86,7 @@ public class BlockListService {
 		UserDTO userDTO = new UserDTO();
 		// UserEntity의 속성들을 UserDTO에 매핑
 		userDTO.setUserId(userEntity.getUserId());
-//		userDTO.setEmail(userEntity.getEmail());
-//		userDTO.setUsername(userEntity.getUsername());
 		userDTO.setNickname(userEntity.getNickname());
-//		userDTO.setBirth(userEntity.getBirth());
-//		userDTO.setGender(userEntity.getGender());
-//		userDTO.setRole(userEntity.getRole());
 		return userDTO;
 	}
 

@@ -1,13 +1,17 @@
 package com.example.tripit.user.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //import com.nimbusds.openid.connect.sdk.claims.Gender;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,5 +60,13 @@ public class UserEntity {
     private String socialType;
 
     private String userpic;
+
+    
+    
+//    //신고횟수
+//    private int reportCount;
+//
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    private Set<String> roles = new HashSet<>();
 
 }

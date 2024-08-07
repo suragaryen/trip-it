@@ -1,10 +1,11 @@
 package com.example.tripit.report.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
+import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.user.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,12 +26,14 @@ public class ReportEntity {
 	@Column(name = "report_id")
 	private Long reportId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private UserEntity userId;
 
-	@Column(name = "post_id", nullable = false)
-	private Long postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity userId;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private PostEntity postId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_type", referencedColumnName = "report_type")
@@ -44,7 +47,7 @@ public class ReportEntity {
 	private LocalDateTime reportDate = LocalDateTime.now();
 
 	@Column(name = "report_false", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
-	private Long reportFalse;
+	private int reportFalse;
 
 	// Getters and Setters
 	public Long getReportId() {
@@ -63,11 +66,11 @@ public class ReportEntity {
 		this.userId = userId;
 	}
 
-	public Long getPostId() {
+	public PostEntity getPostId() {
 		return postId;
 	}
 
-	public void setPostId(Long postId) {
+	public void setPostId(PostEntity postId) {
 		this.postId = postId;
 	}
 
@@ -87,11 +90,11 @@ public class ReportEntity {
 		this.reportDate = reportDate;
 	}
 
-	public Long getReportFalse() {
+	public int getReportFalse() {
 		return reportFalse;
 	}
 
-	public void setReportFalse(Long reportFalse) {
+	public void setReportFalse(int reportFalse) {
 		this.reportFalse = reportFalse;
 	}
 

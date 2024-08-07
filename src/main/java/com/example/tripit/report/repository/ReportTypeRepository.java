@@ -9,4 +9,6 @@ import com.example.tripit.report.entity.ReportTypeEntity;
 public interface ReportTypeRepository extends JpaRepository<ReportTypeEntity, String> {
 
 	Optional<ReportTypeEntity> findByReportType(String reportType);
+
+	
 }
