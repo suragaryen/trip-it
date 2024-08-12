@@ -40,7 +40,7 @@ public class ScheduleService {
 
         try {
             //ModelMapper를 사용하여 DTO를 엔티티로 변환
-
+            System.out.println("저장");
             //전체 일정 변환 및 저장
             ScheduleEntity saveScheduleEntity = modelMapper.map(scheduleDto, ScheduleEntity.class);
             saveScheduleEntity.setRegisterDate(LocalDate.now()); //현재시간으로 set

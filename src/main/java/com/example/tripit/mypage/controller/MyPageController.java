@@ -109,17 +109,8 @@ public class MyPageController {
         String email = customUserDetails.getUsername();
         long userId = userRepository.findUserIdByEmail(email);
 
-        try {
-            List<ScheduleDto> scheduleDtos = myPageService.updateSchedule(scheduleRequest, userId);
+        return ResponseEntity.ok(myPageService.updateSchedule(scheduleRequest, userId));
 
-            return ResponseEntity.ok(scheduleDtos);
-        } catch (Exception e) {
-            // 클라이언트에게 전달할 에러 메시지
-            String errorMessage = "일정 저장 실패: " + e.getMessage();
-            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-        }
     }
     @DeleteMapping("schedules/{scheduleId}") //상세 페이지에서 삭제할 때
     public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {

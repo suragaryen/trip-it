@@ -16,27 +16,20 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class DetailScheduleDto {
 
-    @JsonProperty("schedule_detail_id")
     private Long scheduleDetailId;
 
-    @JsonProperty("schedule_id")
     private Long scheduleId;
 
-    @JsonProperty("schedule_order")
     private Integer scheduleOrder;
 
-    @JsonProperty("start_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
     private LocalTime startTime;
 
-    @JsonProperty("end_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
     private LocalTime endTime;
 
-    @JsonProperty("content_id")
     private String contentId;
 
-    @JsonProperty("register_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime registerTime;
 

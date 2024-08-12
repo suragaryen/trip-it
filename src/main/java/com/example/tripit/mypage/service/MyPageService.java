@@ -9,6 +9,8 @@ import com.example.tripit.error.ErrorCode;
 import com.example.tripit.mypage.dto.PasswordDTO;
 import com.example.tripit.mypage.dto.ProfileDTO;
 import com.example.tripit.mypage.dto.ProfileUpdateDTO;
+import com.example.tripit.mypage.mapper.DetailScheduleMapper;
+import com.example.tripit.mypage.mapper.ScheduleMapper;
 import com.example.tripit.mypage.mapper.UserMapper;
 import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
@@ -58,6 +60,12 @@ public class MyPageService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ScheduleMapper scheduleMapper;
+
+    @Autowired
+    private DetailScheduleMapper detailScheduleMapper;
 
     public MyPageService(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -185,79 +193,56 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
-    public List<ScheduleDto> updateSchedule(ScheduleRequest scheduleRequest, Long userId) throws Exception {
+    @Transactional
+    public List<ScheduleDto> updateSchedule(ScheduleRequest scheduleRequest, Long userId) {
         ScheduleDto scheduleDto = scheduleRequest.getScheduleDto();
         scheduleDto.setUserId(userId);
         try {
-            ScheduleEntity scheduleEntity = scheduleRepository.findById(scheduleDto.getScheduleId())
-                    .orElseThrow(() -> new Exception("일정이 없습니다"));
+            System.out.println("시도");
+            System.out.println(userId);
+            ScheduleEntity updateScheduleEntity = scheduleRepository.findById(scheduleDto.getScheduleId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
 
-            if (scheduleDto.getMetroId() != null) {
-                scheduleEntity.setMetroId(scheduleDto.getMetroId());
-            }
+            System.out.println("전체일정");
+            scheduleMapper.updateScheduleFromDto(scheduleDto, updateScheduleEntity);
 
-            if (scheduleDto.getStartDate() != null) {
-                scheduleEntity.setStartDate(scheduleDto.getStartDate());
-            }
-
-            if (scheduleDto.getEndDate() != null) {
-                scheduleEntity.setEndDate(scheduleDto.getEndDate());
-            }
-
-            if (scheduleDto.getScheduleTitle() != null) {
-                scheduleEntity.setScheduleTitle(scheduleDto.getScheduleTitle());
-            }
-
-            scheduleEntity.setRegisterDate(LocalDate.now());
+            updateScheduleEntity.setRegisterDate(LocalDate.now());
+            Long scheduleId = updateScheduleEntity.getScheduleId();
             //엔티티 DB 저장
-            scheduleRepository.save(scheduleEntity);
-            Long scheduleId = scheduleEntity.getScheduleId();
+            scheduleRepository.save(updateScheduleEntity);
 
-            return updateDetailSchedule(userId, scheduleRequest);
+            List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
+            for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
+                if (detailScheduleDto.getScheduleDetailId() != null) {
+                    System.out.println("상세일정");
+
+                    DetailScheduleEntity detailScheduleEntity = detailScheduleRepository.findById(detailScheduleDto.getScheduleDetailId())
+                            .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+                    detailScheduleMapper.updateDetailScheduleFromDto(detailScheduleDto, detailScheduleEntity);
+                    detailScheduleEntity.setRegisterTime(LocalDateTime.now());
+                    detailScheduleEntity.setScheduleId(scheduleId);
+                    detailScheduleRepository.save(detailScheduleEntity);
+                }else {
+                    DetailScheduleEntity newDetailScheduleEntity = new DetailScheduleEntity();
+                    detailScheduleMapper.updateDetailScheduleFromDto(detailScheduleDto, newDetailScheduleEntity);
+                    newDetailScheduleEntity.setRegisterTime(LocalDateTime.now());
+                    newDetailScheduleEntity.setScheduleId(scheduleId);
+                    detailScheduleRepository.save(newDetailScheduleEntity);
+                }
+            }
+
+            List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUser_UserIdOrderByScheduleIdDesc(userId);
+            return scheduleMapper.toDtoList(scheduleEntities);
+            //            return scheduleEntities.stream()
+//                    .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
+//                    .collect(Collectors.toList());
 
         } catch (RuntimeException e) {
-
+            System.out.println("실패");
             throw new RuntimeException("일정 저장 실패", e);
 
         }
-    }
-
-    public List<ScheduleDto> updateDetailSchedule (Long userId, ScheduleRequest scheduleRequest) {
-        List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
-
-        for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
-            // 상세 일정 ID를 기반으로 기존 상세 일정을 검색
-            DetailScheduleEntity existingDetailSchedule = detailScheduleRepository.findById(detailScheduleDto.getScheduleDetailId())
-                    .orElseThrow(() -> new RuntimeException("해당하는 상세 일정이 없습니다"));
-
-            // 제공된 값만 업데이트
-            if (detailScheduleDto.getScheduleOrder() != null) {
-                existingDetailSchedule.setScheduleOrder(detailScheduleDto.getScheduleOrder());
-            }
-
-            if (detailScheduleDto.getStartTime() != null) {
-                existingDetailSchedule.setStartTime(detailScheduleDto.getStartTime());
-            }
-
-            if (detailScheduleDto.getEndTime() != null) {
-                existingDetailSchedule.setEndTime(detailScheduleDto.getEndTime());
-            }
-
-            if (detailScheduleDto.getContentId() != null) {
-                existingDetailSchedule.setContentId(detailScheduleDto.getContentId());
-            }
-
-            // 수정된 상세 일정을 저장
-            detailScheduleRepository.save(existingDetailSchedule);
-        }
-
-        List<ScheduleEntity> scheduleEntities = scheduleRepository.findByUserId(userId);
-
-        //System.out.println(scheduleEntities);
-
-        return scheduleEntities.stream()
-                .map(scheduleEntity -> modelMapper.map(scheduleEntity, ScheduleDto.class))
-                .collect(Collectors.toList());
     }
 
     //상세 페이지에서 일정 삭제
