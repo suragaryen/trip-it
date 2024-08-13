@@ -1,17 +1,30 @@
 package com.example.tripit.user.repository;
 
-import com.example.tripit.user.entity.UserEntity;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
+import com.example.tripit.user.entity.UserEntity;
 
-    Boolean existsByUsername(String username);
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long>{
+
+    Boolean existsByEmail(String email);
+    Boolean existsByNickname(String nickname);
 
     //nickname를 받아 DB테이블에서 회원을 조회하는 메소드 작성
-
     UserEntity findByEmail(String email);
+   
+    
+    @Query("SELECT u.userId FROM user u WHERE u.email = :email")
+    long findUserIdByEmail(@Param("email") String email);
+
+    Optional<UserEntity> findById(Long userId);
+
+    UserEntity findByNickname(String email);
 
 
     //MemberEntity findByUsername(String id);
