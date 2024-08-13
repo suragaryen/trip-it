@@ -27,13 +27,15 @@ public class TestController {
     }
 
     @GetMapping("/")
-    public String mainP(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public String mainP(
+            //@AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+//
+//        String email = customUserDetails.getUsername();//email
+//        String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
+//        long userId = userRepository.findUserIdByEmail(email);
     	
-        String email = customUserDetails.getUsername();//email
-        String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        long userId = userRepository.findUserIdByEmail(email);
-    	
-    	System.out.println(userId);
+    	//System.out.println(userId);
         return "main Controller";
     }
 

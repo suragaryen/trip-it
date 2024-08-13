@@ -145,7 +145,7 @@ public class ReissueService {
         //바디로 전달
 
         //ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, newRefresh);
-        ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, refresh);
+        ResultResponse result = ResultResponse.of(ResultCode.REISSUE_SUCCESS,"",newAccess, refresh, role);
 
 
         //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환

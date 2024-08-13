@@ -2,6 +2,8 @@ package com.example.tripit.config;
 
 import java.util.Collections;
 
+import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
+import com.example.tripit.user.oAuth2.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,8 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.example.tripit.user.jwt.JWTFilter;
 import com.example.tripit.user.jwt.JWTUtil;
 import com.example.tripit.user.jwt.LoginFilter;
-import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
-import com.example.tripit.user.oAuth2.CustomSuccessHandler;
 import com.example.tripit.user.repository.RefreshRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,7 +68,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.120:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.150:3000"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -97,7 +97,7 @@ public class SecurityConfig {
         //oauth2
         http
                 .oauth2Login((oauth2) -> oauth2
-                        .loginPage("/login/oauth2")
+                        //.loginPage("/login/oauth2")
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(customSuccessHandler)

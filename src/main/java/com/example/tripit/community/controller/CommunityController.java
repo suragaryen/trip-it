@@ -40,8 +40,8 @@ public class CommunityController {
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
-        List<String> titlesByUserId = scheduleRepository.findTitlesByUserId(userId);
-        List<String> scheduleIdByUserId = scheduleRepository.findScheduleIdByUserId(userId);
+        List<String> titlesByUserId = scheduleRepository.findTitlesByUserIdOrderByRegisterDateDesc(userId);
+        List<String> scheduleIdByUserId = scheduleRepository.findScheduleIdByUserIdOrderByRegisterDateDesc(userId);
 
         UserScheduleResponse response = new UserScheduleResponse(userId, titlesByUserId, scheduleIdByUserId, ResultCode.SCHEDULETITLE_SUCCESS);
 
