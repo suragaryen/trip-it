@@ -1,26 +1,28 @@
 package com.example.tripit.schedule.controller;
 
-import com.example.tripit.error.ErrorCode;
-import com.example.tripit.schedule.dto.DetailScheduleDto;
-import com.example.tripit.schedule.dto.ScheduleDto;
-import com.example.tripit.schedule.dto.ScheduleRequest;
-import com.example.tripit.schedule.service.ApiConnection;
-import com.example.tripit.schedule.service.ScheduleService;
-import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.repository.UserRepository;
-import lombok.extern.log4j.Log4j;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.List;
+import com.example.tripit.schedule.dto.ScheduleDto;
+import com.example.tripit.schedule.dto.ScheduleRequest;
+import com.example.tripit.schedule.service.ApiConnection;
+import com.example.tripit.schedule.service.ScheduleService;
+import com.example.tripit.user.dto.CustomUserDetails;
+import com.example.tripit.user.repository.UserRepository;
+
 
 @RestController
 @RequestMapping("/home")

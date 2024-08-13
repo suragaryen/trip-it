@@ -1,8 +1,6 @@
 package com.example.tripit.user.oAuth2;
 
 
-import com.example.tripit.user.entity.UserEntity;
-
 public interface OAuth2Response {
     //사용자의 정보를 응답 받는 객체 like dto
 

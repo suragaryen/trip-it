@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class PostDTO {
-
+	private Long postId;
     private String postTitle;
     private String postContent;
     private Short personnel;
@@ -21,5 +21,9 @@ public class PostDTO {
     private Boolean exposureStatus;
     private Long userId;
     private Long scheduleId;
+    
+    private Long postedUserId;
+    
+    
 }
 

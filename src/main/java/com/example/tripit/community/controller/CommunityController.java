@@ -1,5 +1,17 @@
 package com.example.tripit.community.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.community.dto.CommunityUpdateDTO;
 import com.example.tripit.community.dto.PostDTO;
@@ -19,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/community")
@@ -40,8 +53,8 @@ public class CommunityController {
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
-        List<String> titlesByUserId = scheduleRepository.findTitlesByUserId(userId);
-        List<String> scheduleIdByUserId = scheduleRepository.findScheduleIdByUserId(userId);
+        List<String> titlesByUserId = scheduleRepository.findTitlesByUserIdOrderByRegisterDateDesc(userId);
+        List<String> scheduleIdByUserId = scheduleRepository.findScheduleIdByUserIdOrderByRegisterDateDesc(userId);
 
         UserScheduleResponse response = new UserScheduleResponse(userId, titlesByUserId, scheduleIdByUserId, ResultCode.SCHEDULETITLE_SUCCESS);
 

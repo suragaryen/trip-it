@@ -1,13 +1,17 @@
 package com.example.tripit.user.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.*;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import javax.xml.crypto.Data;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Setter
@@ -17,8 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserDTO {
 
-    private long userId;
-
+    private Long userId;
     private String email;
     private String username;
     private String nickname;
@@ -26,16 +29,17 @@ public class UserDTO {
     private String birth;
     private String gender;
 
-    private String userIntro;
+    private String intro;
 
     private String role;
 
     private LocalDate regdate;
 
-    private String social_type;
     private String userpic;
+    private String socialType;
 
     private int reportCount;
     private LocalDate endDate;
+
 
 }

@@ -1,29 +1,41 @@
 package com.example.tripit.user.entity;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 //import com.nimbusds.openid.connect.sdk.claims.Gender;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity(name="user")
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_Id")
-    private long userId;
+    private Long userId;
 
     private String email;
     private String username;
     private String nickname;
-    private String password;
+    @JsonIgnore
+    private String password; // 직렬화에서 제외
     private String birth;
     private String gender;
 
@@ -46,6 +58,17 @@ public class UserEntity {
 
     private String userpic;
 
-    //private int reportCount;
-    //private Timestamp endDate;
+    
+    
+//    //신고횟수
+    @Column(name="report_count")
+    private int reportCount;
+    
+//    @Column(name="end_date")
+//    private Date endDate;
+//	
+    
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    private Set<String> roles = new HashSet<>();
+
 }

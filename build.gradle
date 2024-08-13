@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	
+	runtimeOnly 'com.h2database:h2'
 
 	// 저장시 자동 서버 재시작
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

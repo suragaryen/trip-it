@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+public class  LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
@@ -64,21 +64,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //유저 정보
         String email = authentication.getName();
 
-        //System.out.println("LoginFilter : " + email);
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-
-
         //토큰 생성
         //60000L = 1분
         String access = jwtUtil.createJwt("access", email, role, 6000000L);
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);//24시간
-
-
 
         //Refresh 토큰 DB에 저장
         addRefreshEntity(email, refresh, 86400000L);
@@ -87,7 +81,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //응답설정
         //response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
         // response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
-        response.setStatus(HttpStatus.OK.value());
+
 //        String setCookie = "";
 //
 //        if (response.containsHeader("Set-Cookie")) {
@@ -96,8 +90,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //        } else {
 //            logger.info("Set-Cookie header not found");
 //        }
-
-        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh);
+        response.setStatus(HttpStatus.OK.value());
+        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh,
+                role);
 
 
         //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환

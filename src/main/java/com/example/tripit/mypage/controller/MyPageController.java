@@ -1,5 +1,7 @@
 package com.example.tripit.mypage.controller;
 
+import com.example.tripit.block.entity.BlockListEntity;
+import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
@@ -33,10 +35,13 @@ public class MyPageController {
 
     private final MyPageService myPageService;
 
+    private final BlockListService blockListService;
+    
     @Autowired
-    public MyPageController(UserRepository userRepository, MyPageService myPageService) {
+    public MyPageController(UserRepository userRepository, MyPageService myPageService, BlockListService blockListService) {
         this.userRepository = userRepository;
         this.myPageService = myPageService;
+        this.blockListService = blockListService;
     }
 
     @GetMapping("profile")
@@ -118,6 +123,22 @@ public class MyPageController {
             myPageService.scheduleDelete(scheduleId);
             return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //차단자 조회
+    @GetMapping("/block")
+	public ResponseEntity<List<BlockListEntity>> mypageblockForUser(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+		// 유저정보 시큐리티 확인
+		String email = customUserDetails.getUsername();// email
+		Long userId = userRepository.findUserIdByEmail(email);
+
+		// 유저의 차단 목록 조회 서비스 호출
+		// ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
+		
+		List<BlockListEntity> blockList = blockListService.mypageblockForUser(userId);
+		return ResponseEntity.ok(blockList);
+	}
 
     @GetMapping("postList")
     public ResponseEntity<?> postList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
