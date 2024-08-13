@@ -12,6 +12,7 @@ import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleRequest;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.dto.UserDTO;
+import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +136,6 @@ public class MyPageController {
 
         List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
         return ResponseEntity.ok(postList);
-
     }
 
 }

@@ -55,6 +55,7 @@ public class ScheduleController {
 
     @GetMapping("/apiDetail/{contentId}")
     public ResponseEntity<Object> apiTest2(@PathVariable String contentId) {
+        System.out.println("장소 호출");
         return apiConnection.detailApi(contentId);
     }
 

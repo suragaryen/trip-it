@@ -34,7 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -211,7 +213,28 @@ public class MyPageService {
             //엔티티 DB 저장
             scheduleRepository.save(updateScheduleEntity);
 
+            //기존 상세일정 가져오기
+            List<DetailScheduleEntity> existingDetailSchedules = detailScheduleRepository.findByScheduleId(scheduleId);
+
+            //scheduleRequest에서 상세일정id 목록 추출
+            Set<Long> requestedDetailIds = scheduleRequest.getDetailScheduleDto().stream()
+                    .map(DetailScheduleDto::getScheduleDetailId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            //scheduleRequest에 포함되지 않는 상세일정id 목록 추출
+            List<Long> idsToDelete = existingDetailSchedules.stream()
+                    .map(DetailScheduleEntity::getScheduleDetailId)
+                    .filter(id -> !requestedDetailIds.contains(id))
+                    .collect(Collectors.toList());
+
+            //삭제
+            if (!idsToDelete.isEmpty()) {
+                detailScheduleRepository.deleteAllById(idsToDelete);
+            }
+
             List<DetailScheduleDto> detailScheduleDtoList = scheduleRequest.getDetailScheduleDto();
+
             for (DetailScheduleDto detailScheduleDto : detailScheduleDtoList) {
                 if (detailScheduleDto.getScheduleDetailId() != null) {
                     System.out.println("상세일정");
@@ -303,6 +326,10 @@ public class MyPageService {
         postRepository.deleteAllById(postIds);
 
         return postList(userId);
+
+    }
+
+    public void userWithdrawal() {
 
     }
 }

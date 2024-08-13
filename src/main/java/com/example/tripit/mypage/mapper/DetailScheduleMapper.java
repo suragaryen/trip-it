@@ -13,5 +13,5 @@ import java.util.List;
 public interface DetailScheduleMapper {
 
     void updateDetailScheduleFromDto(DetailScheduleDto dto, @MappingTarget DetailScheduleEntity entity);
-    
+
 }
