@@ -1,6 +1,14 @@
 package com.example.tripit.user.service;
 
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.error.ErrorResponse;
 import com.example.tripit.result.ResultCode;
@@ -9,18 +17,12 @@ import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.jwt.JWTUtil;
 import com.example.tripit.user.repository.RefreshRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 
 
 @Slf4j
@@ -68,7 +70,7 @@ public class ReissueService {
 
             log.info("refresh is null");
 
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -85,7 +87,7 @@ public class ReissueService {
             log.info("refresh expired");
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -100,7 +102,7 @@ public class ReissueService {
             log.info("not refresh");
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
 
             //response body
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -112,7 +114,7 @@ public class ReissueService {
         if (!isExist) {
 
             //response status code
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGGOUT_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.LOGOUT_REQUEST);
 
             log.info("not in db");
 

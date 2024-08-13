@@ -33,8 +33,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final RefreshRepository refreshRepository;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshRepository refreshRepository
+    private final CustomAccessDeniedHandler customAccessDeniedHandler; // 페이지 권한 없음 출력
+    
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, RefreshRepository refreshRepository,  CustomAccessDeniedHandler customAccessDeniedHandler
                                                                         ) {
 
         this.authenticationConfiguration = authenticationConfiguration;
@@ -42,6 +43,7 @@ public class SecurityConfig {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.refreshRepository = refreshRepository;
+        this.customAccessDeniedHandler =  customAccessDeniedHandler; // 페이지 권한 없음 출력
     }
 
     @Bean
@@ -68,7 +70,9 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.150:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.122:3000"));
+//                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.140:3001"));
+
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -106,10 +110,18 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost", "/block/add", "/block/user","/block/delete","/report/user","/report/add").permitAll()
+                        .requestMatchers("/admin/**", "/block/**", "/report/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/community/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated())
+                
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedHandler(customAccessDeniedHandler) // 페이지 권한 없음 출력
+        );
+        
+        
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);

@@ -27,7 +27,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
     ACCESS_TOKEN_EXPIRED(401, "1", "token expired"),
 
-    LOGGOUT_REQUEST(400, "2", "logout request"),
+    LOGOUT_REQUEST(400, "2", "logout request"),
     ACCESS_TOKEN_INVALID(400, "A002", "access token invalid"),
     
     //Chat
@@ -42,11 +42,23 @@ public enum ErrorCode {
     DUPLICATE_NICKNAMES(409, "409", "Duplicate nicknames"),
     USER_NOT_FOUND(404, "404", "User not found"),
     POST_NOT_FOUND(404, "404", "Post not found"),
-    INTRO_TOO_LONG(422, "422", "Intro too long");
+    INTRO_TOO_LONG(422, "422", "Intro too long"),
+    //NO_CONTENT(204, "N001", "No content"),
+
+    //MyPage
+
+
+    SEARCH_EXISTS(200, "1", "검색 결과가 없습니다."),
+	//block
+	BLOCK_EXISTS(500, "1", "자기 자신을 차단할 수 없습니다."),
+	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다."),
+	BLOCK_EXISTS3(500, "3", "차단한 대상이 아닙니다");
+
 
     //Community
     private int status;
     private final String code;
     private final String message;
+    
 
 }

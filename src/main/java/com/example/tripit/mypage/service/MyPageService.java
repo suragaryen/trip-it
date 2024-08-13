@@ -134,6 +134,7 @@ public class MyPageService {
         userRepository.save(userEntity);
 
     }
+
     public boolean isNicknameExists(String nickname, Long userId) {
         return userRepository.existsByNicknameAndUserIdNot(nickname, userId);
     }
