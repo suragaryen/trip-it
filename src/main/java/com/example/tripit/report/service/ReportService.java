@@ -1,10 +1,10 @@
 package com.example.tripit.report.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.tripit.block.service.BlockListService;
@@ -18,6 +18,7 @@ import com.example.tripit.report.repository.ReportTypeRepository;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 
+import io.jsonwebtoken.lang.Collections;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -81,72 +82,98 @@ public class ReportService {
 		return savedReport;
 	}
 
-	// 관리자용 전체 조회(페이징)
-	public Page<ReportDTO> getReports(Pageable pageable, String sortKey, String sortValue) {
+	// 관리자용 전체 조회(페이징 및 검색)
+	   public Page<ReportDTO> getReports(String search, Pageable pageable, String sortKey, String sortValue) {
+	        Page<ReportEntity> reportPage;
+			if (search != null && !search.isEmpty()) {
+	            reportPage = reportRepository.findBySearchTerm(search, pageable);
+	        } else {
+	            reportPage = reportRepository.findAll(pageable);
+	        }
 
-		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
+	        // ReportEntity를 ReportDTO로 변환
+	        return reportPage.map(report -> new ReportDTO(
+	            report.getReportId(),
+	            report.getUserId().getUserId(),
+	            report.getPostId().getPostId(),
+	            report.getUserId().getNickname(),
+	            report.getPostId().getPostTitle(),
+	            report.getReportType().getReportType(),
+	            report.getReportType().getReportReason(),
+	            report.getReportDetail(),
+	            report.getReportFalse(),
+	            report.getReportDate()
+	        ));
+	    }
 
-		// 기본 정렬 필드 및 방향 설정
-		String defaultSortKey = "reportDate";
-		String defaultSortValue = "desc";
-
-		// 기본값 설정
-		sortKey = defaultSortKey != null ? defaultSortKey : "defaultSortKey";
-		sortValue = defaultSortValue != null ? defaultSortValue : "asc";
-
-		return reportRepository.findAll(pageable).map(report -> {
-			Long postId = report.getPostId().getPostId(); // PostEntity에서 postId 추출
-			String postTitle = report.getPostId().getPostTitle(); // PostEntity에서 postTitle 추출
-			Long blockUserId = report.getUserId().getUserId(); // userEntity에서 userId 추출
-			String reportType = report.getReportType().getReportType(); // ReportTypeEntity에서 ReportType 추출
-			String nickName = report.getUserId().getNickname(); // userEntity에서 Nickname 추출
-			String reportReason = report.getReportType().getReportReason(); // ReportTypeEntity에서 ReportReason 추출
-			return new ReportDTO(report.getReportId(), blockUserId, postId, nickName, postTitle, reportType,
-					reportReason, report.getReportDetail(), report.getReportFalse(), report.getReportDate());
-		});
-	}
-
-	// 관리자 조회
-	public List<ReportEntity> findAll(String sortKey, String sortValue) {
-		Sort sort = Sort.by(Sort.Direction.fromString(sortValue), sortKey);
-
-		// 기본 정렬 필드 및 방향 설정
-		String defaultSortKey = "reportDate";
-		String defaultSortValue = "desc";
-
-		// 기본값 설정
-		sortKey = defaultSortKey != null ? defaultSortKey : "defaultSortKey";
-		sortValue = defaultSortValue != null ? defaultSortValue : "asc";
-
-		return reportRepository.findAll(sort);
-	}
 
 	// sort 특정 사용자의 신고 목록 조회 메서드
-	public List<ReportEntity> reportForUser(Long userId) {
-		UserEntity user = userRepository.findById(userId).orElse(null);
+	public List<ReportDTO> reportForUser(Long userId) {
+	    // 사용자 조회
+	    UserEntity user = userRepository.findById(userId).orElse(null);
 
-//		// 기본 정렬 필드 및 방향 설정
-//		String defaultSortKey = "reportDate";
-//		String defaultSortValue = "desc";
+	    // 사용자가 없으면 빈 리스트 반환
+	    if (user == null) {
+	        return Collections.emptyList();
+	    }
 
-//		// 기본값 설정
-//		sortKey = defaultSortKey != null ? defaultSortKey : "defaultSortKey";
-//		sortValue = defaultSortValue != null ? defaultSortValue : "asc";
+	    // 특정 사용자의 신고 목록 조회
+	    List<ReportEntity> reports = reportRepository.findByUserId(user);
 
-		return reportRepository.findByUserId(user);
+	    // ReportEntity를 ReportDTO로 변환
+	    return reports.stream().map(report -> {
+	        Long postId = report.getPostId().getPostId(); // PostEntity에서 postId 추출
+	        String postTitle = report.getPostId().getPostTitle(); // PostEntity에서 postTitle 추출
+	        Long blockUserId = report.getUserId().getUserId(); // userEntity에서 userId 추출
+	        String nickName = report.getUserId().getNickname(); // userEntity에서 Nickname 추출
+	        String reportType = report.getReportType().getReportType(); // ReportTypeEntity에서 ReportType 추출
+	        String reportReason = report.getReportType().getReportReason(); // ReportTypeEntity에서 ReportReason 추출
+
+	        return new ReportDTO(
+	                report.getReportId(),
+	                blockUserId,
+	                postId,
+	                nickName,
+	                postTitle,
+	                reportType,
+	                reportReason,
+	                report.getReportDetail(),
+	                report.getReportFalse(),
+	                report.getReportDate()
+	        );
+	    }).collect(Collectors.toList());
 	}
 
+	
 	// 관리자용 신고 확인
-	@Transactional
-	public ReportEntity updateReportFalse(Long reportId, int newReportFalse) {
-		ReportEntity report = reportRepository.findById(reportId)
-				.orElseThrow(() -> new RuntimeException("Report not found"));
+	  @Transactional
+	    public void updateReportFalse(Long reportId, int reportFalseValue) {
+	        // ReportEntity 조회
+	        ReportEntity report = reportRepository.findById(reportId)
+	                .orElseThrow(() -> new RuntimeException("Report not found"));
 
-		// reportFalse 값을 직접 설정
-		report.setReportFalse(newReportFalse);
+	        // report_false 값 업데이트
+	        report.setReportFalse(reportFalseValue);
+	        reportRepository.save(report);
 
-		// 업데이트된 엔티티 저장
-		return reportRepository.save(report);
-	}
+	        // report_false 값이 1이면 user의 report_count 값 증가
+	        if (reportFalseValue == 1) {
+	            UserEntity user = report.getPostId().getUserId(); // reportId로부터 userEntity를 가져옴
+	            int newReportCount = user.getReportCount() + 1;
+	            user.setReportCount(newReportCount);
 
+
+	            // reportCount에 따라 역할 업데이트
+	            if (newReportCount >= 7) {
+	                user.setRole("ROLE_C");
+	            } else if (newReportCount >= 5) {
+	                user.setRole("ROLE_B");
+	            } else if (newReportCount >= 3) {
+	                user.setRole("ROLE_A");
+	            }
+
+	            userRepository.save(user);
+	        }
+	        
+	    }
 }

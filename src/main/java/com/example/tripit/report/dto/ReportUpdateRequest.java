@@ -7,9 +7,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReportUpdateRequest {
     private Long reportId;
-    private int reportFalseValue;
+    private int reportFalse; // 요청 데이터에 맞게 'reportFalse'로 수정
 
-    // Getters and Setters
+
+    // 파라미터가 있는 생성자
+    public ReportUpdateRequest(Long reportId, int reportFalse) {
+        this.reportId = reportId;
+        this.reportFalse = reportFalse;
+    }
+
+    // Getter 및 Setter
     public Long getReportId() {
         return reportId;
     }
@@ -18,11 +25,11 @@ public class ReportUpdateRequest {
         this.reportId = reportId;
     }
 
-    public int getReportFalseValue() {
-        return reportFalseValue;
+    public int getReportFalse() {
+        return reportFalse;
     }
 
-    public void setReportFalseValue(int reportFalseValue) {
-        this.reportFalseValue = reportFalseValue;
+    public void setReportFalse(int reportFalse) {
+        this.reportFalse = reportFalse;
     }
 }
