@@ -90,7 +90,7 @@ public class BlockListController {
 		return ResponseEntity.ok(blocksPage);
 	}
 
-//    // 특정 사용자의 차단자 목록 조회
+    // 특정 사용자의 차단자 목록 조회
 	@GetMapping("/user")
 	public ResponseEntity<List<BlockListEntity>> blockForUser(
 			@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("sortKey") String sortKey,
@@ -132,19 +132,5 @@ public class BlockListController {
 		// 업데이트된 차단 리스트 리턴
 		return ResponseEntity.ok("차단 해제 완료");
 	}
-
-//    // 특정 사용자의 차단자 목록 조회DTO
-//    @GetMapping("/user")
-//    public ResponseEntity<List<blockListDTO>> getblockForUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-//                                                                  @RequestParam("sortKey") String sortKey, 
-//                                                                  @RequestParam("sortValue") String sortValue) {
-//        // 유저정보 시큐리티 확인
-//        String email = customUserDetails.getUsername();
-//        Long userId = userRepository.findUserIdByEmail(email);
-//z
-//        // 유저의 차단 목록 조회 서비스 호출
-//        List<blockListDTO> blockList = blockListService.getblockForUser(sortKey, sortValue, userId);
-//        return ResponseEntity.ok(blockList);
-//    }
 
 }

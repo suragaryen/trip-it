@@ -69,16 +69,6 @@ public class ReportService {
 			blockListService.addBlock(userId, post.getUserId().getNickname()); // 신고 유형을 사용하여 차단 추가
 		}
 
-//		  // 신고 횟수 증가
-//	    user.setReportCount(user.getReportCount() + 1);
-//	    int reportThreshold = 3; // 예시 임계값
-//	    if (user.getReportCount() >= reportThreshold) {
-//	        Set<String> newRoles = new HashSet<>();
-//	        newRoles.add("ROLE_A");
-//	        user.setRoles(newRoles);
-//	        // 새로운 역할로 업데이트된 사용자 엔티티 저장
-//	        userRepository.save(user);
-//	    }
 		return savedReport;
 	}
 
@@ -174,6 +164,5 @@ public class ReportService {
 
 	            userRepository.save(user);
 	        }
-	        
 	    }
 }
