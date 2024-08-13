@@ -38,7 +38,7 @@ public class ResultResponse {
     }
 
     // Token response
-    public static ResultResponse of(ResultCode resultCode, String email, String access, String refresh) {
+    public static ResultResponse of(ResultCode resultCode, String email, String access, String refresh, String role) {
         return new ResultResponse(resultCode, email, access, refresh);
     }
 
