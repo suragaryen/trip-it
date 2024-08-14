@@ -159,4 +159,13 @@ public class MyPageController {
         return ResponseEntity.ok(postList);
     }
 
+    @DeleteMapping("delete-user")
+    public ResponseEntity<?> userDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        if (myPageService.deleteUser(customUserDetails)) {
+            return ResponseEntity.ok("탈퇴");
+        } else {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

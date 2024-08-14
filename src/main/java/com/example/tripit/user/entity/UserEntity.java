@@ -1,5 +1,6 @@
 package com.example.tripit.user.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -43,15 +44,15 @@ public class UserEntity {
 
     private String role;
 
-    @Temporal(TemporalType.TIMESTAMP) //JPA 엔티티 클래스의 필드가 데이터베이스에 어떤 시간 정보로 매핑되는지를 지정
+    //@Temporal(TemporalType.TIMESTAMP) //JPA 엔티티 클래스의 필드가 데이터베이스에 어떤 시간 정보로 매핑되는지를 지정
     @Column(name="regdate")
-    private Date regdate;
+    private LocalDate regDate;
 
-    @PrePersist //어노테이션은 엔티티가 영속화되기 전에 실행되는 메서드를 지정
-    public void prePersist() {
-        this.regdate = new Date();
-    }
-    //영속화란 객체를 데이터베이스가 이해할 수 있는 형태로 변환하고 저장하는 것.
+//    @PrePersist //어노테이션은 엔티티가 영속화되기 전에 실행되는 메서드를 지정
+//    public void prePersist() {
+//        this.regdate = new Date();
+//    }
+//    //영속화란 객체를 데이터베이스가 이해할 수 있는 형태로 변환하고 저장하는 것.
 
     @Column(name="social_type")
     private String socialType;
@@ -64,8 +65,8 @@ public class UserEntity {
     @Column(name="report_count")
     private int reportCount;
     
-//    @Column(name="end_date")
-//    private Date endDate;
+    @Column(name="end_date")
+    private LocalDate endDate;
 //	
     
 //    @ElementCollection(fetch = FetchType.EAGER)

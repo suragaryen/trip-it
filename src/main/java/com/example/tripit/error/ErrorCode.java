@@ -43,10 +43,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(404, "404", "User not found"),
     POST_NOT_FOUND(404, "404", "Post not found"),
     INTRO_TOO_LONG(422, "422", "Intro too long"),
-    //NO_CONTENT(204, "N001", "No content"),
 
-    //MyPage
-
+    DELETEUSER(403, "403", "Delete User"),
 
     SEARCH_EXISTS(200, "1", "검색 결과가 없습니다."),
 	//block

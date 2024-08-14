@@ -1,5 +1,7 @@
 package com.example.tripit.user.jwt;
 
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.user.entity.RefreshEntity;
 import com.example.tripit.user.repository.RefreshRepository;
 import com.example.tripit.result.ResultCode;
@@ -68,6 +70,14 @@ public class  LoginFilter extends UsernamePasswordAuthenticationFilter {
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
+
+        if (role.equals("ROLE_D")) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); //403 Forbidden
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\":\"탈퇴한 회원입니다\"}");
+            return;
+        }
 
         //토큰 생성
         //60000L = 1분

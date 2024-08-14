@@ -27,6 +27,8 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
     @Query("SELECT s.scheduleId FROM ScheduleEntity s WHERE s.user.id = :userId ORDER BY s.registerDate DESC")
     List<String> findScheduleIdByUserIdOrderByRegisterDateDesc(@Param("userId") long userId);
 
+    //List<Long> findAllByUserId(Long userId);
+
 
 }
 
