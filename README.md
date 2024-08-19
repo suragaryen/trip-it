@@ -8,8 +8,10 @@
 
 ## 💂🏻‍♀️ 팀원소개
 
-| ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) |
-| **최수림** |
+| 팀원 소개 | 프로필 이미지 | 깃허브 |
+|-----------|---------------|--------|
+| **최수림** | ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | [GitHub Profile](https://github.com/suragaryen) |
+
 
 
 
