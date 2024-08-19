@@ -8,10 +8,11 @@
 
 ## 💂🏻‍♀️ 팀원소개
 
-| ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | 
-|:-----------:|
-| [**최수림(BE)**](https://github.com/suragaryen) |  
+## 💂🏻‍♀️ 팀원소개
 
+| ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | ![sungjoon92](https://avatars.githubusercontent.com/u/50028595?v=4) | ![Yuurim98](https://avatars.githubusercontent.com/u/83633008?v=4) | ![moonmoon96](https://avatars.githubusercontent.com/u/50128712?v=4) | ![narahub123](https://avatars.githubusercontent.com/u/88291130?v=4) |
+|:-------------------------------:|:--------------------------------:|:-------------------------------:|:-------------------------------:|:-------------------------------:|
+| [**최수림(BE)**](https://github.com/suragaryen) | [**원성준(BE)**](https://github.com/sungjoon92) | [**최유림(BE)**](https://github.com/Yuurim98) | [**문준현(FE)**](https://github.com/moonmoon96) | [**박나라(FE)**](https://github.com/narahub123) |
 
 
 
