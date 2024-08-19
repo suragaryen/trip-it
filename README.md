@@ -2,13 +2,13 @@
 
 
 
----
+--
 
 ## 🖥 프로젝트 소개
 
 **TRIP IT!** 은  사용자가 여행 일정을 설계하고 커뮤니티에 공유함으로써 소셜 활동도 즐길 수 있는 여행 스케쥴링 & 커뮤니티 웹 앱 입니다. 
 
----
+--
 ## 🛠 기술 스택
 
 | 개발기간 | 2024.05 ~ 진행중 |
@@ -21,4 +21,9 @@
 | IDE | Visual Studio Code, IntelliJ |
 | API명세 | https://docs.google.com/spreadsheets/d/187gMgASjs6wMs96f0oe8W24CEc872nl8lFro1bmjPi4/edit?gid=0#gid=0 |
 
----
+--
+## 📜 ERD CLOUD
+![tripitERDCLOUD](https://github.com/user-attachments/assets/fb0b571f-25bd-4602-89e2-d18bff4370de)
+
+--
+
