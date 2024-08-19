@@ -10,7 +10,7 @@
 
 | ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | 
 |:-----------:|
-| [**최수림**](https://github.com/suragaryen) |  
+| [**최수림(BE)**](https://github.com/suragaryen) |  
 
 
 
