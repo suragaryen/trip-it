@@ -1,5 +1,6 @@
-![tripitLogo](https://github.com/user-attachments/assets/818f685b-8970-472b-8cb5-006d3defcdb9)
-
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/818f685b-8970-472b-8cb5-006d3defcdb9" alt="tripitLogo">
+</div>
 
 ## 🖥 프로젝트 소개
 
