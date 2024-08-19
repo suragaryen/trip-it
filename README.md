@@ -1,0 +1,1 @@
+![KakaoTalk_Photo_2024-06-14-15-25-22.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/e10b06f1-dba6-4594-97b1-a1dceac85324/1bd05ed4-2712-49b5-8d14-bba44b279c02/KakaoTalk_Photo_2024-06-14-15-25-22.png)
