@@ -1,10 +1,6 @@
 package com.example.tripit.user.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import javax.xml.crypto.Data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,11 +29,11 @@ public class UserDTO {
 
     private String role;
 
-    private LocalDate regdate;
+    private LocalDateTime regdate;
 
     private String userpic;
     private String socialType;
 
     private int reportCount;
-//    private LocalDateTime endDate;
+    private LocalDateTime endDate;
 }

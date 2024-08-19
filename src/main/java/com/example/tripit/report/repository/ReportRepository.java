@@ -29,7 +29,7 @@ public interface ReportRepository extends JpaRepository<ReportEntity, Long> {
     Page<ReportEntity> findAll(Pageable pageable);
     
    
-    @Query("SELECT r FROM ReportEntity r " +
+    @Query("SELECT r FROM report r " +
             "WHERE r.reportDetail LIKE %:search% " +
             "OR r.userId.nickname LIKE %:search% " +
             "OR r.postId.postTitle LIKE %:search% " +

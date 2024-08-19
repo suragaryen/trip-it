@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -65,18 +64,6 @@ public class ReportController {
 		return ResponseEntity.ok("신고완료");
 	}
 
-//	// 모든 신고대상자확인
-//	@GetMapping("/all")
-//	public ResponseEntity<List<ReportEntity>> getAllReports(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-//			@RequestParam("sortKey") String sortKey, @RequestParam("sortValue") String sortValue) {
-//		// 유저정보 시큐리티 확인
-//		String email = customUserDetails.getUsername();
-//		Long userId = userRepository.findUserIdByEmail(email);
-//		
-//		// 유저의 신고 목록 조회 서비스 호출
-//		List<ReportEntity> report = reportService.findAll(sortKey, sortValue);
-//		return ResponseEntity.ok(report);
-//	}
 
 	// 모든 신고대상자확인
 	@GetMapping("/all")
