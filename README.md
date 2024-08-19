@@ -1,1 +1,7 @@
-![KakaoTalk_Photo_2024-06-14-15-25-22.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/e10b06f1-dba6-4594-97b1-a1dceac85324/1bd05ed4-2712-49b5-8d14-bba44b279c02/KakaoTalk_Photo_2024-06-14-15-25-22.png)
+---
+
+## 🖥 프로젝트 소개
+
+**TRIP IT!** 은  사용자가 여행 일정을 설계하고 커뮤니티에 공유함으로써 소셜 활동도 즐길 수 있는 여행 스케쥴링 & 커뮤니티 웹 앱 입니다. 
+
+---
