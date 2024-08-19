@@ -35,7 +35,7 @@ public class AdminService {
 	            user.getEmail(),
 	            user.getUsername(),
 	            user.getNickname(),
-	            user.getPassword(),
+//	            user.getPassword(),
 	            user.getBirth(),
 	            user.getGender(),
 	            user.getIntro(),
