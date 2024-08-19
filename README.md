@@ -8,9 +8,10 @@
 
 ## 💂🏻‍♀️ 팀원소개
 
-|![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | 
-|-----------|
-|  [**최수림**](https://github.com/suragaryen)|  
+| ![suragaryen](https://avatars.githubusercontent.com/u/63506983?v=4) | 
+|:-----------:|
+| [**최수림**](https://github.com/suragaryen) |  
+
 
 
 
