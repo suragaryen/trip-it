@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.tripit.chat.entity.ChatMessage;
+import com.example.tripit.chat.entity.ChatMessageEntity;
 import com.example.tripit.chat.repository.ChatJoinRepository;
 import com.example.tripit.chat.repository.ChatMessageRepository;
 
@@ -18,7 +18,7 @@ public class ChatMessageService {
     @Autowired
     private ChatJoinRepository chatJoinRepository;
 
-    public ChatMessage saveChatMessage(ChatMessage chatMessage) {
+    public ChatMessageEntity saveChatMessage(ChatMessageEntity chatMessage) {
         // chatMessage의 room_id가 chat_join에 있는지 확인
 //        if (!chatJoinRepository.existsByRoomId(chatMessage.getRoomId())) {
 //            throw new IllegalArgumentException("Invalid room_id: " + chatMessage.getRoomId());

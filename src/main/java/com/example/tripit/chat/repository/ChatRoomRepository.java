@@ -1,11 +1,13 @@
 package com.example.tripit.chat.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import com.example.tripit.chat.entity.ChatRoom;
+import com.example.tripit.chat.entity.ChatRoomEntity;
+import com.example.tripit.community.dto.PostDTO;
+import com.example.tripit.community.entity.PostEntity;
 
-@Repository
-public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
-	 ChatRoom findByPostId(int postId);
+public interface ChatRoomRepository extends JpaRepository<ChatRoomEntity, Long> {
+	 Optional<ChatRoomEntity> findByPostId(PostEntity postId);
 }

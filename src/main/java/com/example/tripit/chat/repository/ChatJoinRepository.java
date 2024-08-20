@@ -3,7 +3,7 @@ package com.example.tripit.chat.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.tripit.chat.entity.ChatJoin;
+import com.example.tripit.chat.entity.ChatJoinEntity;
 
-public interface ChatJoinRepository extends JpaRepository<ChatJoin, Integer> {
+public interface ChatJoinRepository extends JpaRepository<ChatJoinEntity, Integer> {
 }

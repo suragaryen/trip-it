@@ -3,7 +3,7 @@ package com.example.tripit.chat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.tripit.chat.entity.ChatJoin;
+import com.example.tripit.chat.entity.ChatJoinEntity;
 import com.example.tripit.chat.repository.ChatJoinRepository;
 
 
@@ -14,7 +14,7 @@ public class ChatJoinService {
     private ChatJoinRepository chatJoinRepository;
 
     public void joinRoom(int userId, int roomId) {
-        ChatJoin chatJoin = new ChatJoin();
+        ChatJoinEntity chatJoin = new ChatJoinEntity();
         chatJoin.setUserId(userId);
         chatJoin.setRoomId(roomId);
         chatJoinRepository.save(chatJoin);

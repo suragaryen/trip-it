@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.user.dto.UserDTO;
+import com.example.tripit.user.dto.adminUsersDTO;
 import com.example.tripit.user.service.AdminService;
 
 
@@ -34,7 +35,7 @@ public class AdminController {
     }
     
     @GetMapping("/users")
-	public ResponseEntity<Page<UserDTO>> allUsers(
+	public ResponseEntity<Page<adminUsersDTO>> allUsers(
 	    @RequestParam(value = "search", required = false) String search,
 	    @RequestParam(value = "page", defaultValue = "1") int page,
 	    @RequestParam(value = "size", defaultValue = "10") int size,
@@ -49,7 +50,7 @@ public class AdminController {
 	    Pageable pageable = PageRequest.of(page - 1, size, sort);
 
 	    // 신고 리스트 조회
-	    Page<UserDTO> users = adminService.getusers(search, pageable, sortKey, sortValue);
+	    Page<adminUsersDTO> users = adminService.getusers(search, pageable, sortKey, sortValue);
 
 	    if (users.isEmpty()) {
 	        // 빈 결과에 대한 커스텀 예외를 던짐

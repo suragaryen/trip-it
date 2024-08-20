@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Chat_join")
-public class ChatJoin {
+public class ChatJoinEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

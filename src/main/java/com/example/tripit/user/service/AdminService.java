@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.tripit.user.dto.UserDTO;
+import com.example.tripit.user.dto.adminUsersDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 
@@ -18,7 +19,7 @@ public class AdminService {
 	private UserRepository userRepository;
 
 	// 관리자용 전체 조회(페이징 및 검색)
-	public Page<UserDTO> getusers(String search, Pageable pageable, String sortKey, String sortValue) {
+	public Page<adminUsersDTO> getusers(String search, Pageable pageable, String sortKey, String sortValue) {
 		
 		Page<UserEntity> userPage;
 	    
@@ -30,7 +31,7 @@ public class AdminService {
 	    }
 
 	    // DTO로 변환
-	    return userPage.map(user -> new UserDTO(
+	    return userPage.map(user -> new adminUsersDTO(
 	            user.getUserId(),
 	            user.getEmail(),
 	            user.getUsername(),

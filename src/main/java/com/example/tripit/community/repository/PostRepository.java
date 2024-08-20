@@ -39,5 +39,4 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
     
-    
 }
