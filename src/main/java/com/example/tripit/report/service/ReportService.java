@@ -1,5 +1,6 @@
 package com.example.tripit.report.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,6 +153,10 @@ public class ReportService {
 	            int newReportCount = user.getReportCount() + 1;
 	            user.setReportCount(newReportCount);
 
+	            // 현재 날짜와 7일 후 날짜 계산
+	            LocalDateTime today = LocalDateTime.now();
+	            LocalDateTime endDate = today.plusDays(7);
+
 
 	            // reportCount에 따라 역할 업데이트
 	            if (newReportCount >= 7) {
@@ -161,7 +166,10 @@ public class ReportService {
 	            } else if (newReportCount >= 3) {
 	                user.setRole("ROLE_A");
 	            }
-
+	            
+	            // end_date를 7일 후 날짜로 설정
+	            user.setEndDate(endDate);
+	            
 	            userRepository.save(user);
 	        }
 	    }

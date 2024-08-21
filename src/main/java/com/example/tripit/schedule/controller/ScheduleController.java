@@ -43,8 +43,8 @@ public class ScheduleController {
     }
 
     @GetMapping({"/apiList/{metroId}/{pageNo}", "/apiList/{metroId}/{pageNo}/{contentTypeId}"})
-    public ResponseEntity<Object> travelApi(@PathVariable String metroId,
-                                            @PathVariable String pageNo,
+    public ResponseEntity<Object> travelApi(@PathVariable("metroId") String metroId,
+                                            @PathVariable("pageNo") String pageNo,
                                             @PathVariable(required = false) String contentTypeId) {
         //contentTypeId가 제공되지 않았을 때 기본값 설정
         if (contentTypeId == null) {
@@ -61,10 +61,10 @@ public class ScheduleController {
     }
 
     @GetMapping("/apiSearch/{metroId}/{pageNo}/{contentTypeId}/{keyword}")
-    public ResponseEntity<Object> apiTest3(@PathVariable String metroId,
-                                           @PathVariable String pageNo,
-                                           @PathVariable String contentTypeId,
-                                           @PathVariable String keyword) throws UnsupportedEncodingException {
+    public ResponseEntity<Object> apiTest3(@PathVariable("metroId") String metroId,
+                                           @PathVariable("pageNo") String pageNo,
+                                           @PathVariable("contentTypeId") String contentTypeId,
+                                           @PathVariable("keyword") String keyword) throws UnsupportedEncodingException {
         return apiConnection.searchApi(metroId, pageNo, contentTypeId, keyword);
     }
 

@@ -84,11 +84,6 @@ public class ReportController {
 	    // 신고 리스트 조회
 	    Page<ReportDTO> reports = reportService.getReports(search, pageable, sortKey, sortValue);
 
-	    if (reports.isEmpty()) {
-	        // 빈 결과에 대한 커스텀 예외를 던짐
-	        throw new CustomException(ErrorCode.SEARCH_EXISTS);
-	    }
-
 	    // 결과 반환
 	    return ResponseEntity.ok(reports);
 	}
@@ -107,17 +102,5 @@ public class ReportController {
 		return ResponseEntity.ok(report);
 	}
 
-	// 관리자용 신고 확인
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PostMapping("/ok")
-	public ResponseEntity<String> updateReportFalse(@RequestBody ReportUpdateRequest request) {
-		// DTO에서 reportId와 reportFalse 값을 추출
-		Long reportId = request.getReportId();
-		int reportFalseValue = request.getReportFalse();
-
-		// 서비스 메서드를 호출하여 데이터 업데이트
-		reportService.updateReportFalse(reportId, reportFalseValue);
-		return ResponseEntity.ok("신고 처리 완료");
-	}
 
 }

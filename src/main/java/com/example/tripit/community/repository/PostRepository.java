@@ -39,4 +39,12 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
     
+    
+    // 관리자용 검색 및 페이징
+    @Query("SELECT p FROM PostEntity p " +
+           "WHERE p.postTitle LIKE %:search% " +
+           "OR p.postContent LIKE %:search% " +
+           "OR CAST(p.personnel AS string) LIKE %:search% " +
+           "OR CAST(p.viewCount AS string) LIKE %:search%")
+    Page<PostEntity> findBySearchTerm(@Param("search") String search, Pageable pageable);
 }

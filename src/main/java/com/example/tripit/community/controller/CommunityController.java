@@ -3,6 +3,7 @@ package com.example.tripit.community.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +56,7 @@ public class CommunityController {
         return ResponseEntity.ok(response);
 
     }
-
+    @PreAuthorize("!hasRole('ROLE_A')")
     @PostMapping("/submitPost")
     public ResponseEntity<?> submitPost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PostDTO postDTO) {
 

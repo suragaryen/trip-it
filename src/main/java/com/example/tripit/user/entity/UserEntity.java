@@ -3,6 +3,7 @@ package com.example.tripit.user.entity;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -44,6 +45,7 @@ public class UserEntity {
     private String role;
 
     @Temporal(TemporalType.TIMESTAMP) //JPA 엔티티 클래스의 필드가 데이터베이스에 어떤 시간 정보로 매핑되는지를 지정
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     @Column(name="regdate")
     private LocalDateTime regdate;
 
@@ -64,6 +66,7 @@ public class UserEntity {
     private int reportCount;
     
     @Column(name="end_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endDate;
 //	
     

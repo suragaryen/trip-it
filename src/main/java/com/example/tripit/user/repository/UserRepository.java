@@ -1,5 +1,7 @@
 package com.example.tripit.user.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -50,5 +52,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
     	       "OR u.socialType LIKE %:search%")
     	Page<UserEntity> findBySearchTerm(@Param("search") String search, Pageable pageable);
 
+    
+    @Query("SELECT u FROM user u WHERE u.endDate = :today")
+    List<UserEntity> findUsersWithExpiredRole(@Param("today") LocalDateTime today);
 
 }

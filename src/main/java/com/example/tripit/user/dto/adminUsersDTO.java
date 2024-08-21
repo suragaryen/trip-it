@@ -2,6 +2,8 @@ package com.example.tripit.user.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,12 +29,14 @@ public class adminUsersDTO {
 	    private String intro;
 
 	    private String role;
-
+	    
+	    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
 	    private LocalDateTime regdate;
 
 	    private String userpic;
 	    private String socialType;
 
 	    private int reportCount;
+	    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
 	    private LocalDateTime endDate;
 }

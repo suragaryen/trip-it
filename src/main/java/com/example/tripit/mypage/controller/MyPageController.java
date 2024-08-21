@@ -1,5 +1,20 @@
 package com.example.tripit.mypage.controller;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.tripit.block.entity.BlockListEntity;
 import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.community.dto.CommunityDTO;
@@ -9,14 +24,6 @@ import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/mypage")
@@ -36,7 +43,7 @@ public class MyPageController {
         this.blockListService = blockListService;
     }
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -48,7 +55,7 @@ public class MyPageController {
         }
     }
 
-    @PostMapping("profile/update")
+    @PostMapping("/profile/update")
     public ResponseEntity<?> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -56,7 +63,7 @@ public class MyPageController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("personal")
+    @GetMapping("/personal")
     public ResponseEntity<?> getPersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -68,7 +75,7 @@ public class MyPageController {
         }
     }
 
-    @PostMapping("personal/update")
+    @PostMapping("/personal/update")
     public ResponseEntity<?> updatePersonal(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserDTO userDTO) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -77,7 +84,7 @@ public class MyPageController {
     }
 
 
-    @GetMapping("schedules") //전체 일정 목록
+    @GetMapping("/schedules") //전체 일정 목록
     public ResponseEntity<?> schedulesList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -86,7 +93,7 @@ public class MyPageController {
         return ResponseEntity.ok(scheduleDtos);
     }
 
-    @PostMapping("schedules/delete-schedules") //일정 복수 삭제
+    @PostMapping("/schedules/delete-schedules") //일정 복수 삭제
     public ResponseEntity<?> schedulesDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody List<Long> scheduleIds){
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -99,7 +106,7 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("schedules/{scheduleId}") //상세 일정
+    @GetMapping("/schedules/{scheduleId}") //상세 일정
     public ResponseEntity<?> detailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                             @PathVariable Long scheduleId) {
         String email = customUserDetails.getUsername();
@@ -109,7 +116,7 @@ public class MyPageController {
         return ResponseEntity.ok(detailScheduleDtos);
     }
 
-    @DeleteMapping("schedules/{scheduleId}")
+    @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> scheduleDelete(@PathVariable Long scheduleId) {
         try {
             myPageService.scheduleDelete(scheduleId);
@@ -136,7 +143,7 @@ public class MyPageController {
 		List<BlockListEntity> blockList = blockListService.mypageblockForUser(userId);
 		return ResponseEntity.ok(blockList);
 	}
-    @GetMapping("postList")
+    @GetMapping("/postList")
     public ResponseEntity<?> postList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
@@ -159,7 +166,7 @@ public class MyPageController {
 //        return ResponseEntity.ok(detail);
 //    }
 
-    @DeleteMapping("postList/{postId}")
+    @DeleteMapping("/postList/{postId}")
     public ResponseEntity<?> postDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
 
         String email = customUserDetails.getUsername();
