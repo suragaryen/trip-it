@@ -74,6 +74,10 @@
 <img src="https://github.com/user-attachments/assets/a5bdcb1c-eaae-4221-8d70-1a357f6f276e" width="900" height="500" alt="일정 저장">
 
 ### 커뮤니티
+
+![무무한스크크롤 (4)](https://github.com/user-attachments/assets/1c09f1d8-42d7-4c6c-b415-2a88af9d22c7)
+* 커뮤니티 리스트
+
 <img src="https://github.com/user-attachments/assets/53c96ee4-0e90-423c-8408-bcc95e54012d" width="900" height="500" alt="검색 디테일">
 
 * 전체 또는 여행 지역을 특정지어 검색 기능을 이용할 수 있다.
