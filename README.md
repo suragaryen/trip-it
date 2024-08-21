@@ -28,7 +28,7 @@
 | OpenApi | kakao map, kakao mobility, NaverOpenApi, [한국관광공사OpenApi](https://www.data.go.kr/iim/api/selectAPIAcountView.do)  |
 | TOOL | GitHub, PostMan, Notion, Discord, SourceTree |
 | IDE | Visual Studio Code, IntelliJ |
-| API명세 | https://docs.google.com/spreadsheets/d/187gMgASjs6wMs96f0oe8W24CEc872nl8lFro1bmjPi4/edit?gid=0#gid=0 |
+| API명세 | [ TripIt API 명세서 ](https://docs.google.com/spreadsheets/d/187gMgASjs6wMs96f0oe8W24CEc872nl8lFro1bmjPi4/edit?gid=0#gid=0) |
 
 
 
