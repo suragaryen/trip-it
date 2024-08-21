@@ -19,13 +19,14 @@
 
 ## 🛠 기술 스택
 
-| 개발기간 | 2024.06 ~ 진행중 |
+| 개발기간 | 2024.06 ~ 2024.08 |
 | --- | --- |
 | 개발인원 | 5명 |
-| 기술스택(BE) | Java(17), SpringBoot(3.2.5), JWT, Gradle |
-| 기술스택(FE) | React(18.3.1), React-route-dom(6.23.1), TypeScript(4.9.5), Axios(1.7.2),  |
-| 데이터베이스 | MySql |
-| TOOL | GitHub, PostMan, Notion, Dischord |
+| 기술스택(BE) | Java(17), SpringBoot(3.2.5), JWT, Gradle, JPA |
+| 기술스택(FE) | React(18.3.1), React-route-dom(6.25.1), TypeScript(4.9.5), Axios(1.7.2), firebase(10.12.4)  |
+| 데이터베이스 | MariaDB |
+| OpenApi | kakao map, kakao mobility, NaverOpenApi, [한국관광공사OpenApi](https://www.data.go.kr/iim/api/selectAPIAcountView.do)  |
+| TOOL | GitHub, PostMan, Notion, Discord, SourceTree |
 | IDE | Visual Studio Code, IntelliJ |
 | API명세 | https://docs.google.com/spreadsheets/d/187gMgASjs6wMs96f0oe8W24CEc872nl8lFro1bmjPi4/edit?gid=0#gid=0 |
 
