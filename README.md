@@ -35,4 +35,19 @@
 ![tripitERDCLOUD](https://github.com/user-attachments/assets/fb0b571f-25bd-4602-89e2-d18bff4370de)
 
 
+## 기능 스크린샷
+### 일정 생성
+* 사용자는 여행가고자 하는 지역을 선택 및 검색하여 날짜를 지정할 수 있다 (초성 검색 가능)
+![지역선택](https://github.com/user-attachments/assets/0f08bf9c-0aae-4c22-9d10-c9f0cda3245c)
 
+* 사용자가 일정을 지정하면 공공 api를 통해 해당 지역에 대한 관광 목록을 제공한다
+![일정날짜](https://github.com/user-attachments/assets/eb563945-0cf5-4229-bd3d-1e9d1706b6fa)
+
+* 사용자가 일정 순서를 수정하면 지도의 경로에도 수정된 일정의 순서로 반영된다
+![맵](https://github.com/user-attachments/assets/db89e9e2-8aa3-47ce-9de6-1530253888c2)
+
+* 사용자가 검색한 내용을 기반으로 공공 api를 제공한다
+![일정검색](https://github.com/user-attachments/assets/1bd7ac22-943c-4b1c-82bd-6e5620a9ae51)
+
+* 드래그 앤 드랍을 통해 일정의 순서 변경이 가능하며 일정을 최종적으로 등록할 수 있다
+![일정저장](https://github.com/user-attachments/assets/a5bdcb1c-eaae-4221-8d70-1a357f6f276e)
