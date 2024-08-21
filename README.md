@@ -31,8 +31,6 @@
 
 
 
-![구불구불](https://github.com/user-attachments/assets/a47400c2-5a6b-4429-b87e-929dd25211d0)
-
 ## 📜 ERD CLOUD
 ![tripitERDCLOUD](https://github.com/user-attachments/assets/fb0b571f-25bd-4602-89e2-d18bff4370de)
 
