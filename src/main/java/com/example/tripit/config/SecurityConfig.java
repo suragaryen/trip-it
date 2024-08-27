@@ -70,7 +70,10 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.100:3000"));
+                        //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.122:3000"));
 //                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.140:3001"));
+
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -82,9 +85,6 @@ public class SecurityConfig {
                         return configuration;
                     }
                 }));
-
-
-
         //csrf disable
         http
                 .csrf((auth) -> auth.disable());
@@ -102,6 +102,7 @@ public class SecurityConfig {
         //oauth2
         http
                 .oauth2Login((oauth2) -> oauth2
+                        //.loginPage("/login/oauth2")
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(customSuccessHandler)

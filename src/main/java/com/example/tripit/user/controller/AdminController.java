@@ -69,23 +69,6 @@ public class AdminController {
 		return ResponseEntity.ok(users);
 	}
 
-//    POST방식
-//    //유저 상세정보 호출
-//    @PostMapping("/userDetail")
-//    public ResponseEntity<?> getUserDetail(@RequestBody UserIdRequest userIdRequest) {
-//        // JSON으로 받은 userId를 사용
-//        Long userId = userIdRequest.getUserId();
-//        
-//        // userId로 유저 정보 조회
-//        adminUsersDTO userDetail = adminService.userDetail(userId);
-//
-//        // 유저 정보가 존재하지 않으면 404 상태와 메시지 반환
-//        if (userDetail == null) {
-//        	throw new CustomException(ErrorCode.SEARCH_EXISTS);
-//        }
-//        return ResponseEntity.ok(userDetail);
-//    }
-
 	// 유저 상세정보
 	@GetMapping("/userDetail/{userId}")
 	public ResponseEntity<?> getUserDetail(@PathVariable("userId") Long userId) {

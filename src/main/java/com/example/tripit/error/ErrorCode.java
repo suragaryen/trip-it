@@ -32,13 +32,25 @@ public enum ErrorCode {
     
     //Chat
     MESSAGE_NULL(400,"1","message is null"),
+
     //Schedule
+    SCHEDULE_NOT_FOUND(404, "404", "Schedule not found"),
+    FAIL_SAVE_SCHEDULE(500, "500", "schedule save fails"),
     NO_CONTENT(204, "N001", "No content"),
 
     //MyPage
 	
 	
     SEARCH_EXISTS(404, "1", "검색 결과가 없습니다."),
+    DUPLICATE_NICKNAMES(409, "409", "Duplicate nicknames"),
+    USER_NOT_FOUND(404, "404", "User not found"),
+    POST_NOT_FOUND(404, "404", "Post not found"),
+    INTRO_TOO_LONG(422, "422", "Intro too long"),
+    //NO_CONTENT(204, "N001", "No content"),
+
+    //MyPage
+
+
 	//block
 	BLOCK_EXISTS(500, "1", "자기 자신을 차단할 수 없습니다."),
 	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다."),
@@ -47,6 +59,7 @@ public enum ErrorCode {
 	//admin
 	ADMIN_USER_EXISTS(404, "1", "유저 정보를 찾을수 없습니다.");
 	
+
     //Community
     private int status;
     private final String code;

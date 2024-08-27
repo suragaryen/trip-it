@@ -25,16 +25,6 @@ public class TestController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/")
-    public String mainP(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-    	
-        String email = customUserDetails.getUsername();//email
-        String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        Long userId = userRepository.findUserIdByEmail(email);
-    	
-    	System.out.println(userId);
-        return "main Controller";
-    }
 
 
 //    @GetMapping("/test")
@@ -55,8 +45,6 @@ public class TestController {
         String email = customUserDetails.getUsername();//email
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
         long userId = userRepository.findUserIdByEmail(email);
-
-
 
 
        //토큰 살아있을 때 유저 정보

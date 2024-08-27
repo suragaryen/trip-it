@@ -48,7 +48,7 @@ public class PostEntity {
     @Column(name = "personnel")
     private Short personnel;
 
-    @Column(name = "post_date", nullable = false)
+    @Column(name = "post_date")
     private LocalDateTime postDate = LocalDateTime.now();
 
     @Column(name = "post_pic")
@@ -67,8 +67,14 @@ public class PostEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
+//    @Column(name = "user_id", insertable = false, updatable = false)
+//    private long userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")
     private ScheduleEntity scheduleId;
+
+//    @Column(name = "schedule_id", insertable = false, updatable = false)
+//    private long scheduleId;
 
 }

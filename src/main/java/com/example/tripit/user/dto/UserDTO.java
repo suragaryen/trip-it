@@ -40,4 +40,5 @@ public class UserDTO {
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endDate;
+
 }

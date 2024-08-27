@@ -16,6 +16,7 @@ public class CommunityDTO {
 
     //User
     private long userId;
+    private long loggedUserId; // 글쓴이와 로그인한 유저가 일치하는가를 확인하기 위함임
     private String nickname;
     private String gender;
     private String birth;
@@ -25,6 +26,7 @@ public class CommunityDTO {
     private long scheduleId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String metroName;
     private String metroId;
 
     //Post
@@ -39,8 +41,8 @@ public class CommunityDTO {
 
     public CommunityDTO(Long postId, String postTitle, String postContent, Short personnel,
                         Integer viewCount, Boolean exposureStatus, String postPic, LocalDateTime postDate , long userId,
-                        String nickname, String gender, String birth, String userpic, long scheduleId,
-                        String metroId, LocalDate startDate, LocalDate endDate) {
+                        String nickname, String gender, String birth, String userpic, long scheduleId,String metroId,
+                        String metroName, LocalDate startDate, LocalDate endDate) {
 
         this.postId = postId;
         this.postTitle = postTitle;
@@ -59,6 +61,7 @@ public class CommunityDTO {
 
         this.scheduleId = scheduleId;
         this.metroId = metroId;
+        this.metroName = metroName;
         this.startDate = startDate;
         this.endDate = endDate;
     }

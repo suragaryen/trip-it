@@ -1,9 +1,15 @@
 package com.example.tripit.schedule.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Builder
@@ -13,11 +19,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDto {
+
     private Long scheduleId;
 
     private String metroId;
 
-    private long userId;
+    private Long userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     private LocalDate startDate;
@@ -29,6 +36,5 @@ public class ScheduleDto {
     private LocalDate registerDate;
 
     private String scheduleTitle;
-
 
 }

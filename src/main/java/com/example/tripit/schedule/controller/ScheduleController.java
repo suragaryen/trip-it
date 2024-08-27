@@ -24,6 +24,7 @@ import com.example.tripit.schedule.service.ScheduleService;
 import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.repository.UserRepository;
 
+
 @RestController
 @RequestMapping("/home")
 public class ScheduleController {
@@ -50,13 +51,14 @@ public class ScheduleController {
         if (contentTypeId == null) {
             contentTypeId = "12";
         }
-        System.out.println("????");
+        System.out.println("호출");
         //apiConnection 메서드 호출 및 반환
         return apiConnection.cultureFacilityApi(metroId, pageNo, contentTypeId);
     }
 
     @GetMapping("/apiDetail/{contentId}")
     public ResponseEntity<Object> apiTest2(@PathVariable String contentId) {
+        System.out.println("장소 호출");
         return apiConnection.detailApi(contentId);
     }
 
@@ -74,22 +76,11 @@ public class ScheduleController {
     public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
         //CustomUserDetails에서 userId 추출
         String email = customUserDetails.getUsername();
-        long userId = userRepository.findUserIdByEmail(email);
+        Long userId = userRepository.findUserIdByEmail(email);
 
-        try {
-            List<ScheduleDto> scheduleDtos = scheduleService.saveSchedule(scheduleRequest, userId);
-
-            return ResponseEntity.ok(scheduleDtos);
-        } catch (Exception e) {
-            // 예외 로그 출력
-            logger.error("일정 저장 실패: {}", e.getMessage(), e);
-
-            // 클라이언트에게 전달할 에러 메시지
-            String errorMessage = "일정 저장 실패: " + e.getMessage();
-            //ErrorResponse result = new ErrorResponse(ErrorCode.SCHEDULE_FAIL);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-        }
+        //일정 저장 및 결과 반환
+        List<ScheduleDto> scheduleDtoList = scheduleService.saveSchedule(scheduleRequest, userId);
+        return ResponseEntity.ok(scheduleDtoList);
     }
 
 
