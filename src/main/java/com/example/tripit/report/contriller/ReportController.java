@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tripit.error.CustomException;
-import com.example.tripit.error.ErrorCode;
+import com.example.tripit.block.entity.BlockListEntity;
+import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.report.dto.ReportDTO;
-import com.example.tripit.report.dto.ReportUpdateRequest;
 import com.example.tripit.report.entity.ReportEntity;
 import com.example.tripit.report.repository.ReportRepository;
 import com.example.tripit.report.repository.ReportTypeRepository;
@@ -42,6 +40,8 @@ public class ReportController {
 	private ReportRepository reportRepository;
 	@Autowired
 	private ReportTypeRepository reportTypeRepository;
+	@Autowired
+	private BlockListService blockListService;
 
 	// 신고 추가
 	@PostMapping("/add")
@@ -90,7 +90,7 @@ public class ReportController {
 	
 
 	// 특정 사용자의 신고자 목록 조회
-	@GetMapping("/user")
+	@GetMapping("/user")	
 	public ResponseEntity<List<ReportDTO>> blockForUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
 		// 유저정보 시큐리티 확인
@@ -102,5 +102,28 @@ public class ReportController {
 		return ResponseEntity.ok(report);
 	}
 
+
+	// 차단 삭제
+		@PostMapping("/delete")
+		public ResponseEntity<String> deleteReport(@RequestBody BlockListEntity blockList,
+				@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+			// 유저정보 시큐리티 확인
+			String email = customUserDetails.getUsername();
+			long userId = userRepository.findUserIdByEmail(email);
+
+			// 차단 삭제 서비스 호출
+			blockListService.deleteForUser(userId, blockList.getBlockId());
+			
+
+			// 유저 객체생성후 user에 userId 담기
+			UserEntity user = new UserEntity();
+			user.setUserId(userId);
+
+			// 업데이트된 차단 리스트 가져오기
+			List<BlockListEntity> updatedblockList = blockListService.findByUserId(user);
+
+			// 업데이트된 차단 리스트 리턴
+			return ResponseEntity.ok("차단 해제 완료");
+		}
 
 }

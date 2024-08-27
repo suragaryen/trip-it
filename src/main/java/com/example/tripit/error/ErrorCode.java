@@ -56,6 +56,8 @@ public enum ErrorCode {
 	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다."),
 	BLOCK_EXISTS3(500, "3", "차단한 대상이 아닙니다"),
 
+	//report
+	REPORT_EXISTS(500, "2", "이미 신고된 사용자 입니다."),
 	//admin
 	ADMIN_USER_EXISTS(404, "1", "유저 정보를 찾을수 없습니다.");
 	

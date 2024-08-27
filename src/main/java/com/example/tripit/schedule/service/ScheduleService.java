@@ -73,6 +73,7 @@ public class ScheduleService {
                     .collect(Collectors.toList());
 
         } catch (Exception e) {
+//            e.printStackTrace(); // 예외 스택 트레이스를 출력하여 문제를 분석합니다.
             throw new CustomException(ErrorCode.FAIL_SAVE_SCHEDULE);
         }
     }

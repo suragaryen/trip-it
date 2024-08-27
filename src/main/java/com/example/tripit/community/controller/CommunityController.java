@@ -96,8 +96,8 @@ public class CommunityController {
     // 커뮤니티 전체 리스트 날짜순
     @GetMapping("/communityList")
     public ResponseEntity<?> CommunityList(
-                                            @RequestParam (defaultValue = "0") int page,
-                                            @RequestParam (defaultValue = "12") int size
+                                            @RequestParam (name="page", defaultValue = "0") int page,
+                                            @RequestParam (name="size", defaultValue = "12") int size
     ) {
         List<CommunityDTO> communityDTOS = communityService.loadCommunityListOrderByPostDate(page, size);
         return ResponseEntity.ok(communityDTOS);
@@ -106,8 +106,8 @@ public class CommunityController {
     // 커뮤니티 전체 리스트 조회순
     @GetMapping("/communityListByView")
     public ResponseEntity<?> CommunityListByViewCount(
-            @RequestParam (defaultValue = "0") int page,
-            @RequestParam (defaultValue = "12") int size
+            @RequestParam (name="page", defaultValue = "0") int page,
+            @RequestParam (name="size", defaultValue = "12") int size
     ) {
 
         List<CommunityDTO> communityDTOS = communityService.loadCommunityListOrderByViewCount(page, size);
@@ -117,8 +117,8 @@ public class CommunityController {
 
     @GetMapping("/communitySearch")
     public ResponseEntity<?> CommunitySearch(
-            @RequestParam (defaultValue = "") String query,
-            @RequestParam (defaultValue = "1") String metroId
+            @RequestParam (name="query", defaultValue = "") String query,
+            @RequestParam (name="metroId", defaultValue = "1") String metroId
     ) {
             List<CommunityDTO> communityDTOS = communityService.searchCommunityByQueryAndMetroId(query, metroId);
 
@@ -135,7 +135,7 @@ public class CommunityController {
 
     //커뮤니티 글 상세 조회
     @GetMapping("/communityDetail/{userId}/{postId}")
-    public ResponseEntity<?> CommunityDetail(@PathVariable long userId, @PathVariable long postId,
+    public ResponseEntity<?> CommunityDetail(@PathVariable("userId") long userId, @PathVariable("postId") long postId,
                                              @AuthenticationPrincipal CustomUserDetails customUserDetails
                                                     ) {
         String email = customUserDetails.getUsername();//email
@@ -150,7 +150,7 @@ public class CommunityController {
 
     //커뮤니티 글 비회원 상세 조회
     @GetMapping("/communityDetailGuest/{userId}/{postId}")
-    public ResponseEntity<?> CommunityDetailGuest(@PathVariable long userId, @PathVariable long postId
+    public ResponseEntity<?> CommunityDetailGuest(@PathVariable("userId") long userId, @PathVariable("postId") long postId
     ) {
 
         List<CommunityDTO> detail = communityService.loadCommunityDetail(userId, postId);
@@ -162,7 +162,7 @@ public class CommunityController {
     //커뮤니티 업데이트
     @PostMapping("/communityDetail/update/{postId}")
     public void communityDetailUpdate(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      @PathVariable Long postId, @RequestBody CommunityUpdateDTO updateDTO){
+                                      @PathVariable("postId") Long postId, @RequestBody CommunityUpdateDTO updateDTO){
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
@@ -178,7 +178,7 @@ public class CommunityController {
 
     @DeleteMapping("/communityDetail/delete/{postId}")
     public void communityDetailDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      @PathVariable Long postId){
+                                      @PathVariable("postId") Long postId){
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);
@@ -195,7 +195,7 @@ public class CommunityController {
     //모집상태 업데이트
     @PostMapping("/communityDetail/CompletedPost/{postId}")
     public void communityCompletedPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      @PathVariable Long postId){
+                                      @PathVariable("postId") Long postId){
 
         String email = customUserDetails.getUsername();//email
         long userId = userRepository.findUserIdByEmail(email);

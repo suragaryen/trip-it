@@ -1,12 +1,13 @@
 package com.example.tripit.block.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,48 +66,30 @@ public class BlockListController {
 		// 업데이트된 차단 리스트 리턴
 		return ResponseEntity.ok(updatedblockList);
 	}
-
+	
+	// 관리자용 차단 리스트 조회
 	@GetMapping("/all")
-	public ResponseEntity<Page<BlockListDTO>> blockForAdmin(
-			@RequestParam(value = "search", required = false) String search,
-			@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("sortKey") String sortKey,
-			@RequestParam("sortValue") String sortValue, @RequestParam("page") int page, @RequestParam("size") int size
+	public ResponseEntity<Page<BlockListDTO>> getReports(
+	    @RequestParam(value = "search", required = false) String search,
+	    @RequestParam(value = "page", defaultValue = "1") int page,
+	    @RequestParam(value = "size", defaultValue = "10") int size,
+	    @RequestParam(value = "sortKey", defaultValue = "reportDate") String sortKey,
+	    @RequestParam(value = "sortValue", defaultValue = "desc") String sortValue
 	) {
+	    // 정렬 방향과 키 설정
+	    Sort.Direction direction = Sort.Direction.fromString(sortValue);
+	    Sort sort = Sort.by(direction, sortKey);
 
-		// 유저 정보 시큐리티 확인
-		String email = customUserDetails.getUsername(); // email
-		Long userId = userRepository.findUserIdByEmail(email);
+	    // 페이지 요청 생성
+	    Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-		// 정렬된 차단 리스트 조회
-		List<BlockListEntity> blockList = blockListService.getBlockForAdmin(sortKey, sortValue);
-		// 페이징 및
-		Page<BlockListDTO> blocksPage = blockListService.blockListPage(search, sortKey, sortValue, page, size);
+	    // 차단 리스트 조회
+	    Page<BlockListDTO> blockLists = blockListService.blockLists(search, pageable, sortKey, sortValue);
 
-		// 응답 객체 구성
-		Map<String, Object> response = new HashMap<>();
-		response.put("blocks", blockList);
-		response.put("totalElements", blocksPage.getTotalElements());
-
-		return ResponseEntity.ok(blocksPage);
+	    // 결과 반환
+	    return ResponseEntity.ok(blockLists);
 	}
-
-    // 특정 사용자의 차단자 목록 조회
-	@GetMapping("/user")
-	public ResponseEntity<List<BlockListEntity>> blockForUser(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("sortKey") String sortKey,
-			@RequestParam("sortValue") String sortValue) {
-
-		// 유저정보 시큐리티 확인
-		String email = customUserDetails.getUsername();// email
-		Long userId = userRepository.findUserIdByEmail(email);
-
-		// 유저의 차단 목록 조회 서비스 호출
-		// ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
-		List<BlockListEntity> blockList = blockListService.getblockForUser(sortKey, sortValue, userId);
-		return ResponseEntity.ok(blockList);
-	}
-
-
+	
 	// 차단 삭제
 	@PostMapping("/delete")
 	public ResponseEntity<String> deleteBlock(@RequestBody BlockListEntity blockList,

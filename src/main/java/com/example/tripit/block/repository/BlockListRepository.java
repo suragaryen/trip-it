@@ -1,7 +1,5 @@
 package com.example.tripit.block.repository;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -12,17 +10,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.tripit.block.dto.BlockListDTO;
 import com.example.tripit.block.entity.BlockListEntity;
 import com.example.tripit.user.entity.UserEntity;
 
 @Repository
 public interface BlockListRepository extends JpaRepository<BlockListEntity, Long> {
 
-	// 정렬
-	List<BlockListEntity> findAll(Sort sort);
-
-	// 페이징
-	Page<BlockListEntity> findAll(Pageable pageable);
+	@Query("SELECT b FROM blockedlist b " + "WHERE LOWER(b.nickname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
+			+ "OR LOWER(b.userId.nickname) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+	Page<BlockListEntity> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageable);
 
 	// 특정 userId로 차단 목록 조회 및 정렬
 	List<BlockListEntity> findByUserId(UserEntity user, Sort sort);
@@ -39,9 +36,8 @@ public interface BlockListRepository extends JpaRepository<BlockListEntity, Long
 	// 사용자 ID로 차단 리스트 조회
 	List<BlockListEntity> findByUserId(UserEntity userId);
 
-	// 닉네임으로 검색
-	Page<BlockListEntity> findByNicknameContainingIgnoreCase(String nickname, Pageable pageable);
+	// 특정 사용자 기준으로 차단 목록 조회
+    @Query("SELECT b FROM blockedlist b WHERE b.userId.userId = :userId")
+    List<BlockListEntity> findByUserId(@Param("userId") Long userId);
 
-	// 날짜로 블록 리스트를 검색하는 메서드
-	Page<BlockListEntity> findByBlockDate(LocalDateTime blockDate, Pageable pageable);
 }

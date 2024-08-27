@@ -73,5 +73,11 @@ public class CustomUserDetails  implements UserDetails {
         return true;
     }
 
+
+	public Long getUserId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 

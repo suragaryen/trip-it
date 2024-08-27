@@ -31,8 +31,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
     Optional<UserEntity> findById(Long userId);
 
 
-    //UserEntity findByNickname(String nickname);
-    
+    // nickname으로 UserEntity 조회
     UserEntity findByNickname(String email);
 
 
@@ -61,5 +60,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
     
     @Query("SELECT u FROM user u WHERE u.endDate = :today")
     List<UserEntity> findUsersWithExpiredRole(@Param("today") LocalDateTime today);
-
 }

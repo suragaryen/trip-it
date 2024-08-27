@@ -1,5 +1,7 @@
 package com.example.tripit.user.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,8 @@ import com.example.tripit.community.repository.PostRepository;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.report.dto.ReportUpdateRequest;
+import com.example.tripit.report.entity.ReportEntity;
+import com.example.tripit.report.repository.ReportRepository;
 import com.example.tripit.report.service.ReportService;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.entity.ScheduleEntity;
@@ -22,6 +26,8 @@ import com.example.tripit.schedule.repository.ScheduleRepository;
 import com.example.tripit.user.dto.adminUsersDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AdminService {
@@ -34,8 +40,10 @@ public class AdminService {
 	
 	@Autowired 
 	private PostRepository postRepository;
+	@Autowired
+	private ReportRepository reportRepository;
 	
-	// 관리자용 전체 조회(페이징 및 검색)
+	// 관리자용 회원 전체 조회(페이징 및 검색)
 	public Page<adminUsersDTO> getusers(String search, Pageable pageable, String sortKey, String sortValue) {
 		
 		Page<UserEntity> userPage;
@@ -104,7 +112,7 @@ public class AdminService {
     }
 	
     
- // 관리자용 전체 조회(페이징 및 검색)
+ // 관리자용 일정 전체 조회(페이징 및 검색)
     public Page<ScheduleDto> schedules(String search, Pageable pageable, String sortKey, String sortValue) {
     	
         Page<ScheduleEntity> schedulePage = scheduleRepository.findBySearchTerm(search, pageable);
@@ -127,7 +135,7 @@ public class AdminService {
         ));
     }
 	
-    
+    // 관리자용 모집글 전체 조회(페이징 및 검색)
     public Page<PostDTO> posts(String search, Pageable pageable, String sortKey, String sortValue) {
     	
         Page<PostEntity> postPage = postRepository.findBySearchTerm(search, pageable);
@@ -154,6 +162,42 @@ public class AdminService {
     }
 	
     
+ // 관리자용 신고 확인
+ 	  @Transactional
+ 	    public void updateReportFalse(Long reportId, int reportFalseValue) {
+ 	        // ReportEntity 조회
+ 	        ReportEntity report = reportRepository.findById(reportId)
+ 	                .orElseThrow(() -> new RuntimeException("Report not found"));
 
+ 	        // report_false 값 업데이트
+ 	        report.setReportFalse(reportFalseValue);
+ 	        reportRepository.save(report);
+
+ 	        // report_false 값이 1이면 user의 report_count 값 증가
+ 	        if (reportFalseValue == 1) {
+ 	            UserEntity user = report.getPostId().getUserId(); // reportId로부터 userEntity를 가져옴
+ 	            int newReportCount = user.getReportCount() + 1;
+ 	            user.setReportCount(newReportCount);
+
+ 	            // 현재 날짜와 7일 후 날짜 계산
+ 	            LocalDateTime today = LocalDateTime.now();
+ 	            LocalDateTime endDate = today.plusDays(7);
+
+
+ 	            // reportCount에 따라 역할 업데이트
+ 	            if (newReportCount >= 7) {
+ 	                user.setRole("ROLE_C");
+ 	            } else if (newReportCount >= 5) {
+ 	                user.setRole("ROLE_B");
+ 	            } else if (newReportCount >= 3) {
+ 	                user.setRole("ROLE_A");
+ 	            }
+ 	            
+ 	            // end_date를 7일 후 날짜로 설정
+ 	            user.setEndDate(endDate);
+ 	            
+ 	            userRepository.save(user);
+ 	        }
+ 	    }
 	
 }

@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tripit.block.entity.BlockListEntity;
+import com.example.tripit.block.dto.BlockListDTO;
+import com.example.tripit.block.repository.BlockListRepository;
 import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.mypage.dto.PasswordDTO;
@@ -38,12 +39,14 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     private final BlockListService blockListService;
+    private final BlockListRepository BlockListRepository;
     
     @Autowired
-    public MyPageController(UserRepository userRepository, MyPageService myPageService, BlockListService blockListService) {
+    public MyPageController(UserRepository userRepository, MyPageService myPageService, BlockListService blockListService, BlockListRepository BlockListRepository) {
         this.userRepository = userRepository;
         this.myPageService = myPageService;
         this.blockListService = blockListService;
+        this.BlockListRepository = BlockListRepository;
     }
 
     @GetMapping("profile")
@@ -103,7 +106,7 @@ public class MyPageController {
 
     @GetMapping("schedules/{scheduleId}") //상세 일정
     public ResponseEntity<?> detailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                            @PathVariable Long scheduleId) {
+                                            @PathVariable("scheduleId") Long scheduleId) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
         List<DetailScheduleDto> detailScheduleDtos = myPageService.detailSchedule(scheduleId);
@@ -126,21 +129,6 @@ public class MyPageController {
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //차단자 조회
-    @GetMapping("/block")
-	public ResponseEntity<List<BlockListEntity>> mypageblockForUser(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-		// 유저정보 시큐리티 확인
-		String email = customUserDetails.getUsername();// email
-		Long userId = userRepository.findUserIdByEmail(email);
-
-		// 유저의 차단 목록 조회 서비스 호출
-		// ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
-		
-		List<BlockListEntity> blockList = blockListService.mypageblockForUser(userId);
-		return ResponseEntity.ok(blockList);
-	}
 
     @GetMapping("postList")
     public ResponseEntity<?> postList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -160,5 +148,20 @@ public class MyPageController {
         List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
         return ResponseEntity.ok(postList);
     }
+    
+	// 특정 사용자의 차단자 목록 조회
+	@GetMapping("/block")
+	public ResponseEntity<List<BlockListDTO>> blockForUser(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+		// 유저정보 시큐리티 확인
+		String email = customUserDetails.getUsername();// email
+		Long userId = userRepository.findUserIdByEmail(email);
+
+		// 유저의 차단 목록 조회 서비스 호출
+		// ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
+		List<BlockListDTO> blockList = blockListService.MypageBlockLists(userId);
+		return ResponseEntity.ok(blockList);
+	}
 
 }

@@ -143,7 +143,7 @@ public class AdminController {
 			int reportFalseValue = request.getReportFalse();
 
 			// 서비스 메서드를 호출하여 데이터 업데이트
-			reportService.updateReportFalse(reportId, reportFalseValue);
+			adminService.updateReportFalse(reportId, reportFalseValue);
 			return ResponseEntity.ok("신고 처리 완료");
 		}
 

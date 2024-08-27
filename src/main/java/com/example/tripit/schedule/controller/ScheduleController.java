@@ -46,7 +46,7 @@ public class ScheduleController {
     @GetMapping({"/apiList/{metroId}/{pageNo}", "/apiList/{metroId}/{pageNo}/{contentTypeId}"})
     public ResponseEntity<Object> travelApi(@PathVariable("metroId") String metroId,
                                             @PathVariable("pageNo") String pageNo,
-                                            @PathVariable(required = false) String contentTypeId) {
+                                            @PathVariable(name="contentTypeId", required = false) String contentTypeId) {
         //contentTypeId가 제공되지 않았을 때 기본값 설정
         if (contentTypeId == null) {
             contentTypeId = "12";
@@ -57,7 +57,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/apiDetail/{contentId}")
-    public ResponseEntity<Object> apiTest2(@PathVariable String contentId) {
+    public ResponseEntity<Object> apiTest2(@PathVariable("contentId") String contentId) {
         System.out.println("장소 호출");
         return apiConnection.detailApi(contentId);
     }
