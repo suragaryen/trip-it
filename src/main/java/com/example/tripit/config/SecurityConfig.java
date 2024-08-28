@@ -70,7 +70,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.122:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.130:3000"));
 //                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.140:3001"));
 
                         configuration.setAllowedMethods(Collections.singletonList("*"));
@@ -114,7 +114,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**", "/block/**", "/report/**").hasRole("ADMIN")
                         .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/community/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/reissue").permitAll()
+                        .requestMatchers("/reissue","/test").permitAll()
                         .anyRequest().authenticated())
                 
         .exceptionHandling(exceptionHandling -> exceptionHandling

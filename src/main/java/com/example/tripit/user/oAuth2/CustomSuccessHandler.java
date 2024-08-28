@@ -52,25 +52,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         addRefreshEntity(email, refresh, 86400000L);
         response.setStatus(HttpStatus.OK.value());
-        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh, role);
+        //ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh, role);
 
-        //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(result);
+//        //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String jsonResponse = objectMapper.writeValueAsString(result);
+//
+//        //응답 본문에 JSON 작성
+//        PrintWriter writer = response.getWriter();
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        writer.print(jsonResponse);
+//        writer.flush();
 
-        //응답 본문에 JSON 작성
-        PrintWriter writer = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        writer.print(jsonResponse);
-        writer.flush();
-
-        logger.info("토큰 :" + access);
+        logger.info("소셜로그인토큰 :" + access);
         logger.info("refresh :" + refresh);
 
 
         //response.addCookie(createCookie("Authorization", token));
-        //response.sendRedirect("http://localhost:3000/");
+        response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
+        response.addCookie(createCookie("Authorization", refresh)); //쿠키에 저장
+        response.sendRedirect("http://172.16.1.185:3000/test");
 
 
     }
@@ -81,7 +83,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setMaxAge(60*60*60);
         //cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        //cookie.setHttpOnly(true);
 
         return cookie;
     }

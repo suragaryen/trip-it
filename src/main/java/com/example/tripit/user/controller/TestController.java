@@ -1,10 +1,13 @@
 package com.example.tripit.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripit.result.ResultCode;
@@ -27,15 +30,15 @@ public class TestController {
 
 
 
-//    @GetMapping("/test")
-//    @ResponseBody
-//    public String test(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/test")
+    @ResponseBody
+    public void test(HttpServletRequest request, HttpServletResponse response) {
 //
 //        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //        System.out.println("test cont " + username);
-//
-//        return username;
-//    }
+
+        //return username;
+    }
 
 
     @GetMapping("/user")

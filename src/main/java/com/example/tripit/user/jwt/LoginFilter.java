@@ -79,8 +79,8 @@ public class  LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         //응답설정
-        //response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
-        // response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
+        response.setHeader("access", access); //프론트단에서 로컬 스토리지에 저장해두고 쓰면 됌
+        response.addCookie(createCookie("refresh", refresh)); //쿠키에 저장
 
 //        String setCookie = "";
 //
@@ -91,8 +91,9 @@ public class  LoginFilter extends UsernamePasswordAuthenticationFilter {
 //            logger.info("Set-Cookie header not found");
 //        }
         response.setStatus(HttpStatus.OK.value());
-        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh,
-                role);
+
+        ResultResponse result = ResultResponse.of(ResultCode.LOGIN_SUCCESS,email, access, refresh, role);
+
 
 
         //ObjectMapper를 사용하여 ResultResponse 객체를 JSON으로 변환
@@ -108,6 +109,7 @@ public class  LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         logger.info("토큰 :" + access);
         logger.info("refresh :" + refresh);
+        logger.info("role :" + role);
 
         //로그 추가: 응답 헤더 확인
         response.getHeaderNames().forEach(headerName -> {
