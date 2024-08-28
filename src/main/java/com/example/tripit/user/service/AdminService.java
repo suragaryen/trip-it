@@ -5,21 +5,16 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.tripit.community.dto.PostDTO;
+import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.entity.PostEntity;
 import com.example.tripit.community.repository.PostRepository;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
-import com.example.tripit.report.dto.ReportUpdateRequest;
 import com.example.tripit.report.entity.ReportEntity;
 import com.example.tripit.report.repository.ReportRepository;
-import com.example.tripit.report.service.ReportService;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.schedule.repository.ScheduleRepository;
@@ -98,18 +93,6 @@ public class AdminService {
 	    );
 	}
 	
-	//유저 ROLE 변경
-    public void changeUserRole(Long userId, String role) {
-        // userId로 유저 정보 조회
-        UserEntity user = userRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_USER_EXISTS));
-
-        // 새로운 역할을 설정
-        user.setRole(role);
-
-        // 변경된 유저 정보를 저장
-        userRepository.save(user);
-    }
 	
     
  // 관리자용 일정 전체 조회(페이징 및 검색)
@@ -136,7 +119,7 @@ public class AdminService {
     }
 	
     // 관리자용 모집글 전체 조회(페이징 및 검색)
-    public Page<PostDTO> posts(String search, Pageable pageable, String sortKey, String sortValue) {
+    public Page<CommunityDTO> postList(String search, Pageable pageable, String sortKey, String sortValue) {
     	
         Page<PostEntity> postPage = postRepository.findBySearchTerm(search, pageable);
 
@@ -147,22 +130,34 @@ public class AdminService {
 	    	postPage = postRepository.findAll(pageable);
 	    }
 	    
-        return postPage.map(post -> new PostDTO(
-        		 post.getPostId(),
-        		 post.getUserId().getUserId(),
-                 post.getScheduleId().getScheduleId(),
-                 post.getPostTitle(),
-                 post.getPostContent(),
-                 post.getPersonnel(),
-                 post.getPostPic(),
-                 post.getRecruitStatus(),
-                 post.getViewCount(),
-                 post.getExposureStatus()
-        		));
+        return postPage.map(post -> {
+	        	UserEntity userEntity = post.getUserId();
+	        	ScheduleEntity schedule = post.getScheduleId();
+        		return	new CommunityDTO(
+        		   		 post.getPostId(),
+                         post.getPostTitle(),
+                         post.getPostContent(),
+                         post.getPersonnel(),
+                         post.getViewCount(),
+                         post.getExposureStatus(),
+                         post.getPostPic(),
+                         post.getPostDate(),
+                         userEntity.getUserId(),
+                         userEntity.getNickname(),
+                         userEntity.getGender(),
+                         userEntity.getBirth(),
+                         userEntity.getUserpic(),
+                         schedule.getScheduleId(),
+                         schedule.getMetroId(),
+                         MetroENUM.getNameById(schedule.getMetroId()),
+                         schedule.getStartDate(),
+                         schedule.getEndDate()
+        			);
+        		});
     }
 	
     
- // 관리자용 신고 확인
+    // 관리자용 신고 확인
  	  @Transactional
  	    public void updateReportFalse(Long reportId, int reportFalseValue) {
  	        // ReportEntity 조회
@@ -200,4 +195,44 @@ public class AdminService {
  	        }
  	    }
 	
+ 	  
+		// 유저 ROLE 변경
+		public void changeUserRole(Long userId, String role) {
+			// userId로 유저 정보 조회
+			UserEntity user = userRepository.findById(userId)
+					.orElseThrow(() -> new CustomException(ErrorCode.ADMIN_USER_EXISTS));
+
+			// 현재 날짜와 7일 후 날짜 계산
+			LocalDateTime today = LocalDateTime.now();
+			LocalDateTime ROLE_A = today.plusDays(7);
+			LocalDateTime ROLE_B = today.plusDays(30);
+			LocalDateTime ROLE_C = today.plusDays(999999);
+			LocalDateTime ROLE_USER = null;
+			
+			// 파타미터로 받은 role의 값이 ROLE_A, ROLE_B 일시
+			if (role.equals("ROLE_A")) {
+				// 새로운 역할을 설정
+				user.setRole(role);
+				// end_date를 7일 후 날짜로 설정
+				user.setEndDate(ROLE_A);
+			}else if(role.equals("ROLE_B")){
+				// 새로운 역할을 설정
+				user.setRole(role);
+				// end_date를 30일 후 날짜로 설정
+				user.setEndDate(ROLE_B);
+			}else if(role.equals("ROLE_C")){
+				// 새로운 역할을 설정
+				user.setRole(role);
+				// end_date를 999999일 후 날짜로 설정
+				user.setEndDate(ROLE_C);
+			}else if(role.equals("ROLE_USER")){
+				user.setRole(role);
+				user.setEndDate(ROLE_USER);
+			}
+			user.setRole(role);
+
+			// 변경된 유저 정보를 저장
+			userRepository.save(user);
+		}
+ 		
 }

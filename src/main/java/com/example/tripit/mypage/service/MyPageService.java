@@ -34,7 +34,9 @@ import com.example.tripit.schedule.entity.DetailScheduleEntity;
 import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.schedule.repository.DetailScheduleRepository;
 import com.example.tripit.schedule.repository.ScheduleRepository;
+import com.example.tripit.user.dto.CustomUserDetails;
 import com.example.tripit.user.entity.UserEntity;
+import com.example.tripit.user.repository.RefreshRepository;
 import com.example.tripit.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -69,6 +71,9 @@ public class MyPageService {
     @Autowired
     private DetailScheduleMapper detailScheduleMapper;
 
+    @Autowired
+    private RefreshRepository refreshRepository;
+    
     public MyPageService(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -332,5 +337,25 @@ public class MyPageService {
 
     public void userWithdrawal() {
 
+    }
+    @Transactional
+    public boolean deleteUser(CustomUserDetails customUserDetails) {
+        String email = customUserDetails.getUsername();
+        Long userId = userRepository.findUserIdByEmail(email);
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        userEntity.setRole("ROLE_D");
+        userRepository.save(userEntity);
+//        List<Long> schedulesId = scheduleRepository.findAllByUserId(userId);
+//        scheduleRepository.deleteAllById(Collections.singleton(userId));
+        //발급된 리프레시 토큰 삭제
+        long result = refreshRepository.deleteByEmail(email);
+
+        if (result == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

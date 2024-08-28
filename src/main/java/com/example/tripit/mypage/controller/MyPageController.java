@@ -19,6 +19,8 @@ import com.example.tripit.block.dto.BlockListDTO;
 import com.example.tripit.block.repository.BlockListRepository;
 import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.community.dto.CommunityDTO;
+import com.example.tripit.error.CustomException;
+import com.example.tripit.error.ErrorCode;
 import com.example.tripit.mypage.dto.PasswordDTO;
 import com.example.tripit.mypage.dto.ProfileDTO;
 import com.example.tripit.mypage.dto.ProfileUpdateDTO;
@@ -48,7 +50,8 @@ public class MyPageController {
         this.blockListService = blockListService;
         this.BlockListRepository = BlockListRepository;
     }
-
+    
+    // mypage 유저 상세정보
     @GetMapping("profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
@@ -147,6 +150,16 @@ public class MyPageController {
 
         List<CommunityDTO> postList = myPageService.postDelete(postIds, userId);
         return ResponseEntity.ok(postList);
+    }
+    
+    // 회원 탈퇴
+    @DeleteMapping("delete-user")
+    public ResponseEntity<?> userDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        if (myPageService.deleteUser(customUserDetails)) {
+            return ResponseEntity.ok("탈퇴");
+        } else {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
     
 	// 특정 사용자의 차단자 목록 조회

@@ -3,6 +3,9 @@ package com.example.tripit.mypage.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Setter
 @Getter
@@ -20,10 +23,11 @@ public class ProfileDTO {
     private String intro;
     private String userpic;
     private String role;
-    private LocalDate regdate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
+    private LocalDateTime regdate;
     private String social_type;
-    //private int reportCount;
-    private LocalDate endDate;
-
+    private int reportCount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime endDate;
 
 }

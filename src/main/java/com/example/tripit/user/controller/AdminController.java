@@ -1,5 +1,8 @@
 package com.example.tripit.user.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tripit.community.dto.PostDTO;
+import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.error.CustomException;
 import com.example.tripit.error.ErrorCode;
 import com.example.tripit.report.dto.ReportUpdateRequest;
@@ -26,6 +29,7 @@ import com.example.tripit.report.service.ReportService;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.user.dto.UserRoleChangeRequest;
 import com.example.tripit.user.dto.adminUsersDTO;
+import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
 import com.example.tripit.user.service.AdminService;
 
@@ -49,6 +53,7 @@ public class AdminController {
 		return "admin Controller";
 	}
 
+	//유저 전체 정보
 	@GetMapping("/users")
 	public ResponseEntity<Page<adminUsersDTO>> allUsers(@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "page", defaultValue = "1") int page,
@@ -78,17 +83,23 @@ public class AdminController {
 		return ResponseEntity.ok(userDetail);
 	}
 
-	// 유저 ROLE 변경
-	@PostMapping("/changeUserRole")
-	public ResponseEntity<?> changeUserRole(@RequestBody UserRoleChangeRequest request) {
-		try {
-			// 역할 변경 서비스 호출
-			adminService.changeUserRole(request.getUserId(), request.getRole());
-			return ResponseEntity.ok("유저 역할이 성공적으로 변경되었습니다.");
-		} catch (CustomException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		@PostMapping("/changeUserRole")
+		public ResponseEntity<?> changeUserRole(@RequestBody UserRoleChangeRequest request) {
+		    try {
+		        // 역할 변경 서비스 호출
+		        adminService.changeUserRole(request.getUserId(), request.getRole());
+		        
+		        // 변경된 유저 정보를 가져오기
+		        UserEntity user = userRepository.findById(request.getUserId())
+		                .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_USER_EXISTS));
+	
+		        // UserEntity 객체를 반환하면 endDate가 지정된 형식으로 출력됩니다.
+		        return ResponseEntity.ok(user);
+		    } catch (CustomException e) {
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		    }
 		}
-	}
+
 
 	@GetMapping("/schedules")
 	public ResponseEntity<Page<ScheduleDto>> schedules(@RequestParam(value = "search", required = false) String search,
@@ -110,8 +121,8 @@ public class AdminController {
 		return ResponseEntity.ok(schedules);
 	}
 
-	@GetMapping("/posts")
-	public ResponseEntity<Page<PostDTO>> posts(@RequestParam(value = "search", required = false) String search,
+	@GetMapping("/postList")
+	public ResponseEntity<Page<CommunityDTO>> posts(@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam(value = "sortKey", defaultValue = "postDate") String sortKey,
@@ -125,7 +136,7 @@ public class AdminController {
 		Pageable pageable = PageRequest.of(page - 1, size, sort);
 
 		// 유저 리스트 조회
-		Page<PostDTO> posts = adminService.posts(search, pageable, sortKey, sortValue);
+		Page<CommunityDTO> posts = adminService.postList(search, pageable, sortKey, sortValue);
 
 		if (posts.isEmpty()) {
 			// 빈 결과에 대한 커스텀 예외를 던짐

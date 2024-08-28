@@ -22,7 +22,7 @@ public interface BlockListRepository extends JpaRepository<BlockListEntity, Long
 	Page<BlockListEntity> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageable);
 
 	// 특정 userId로 차단 목록 조회 및 정렬
-	List<BlockListEntity> findByUserId(UserEntity user, Sort sort);
+	List<BlockListEntity> findByUserId(UserEntity userId, Sort sort);
 
 	// 이미 차단된 사람이 있는지 유효성검사
 	boolean existsByUserIdAndNickname(UserEntity userId, String nickname);
@@ -39,5 +39,6 @@ public interface BlockListRepository extends JpaRepository<BlockListEntity, Long
 	// 특정 사용자 기준으로 차단 목록 조회
     @Query("SELECT b FROM blockedlist b WHERE b.userId.userId = :userId")
     List<BlockListEntity> findByUserId(@Param("userId") Long userId);
-
+    
+    
 }

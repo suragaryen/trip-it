@@ -57,21 +57,13 @@ public class ReportService {
 		// 포스트 존재 여부 확인
 		PostEntity post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 		
-		   // 이미 신고가 존재하는지 확인
-//        boolean exists = reportRepository.existsByPostIdAndUserId(postId, userId);
-//
-//        if (exists) {
-//            // 이미 신고된 경우, 사용자에게 적절한 메시지 반환
-//            throw new CustomException(ErrorCode.REPORT_EXISTS);
-//        }
-//	    
 		// 신고 엔티티 생성 및 설정
 		ReportEntity report = new ReportEntity();
 		report.setUserId(user);
 		report.setPostId(post); // postId를 PostEntity 객체로 설정
 		report.setReportType(reportTypeEntity);
 		report.setReportDetail(reportDetail);
-		report.setReportFalse(0); // 기본값 설정
+		report.setReportFalse(0); // 기본값 설정	
 
 		// 신고 저장
 		ReportEntity saveReport = reportRepository.save(report);

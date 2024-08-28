@@ -33,7 +33,5 @@ public interface ReportRepository extends JpaRepository<ReportEntity, Long> {
 			+ "OR r.reportType.reportReason LIKE %:search%")
 	Page<ReportEntity> findBySearchTerm(@Param("search") String search, Pageable pageable);
 
-	 // 특정 포스트 ID와 사용자 ID의 조합이 존재하는지 확인
-//    boolean existsByPostIdAndUserId(Long postId, Long userId);
 
 }
