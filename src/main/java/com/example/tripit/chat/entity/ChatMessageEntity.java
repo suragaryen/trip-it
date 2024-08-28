@@ -1,28 +1,36 @@
-package com.example.tripit.chat.dto;
+package com.example.tripit.chat.entity;
 
 import java.time.LocalDateTime;
 
-public class ChatMessageDto {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "chat_message")
+public class ChatMessageEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_id")
     private int messageId;
+
+    @Column(name = "user_id", nullable = false)
     private int userId;
+
+    @Column(name = "room_id", nullable = false)
     private int roomId;
+
+    @Column(name = "content", nullable = false, length = 200)
     private String content;
+
+    @Column(name = "send_time", nullable = false)
     private LocalDateTime sendTime;
 
-    // 기본 생성자
-    public ChatMessageDto() {
-    }
-
-    // 생성자
-    public ChatMessageDto(int userId, int roomId, String content, LocalDateTime sendTime) {
-        this.userId = userId;
-        this.roomId = roomId;
-        this.content = content;
-        this.sendTime = sendTime;
-    }
-
-    // Getters and Setters
+    // Getters and setters
     public int getMessageId() {
         return messageId;
     }

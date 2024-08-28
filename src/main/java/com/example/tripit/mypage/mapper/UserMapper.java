@@ -1,11 +1,12 @@
 package com.example.tripit.mypage.mapper;
 
-import com.example.tripit.mypage.dto.ProfileUpdateDTO;
-import com.example.tripit.user.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import com.example.tripit.mypage.dto.ProfileUpdateDTO;
+import com.example.tripit.user.entity.UserEntity;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

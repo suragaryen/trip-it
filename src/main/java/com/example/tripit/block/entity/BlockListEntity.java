@@ -22,17 +22,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "blockedlist")
+@Entity(name = "blockedlist")
 public class BlockListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "block_id")
     private Long blockId;
-    
-//    @Column(name = "user_id")
-//    private Long userId;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

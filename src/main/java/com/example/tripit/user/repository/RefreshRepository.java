@@ -10,6 +10,10 @@ public interface RefreshRepository extends JpaRepository<RefreshEntity, Long> {
 
     @Transactional
     void deleteByRefresh(String refresh);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 2c389731a2c1c1f7297d5555a47cd92d5cf0241a
     Long deleteByEmail(String email);
 }

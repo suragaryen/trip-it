@@ -6,15 +6,11 @@ import com.example.tripit.user.entity.UserEntity;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.example.tripit.community.entity.PostEntity;
-import com.example.tripit.user.entity.UserEntity;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
@@ -41,6 +37,15 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "p.scheduleId.metroId = :metroId " +
             "ORDER BY p.postDate DESC")
     List<PostEntity> searchByQueryAndMetroIdOrderByPostDateDesc(@Param("query") String query, @Param("metroId") String metroId);
+    
+    
+    // 관리자용 검색 및 페이징
+    @Query("SELECT p FROM PostEntity p " +
+           "WHERE p.postTitle LIKE %:search% " +
+           "OR p.postContent LIKE %:search% " +
+           "OR CAST(p.personnel AS string) LIKE %:search% " +
+           "OR CAST(p.viewCount AS string) LIKE %:search%")
+    Page<PostEntity> findBySearchTerm(@Param("search") String search, Pageable pageable);
 
     //전체검색
     @Query("SELECT p FROM PostEntity p WHERE " +

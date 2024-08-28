@@ -2,14 +2,12 @@ package com.example.tripit.config;
 
 import java.util.Collections;
 
-import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
-import com.example.tripit.user.oAuth2.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,12 +18,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.example.tripit.user.jwt.JWTFilter;
 import com.example.tripit.user.jwt.JWTUtil;
 import com.example.tripit.user.jwt.LoginFilter;
+import com.example.tripit.user.oAuth2.CustomOAuth2UserService;
+import com.example.tripit.user.oAuth2.CustomSuccessHandler;
 import com.example.tripit.user.repository.RefreshRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -69,9 +69,8 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
+                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.130:3000"));
                         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.122:3000"));
-//                        configuration.setAllowedOrigins(Collections.singletonList("http://172.16.1.140:3001"));
 
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
@@ -110,9 +109,9 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/load", "/submitPost", "/block/add", "/block/user","/block/delete","/report/user","/report/add").permitAll()
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**", "/load", "/submitPost", "/block/add", "/block/user","/block/delete","/report/user","/report/add").permitAll()
                         .requestMatchers("/admin/**", "/block/**", "/report/**").hasRole("ADMIN")
-                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**","/community/**").permitAll()
+                        .requestMatchers("/login/**", "/", "/join", "/oauth2/**", "/user","/home/**", "/community/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated())

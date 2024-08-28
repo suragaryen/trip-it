@@ -1,6 +1,22 @@
 package com.example.tripit.mypage.controller;
 
-import com.example.tripit.block.entity.BlockListEntity;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.tripit.block.dto.BlockListDTO;
+import com.example.tripit.block.repository.BlockListRepository;
 import com.example.tripit.block.service.BlockListService;
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.error.CustomException;
@@ -13,18 +29,7 @@ import com.example.tripit.schedule.dto.DetailScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleDto;
 import com.example.tripit.schedule.dto.ScheduleRequest;
 import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.dto.UserDTO;
-import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/mypage")
@@ -36,14 +41,17 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     private final BlockListService blockListService;
+    private final BlockListRepository BlockListRepository;
     
     @Autowired
-    public MyPageController(UserRepository userRepository, MyPageService myPageService, BlockListService blockListService) {
+    public MyPageController(UserRepository userRepository, MyPageService myPageService, BlockListService blockListService, BlockListRepository BlockListRepository) {
         this.userRepository = userRepository;
         this.myPageService = myPageService;
         this.blockListService = blockListService;
+        this.BlockListRepository = BlockListRepository;
     }
-
+    
+    // mypage 유저 상세정보
     @GetMapping("profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String email = customUserDetails.getUsername();
@@ -101,7 +109,7 @@ public class MyPageController {
 
     @GetMapping("schedules/{scheduleId}") //상세 일정
     public ResponseEntity<?> detailSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                            @PathVariable Long scheduleId) {
+                                            @PathVariable("scheduleId") Long scheduleId) {
         String email = customUserDetails.getUsername();
         Long userId = userRepository.findUserIdByEmail(email);
         List<DetailScheduleDto> detailScheduleDtos = myPageService.detailSchedule(scheduleId);
@@ -124,21 +132,6 @@ public class MyPageController {
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //차단자 조회
-    @GetMapping("/block")
-	public ResponseEntity<List<BlockListEntity>> mypageblockForUser(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-		// 유저정보 시큐리티 확인
-		String email = customUserDetails.getUsername();// email
-		Long userId = userRepository.findUserIdByEmail(email);
-
-		// 유저의 차단 목록 조회 서비스 호출
-		// ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
-		
-		List<BlockListEntity> blockList = blockListService.mypageblockForUser(userId);
-		return ResponseEntity.ok(blockList);
-	}
 
     @GetMapping("postList")
     public ResponseEntity<?> postList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -159,6 +152,21 @@ public class MyPageController {
         return ResponseEntity.ok(postList);
     }
 
+    // 특정 사용자의 차단자 목록 조회
+    @GetMapping("/block")
+    public ResponseEntity<List<BlockListDTO>> blockForUser(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        // 유저정보 시큐리티 확인
+        String email = customUserDetails.getUsername();// email
+        Long userId = userRepository.findUserIdByEmail(email);
+
+        // 유저의 차단 목록 조회 서비스 호출
+        // ProntEnd 에서 전달받은 userId ,sortKey, sortValue 값의 결과를 반환
+        List<BlockListDTO> blockList = blockListService.MypageBlockLists(userId);
+        return ResponseEntity.ok(blockList);
+    }
+
     @DeleteMapping("delete-user")
     public ResponseEntity<?> userDelete(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (myPageService.deleteUser(customUserDetails)) {
@@ -169,3 +177,4 @@ public class MyPageController {
     }
 
 }
+

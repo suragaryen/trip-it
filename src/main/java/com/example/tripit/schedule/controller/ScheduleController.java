@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +44,9 @@ public class ScheduleController {
     }
 
     @GetMapping({"/apiList/{metroId}/{pageNo}", "/apiList/{metroId}/{pageNo}/{contentTypeId}"})
-    public ResponseEntity<Object> travelApi(@PathVariable String metroId,
-                                            @PathVariable String pageNo,
-                                            @PathVariable(required = false) String contentTypeId) {
+    public ResponseEntity<Object> travelApi(@PathVariable("metroId") String metroId,
+                                            @PathVariable("pageNo") String pageNo,
+                                            @PathVariable(name="contentTypeId", required = false) String contentTypeId) {
         //contentTypeId가 제공되지 않았을 때 기본값 설정
         if (contentTypeId == null) {
             contentTypeId = "12";
@@ -56,19 +57,21 @@ public class ScheduleController {
     }
 
     @GetMapping("/apiDetail/{contentId}")
-    public ResponseEntity<Object> apiTest2(@PathVariable String contentId) {
+    public ResponseEntity<Object> apiTest2(@PathVariable("contentId") String contentId) {
         System.out.println("장소 호출");
         return apiConnection.detailApi(contentId);
     }
 
     @GetMapping("/apiSearch/{metroId}/{pageNo}/{contentTypeId}/{keyword}")
-    public ResponseEntity<Object> apiTest3(@PathVariable String metroId,
-                                           @PathVariable String pageNo,
-                                           @PathVariable String contentTypeId,
-                                           @PathVariable String keyword) throws UnsupportedEncodingException {
+    public ResponseEntity<Object> apiTest3(@PathVariable("metroId") String metroId,
+                                           @PathVariable("pageNo") String pageNo,
+                                           @PathVariable("contentTypeId") String contentTypeId,
+                                           @PathVariable("keyword") String keyword) throws UnsupportedEncodingException {
         return apiConnection.searchApi(metroId, pageNo, contentTypeId, keyword);
     }
 
+    //ROLE_A권한자는 사용이 Mapping불가능
+    @PreAuthorize("!hasRole('ROLE_A')")
     @PostMapping("/saveSchedule")
     public ResponseEntity<?> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ScheduleRequest scheduleRequest) {
         //CustomUserDetails에서 userId 추출

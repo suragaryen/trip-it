@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.user.entity.UserEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

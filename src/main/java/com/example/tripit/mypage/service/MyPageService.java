@@ -1,5 +1,20 @@
 package com.example.tripit.mypage.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.community.dto.MetroENUM;
 import com.example.tripit.community.entity.PostEntity;
@@ -20,23 +35,10 @@ import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.schedule.repository.DetailScheduleRepository;
 import com.example.tripit.schedule.repository.ScheduleRepository;
 import com.example.tripit.user.dto.CustomUserDetails;
-import com.example.tripit.user.dto.UserDTO;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.RefreshRepository;
 import com.example.tripit.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MyPageService {
@@ -70,7 +72,6 @@ public class MyPageService {
 
     @Autowired
     private RefreshRepository refreshRepository;
-
 
     public MyPageService(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;

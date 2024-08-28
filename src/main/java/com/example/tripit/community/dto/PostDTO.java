@@ -1,6 +1,7 @@
 package com.example.tripit.community.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class PostDTO {
 	private Long postId;
     private String postTitle;
@@ -23,6 +25,22 @@ public class PostDTO {
     private Long scheduleId;
     
     private Long postedUserId;
+    // 모든 필드를 포함하는 생성자
+    public PostDTO(Long postId, Long userId, Long scheduleId, String postTitle, 
+                        String postContent, Short personnel, String postPic, 
+                        Boolean recruitStatus, Integer viewCount, 
+                        Boolean exposureStatus) {
+        this.postId = postId;
+        this.userId = userId;
+        this.scheduleId = scheduleId;
+        this.postTitle = postTitle;
+        this.postContent = postContent;
+        this.personnel = personnel;
+        this.postPic = postPic;
+        this.recruitStatus = recruitStatus;
+        this.viewCount = viewCount;
+        this.exposureStatus = exposureStatus;
+    }
     
     
 }

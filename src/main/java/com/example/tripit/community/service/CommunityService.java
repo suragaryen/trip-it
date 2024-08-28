@@ -1,5 +1,14 @@
 package com.example.tripit.community.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.example.tripit.block.repository.BlockListRepository;
 import com.example.tripit.community.dto.CommunityDTO;
 import com.example.tripit.community.dto.CommunityUpdateDTO;
 import com.example.tripit.community.dto.MetroENUM;
@@ -9,13 +18,6 @@ import com.example.tripit.schedule.entity.ScheduleEntity;
 import com.example.tripit.schedule.repository.ScheduleRepository;
 import com.example.tripit.user.entity.UserEntity;
 import com.example.tripit.user.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommunityService {
@@ -23,11 +25,14 @@ public class CommunityService {
     private PostRepository postRepository;
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final BlockListRepository blockListRepository;
+    
 
-    public CommunityService(PostRepository postRepository, UserRepository userRepository,ScheduleRepository scheduleRepository ) {
+    public CommunityService(PostRepository postRepository, UserRepository userRepository,ScheduleRepository scheduleRepository, BlockListRepository blockListRepository ) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.scheduleRepository = scheduleRepository;
+        this.blockListRepository = blockListRepository;
     }
 
     public void postProcess(PostEntity postEntity) {
@@ -38,7 +43,7 @@ public class CommunityService {
 
     //최신순 조회
     public List<CommunityDTO> loadCommunityListOrderByPostDate(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    	Pageable pageable = PageRequest.of(page, size);
         Page<PostEntity> posts = (Page<PostEntity>) postRepository.findAllByOrderByPostDateDesc(pageable);
 
         return posts.stream()

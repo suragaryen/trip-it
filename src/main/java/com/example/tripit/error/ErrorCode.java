@@ -39,6 +39,9 @@ public enum ErrorCode {
     NO_CONTENT(204, "N001", "No content"),
 
     //MyPage
+	
+	
+    SEARCH_EXISTS(404, "1", "검색 결과가 없습니다."),
     DUPLICATE_NICKNAMES(409, "409", "Duplicate nicknames"),
     USER_NOT_FOUND(404, "404", "User not found"),
     POST_NOT_FOUND(404, "404", "Post not found"),
@@ -46,12 +49,16 @@ public enum ErrorCode {
 
     DELETEUSER(403, "403", "Delete User"),
 
-    SEARCH_EXISTS(200, "1", "검색 결과가 없습니다."),
 	//block
 	BLOCK_EXISTS(500, "1", "자기 자신을 차단할 수 없습니다."),
 	BLOCK_EXISTS2(500, "2", "이미 차단한 사용자 입니다."),
-	BLOCK_EXISTS3(500, "3", "차단한 대상이 아닙니다");
+	BLOCK_EXISTS3(500, "3", "차단한 대상이 아닙니다"),
 
+	//report
+	REPORT_EXISTS(500, "2", "이미 신고된 사용자 입니다."),
+	//admin
+	ADMIN_USER_EXISTS(404, "1", "유저 정보를 찾을수 없습니다.");
+	
 
     //Community
     private int status;
